@@ -1,0 +1,1 @@
+Documentar depois sobre a paleta de cores no styles css.
