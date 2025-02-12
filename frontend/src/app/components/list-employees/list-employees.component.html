@@ -1,35 +1,45 @@
-<section class="bg-component shadow p-5">
-  <header class="flex">
+<section class="bg-component shadow w-full p-5 border border-gray-light rounded">
+  <header class="flex justify-between items-center">
     <h2>List Employees</h2>
-    <div>
-      <input type="search" placeholder="Search Employee">
-      <button>All Role</button>
-      <button>Departments</button>
+    <div class="hidden md:flex gap-2.5 ">
+      <div class="flex items-center border border-gray-light rounded relative">
+        <div class="absolute left-1">
+          <lucide-icon class="w-5 h-5" [img]="UserRoundSearchIcon"></lucide-icon>
+        </div>
+        <input
+          class="pl-7 p-2"
+          type="search"
+          placeholder="Search Employee"
+        >
+      </div>
+      <button class="text-deep p-2 border border-gray-light rounded hover:opacity-80">All Role</button>
+      <button class="text-deep p-2 border border-gray-light rounded hover:opacity-80">Departments</button>
     </div>
   </header>
-  <table>
-    <thead>
+  <table class="table-auto w-full mt-4 text-center">
+    <thead class="bg-gray-light">
       <tr>
-        <th>ID</th>
-        <th>Name</th>
-        <th>Phone</th>
-        <th>Role</th>
-        <th>Department</th>
-        <th>Shift</th>
-        <th>Actions</th>
+        <th class="rounded-tl rounded-bl py-2">ID</th>
+        <th class="py-2">Name</th>
+        <th class="py-2 hidden md:table-cell">Phone</th>
+        <th class="py-2 hidden md:table-cell">Role</th>
+        <th class="py-2 hidden lg:table-cell">Department</th>
+        <th class="py-2 hidden lg:table-cell">Shift</th>
+        <th class="rounded-tr rounded-br py-2">Action</th>
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let employee of employees">
-        <td>{{ employee.id }}</td>
-        <td>{{ employee.name }}</td>
-        <td>{{ employee.phone }}</td>
-        <td>{{ employee.role }}</td>
-        <td>{{ employee.department }}</td>
-        <td>{{ employee.shift }}</td>
-        <td>
-          <button>Edit</button>
-          <button>Delete</button>
+      <tr class="border-b border-gray-light" *ngFor="let employee of employees">
+        <td class="py-2">{{ employee.id }}</td>
+        <td class="py-2">{{ employee.name }}</td>
+        <td class="py-2 hidden md:table-cell">{{ employee.phone }}</td>
+        <td class="py-2 hidden md:table-cell">{{ employee.role }}</td>
+        <td class="py-2 hidden lg:table-cell">{{ employee.department }}</td>
+        <td class="py-2 hidden lg:table-cell">{{ employee.shift }}</td>
+        <td class="py-2">
+          <button class="border border-gray-light p-1 rounded hover:opacity-70">
+            <lucide-icon [img]="EyeIcon"></lucide-icon>
+          </button>
         </td>
       </tr>
     </tbody>
