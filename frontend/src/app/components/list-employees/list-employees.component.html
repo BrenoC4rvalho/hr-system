@@ -1,0 +1,37 @@
+<section class="bg-component shadow p-5">
+  <header class="flex">
+    <h2>List Employees</h2>
+    <div>
+      <input type="search" placeholder="Search Employee">
+      <button>All Role</button>
+      <button>Departments</button>
+    </div>
+  </header>
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Phone</th>
+        <th>Role</th>
+        <th>Department</th>
+        <th>Shift</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let employee of employees">
+        <td>{{ employee.id }}</td>
+        <td>{{ employee.name }}</td>
+        <td>{{ employee.phone }}</td>
+        <td>{{ employee.role }}</td>
+        <td>{{ employee.department }}</td>
+        <td>{{ employee.shift }}</td>
+        <td>
+          <button>Edit</button>
+          <button>Delete</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</section>
