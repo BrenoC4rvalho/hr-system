@@ -1,35 +1,41 @@
-<div>
+<div class="bg-component fixed top-0 right-0 p-10">
 
-  <section>
+  <section class="flex gap-5">
 
-    <div>
+    <div class="w-40 h-40 rounded-full bg-red-600">
       <img>
     </div>
 
     <div>
 
-      <div>
-        <p>Marcos Willians Guzenks</p>
-        <div>
-          <p>status</p>
-          <p>Developer</p>
+      <div class="border-b-2 border-gray-light pb-5">
+        <p class="text-deep font-bold text-2xl">Marcos Willians Guzenks</p>
+        <div class="flex items-center gap-2">
+          <p class="bg-green-200 text-green-600 p-1 rounded border-2 border-green-600">status</p>
+          <p class="text-gray">Developer</p>
         </div>
       </div>
 
-      <div>
+      <div class="flex gap-5 mt-5">
         <div>
-          <p>Departament</p>
-          <p>Tecnology</p>
+          <div class="flex gap-3">
+            <p class="text-gray">Departament</p>
+            <p>Tecnology</p>
+          </div>
+          <div class="flex gap-3">
+            <p class="text-gray">Data Hired</p>
+            <p>March, 17, 2021</p>
+          </div>
         </div>
         <div>
-          <p>Data Hired</p>
-          <p>March, 17, 2021</p>
-        </div>
-        <div>
-          <p>neymargmail.com</p>
-        </div>
-        <div>
-          <p>2492245-6789</p>
+          <div class="flex gap-1">
+            <lucide-icon [img]="MailIcon"></lucide-icon>
+            <p>neymargmail.com</p>
+          </div>
+          <div class="flex gap-1">
+            <lucide-icon [img]="PhoneIcon"></lucide-icon>
+            <p>2492245-6789</p>
+          </div>
         </div>
       </div>
 

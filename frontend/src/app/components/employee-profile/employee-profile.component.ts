@@ -1,11 +1,14 @@
 import { Component } from '@angular/core';
+import { Mail, Phone, LucideAngularModule } from 'lucide-angular';
 
 @Component({
   selector: 'app-employee-profile',
-  imports: [],
+  imports: [LucideAngularModule],
   templateUrl: './employee-profile.component.html',
-  styleUrl: './employee-profile.component.css'
 })
 export class EmployeeProfileComponent {
+
+  readonly MailIcon = Mail;
+  readonly PhoneIcon = Phone;
 
 }
