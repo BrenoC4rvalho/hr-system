@@ -1,12 +1,17 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
+import { ServerErrorComponent } from "./pages/error/serverError/serverError.component";
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet],
-  template: '<router-outlet></router-outlet>'
+  imports: [RouterOutlet, ServerErrorComponent, CommonModule],
+  templateUrl: 'app.component.html'
 })
 export class AppComponent {
-  title = 'HR System';
+  title = 'HR System'
+
+  isServerError: boolean = true;
+
 }
