@@ -19,6 +19,10 @@
 **/*.launch
 **/.settings/
 **/*.sublime-workspace
+**/.iml
+*.ipr
+*.iws
+
 
 # Visual Studio Code
 **/.vscode/*
@@ -40,3 +44,26 @@
 # System files
 **/.DS_Store
 **/Thumbs.db
+
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+# Package Files
+*HELP.md
+**/target/
+!.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
+
+# environment files
+*.env
+*.env.prod
+*.env.production
+*application.properties
+*application-prod.properties
