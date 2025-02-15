@@ -18,5 +18,3 @@ xl	80rem (1280px)	@media (width >= 80rem) { ... }
   --color-gray-light: #CED4DA; /* Light Gray */
   --color-deep: #1E1E1E; /* Soft Black */
   --color-white-soft: #F9F9F9; /* Soft White */
-
-  

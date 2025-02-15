@@ -4,12 +4,16 @@
   "description": "Documentar depois sobre a paleta de cores no styles css.",
   "main": "index.js",
   "scripts": {
-    "dev": "npm run services:up && npm run dev:frontend",
+    "dev": "npm run services:up && concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
     "services:up": "docker compose up -d",
     "services:stop": "docker compose stop",
     "services:down": "docker compose down",
-    "dev:frontend": "cd frontend && ng serve"
+    "dev:frontend": "cd frontend && ng serve ",
+    "dev:backend": "export $(grep -v '^#' .env | envsubst | xargs) && cd backend && mvn spring-boot:run"
   },
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  }
 }
