@@ -4,11 +4,11 @@
   "description": "Documentar depois sobre a paleta de cores no styles css.",
   "main": "index.js",
   "scripts": {
-    "dev": "npm run services:up",
+    "dev": "npm run services:up && npm run dev:frontend",
     "services:up": "docker compose up -d",
     "services:stop": "docker compose stop",
-    "services:down": "docker compose down"
-
+    "services:down": "docker compose down",
+    "dev:frontend": "cd frontend && ng serve"
   },
   "author": "",
   "license": "ISC"
