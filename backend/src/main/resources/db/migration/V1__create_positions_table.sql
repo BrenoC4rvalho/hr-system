@@ -1,4 +1,4 @@
--- V1: Create Positions Table
+-- V1: Create Positions Table (Initial schema)
 
 CREATE TABLE positions (
     id BIGSERIAL PRIMARY KEY, 

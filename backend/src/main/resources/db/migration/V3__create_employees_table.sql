@@ -1,4 +1,4 @@
--- V3: create Employees table
+-- V3: create Employees table (Initial schema with enums and foreign keys)
 
 CREATE TYPE employee_gender_enum AS ENUM ('MALE', 'FEMALE', 'OTHER');
 CREATE TYPE employee_shift_enum AS ENUM ('MORNING', 'AFTERNOON', 'NIGHT', 'NONE');
@@ -9,7 +9,7 @@ CREATE TABLE employees (
     first_name VARCHAR(100) NOT NULL,
     last_name VARCHAR(255),
     email VARCHAR(255),
-    phone VARCHAR(30) NOT NULL CHECK,
+    phone VARCHAR(30) NOT NULL,
     gender employee_gender_enum NOT NULL,
     department_id BIGINT NOT NULL,
     FOREIGN KEY (department_id) REFERENCES departments(id),

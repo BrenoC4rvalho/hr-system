@@ -1,4 +1,4 @@
--- V2: Create Departments Table
+-- V2: Create Departments Table (Initial schema)
 
 CREATE TABLE departments (
     id BIGSERIAL PRIMARY KEY,

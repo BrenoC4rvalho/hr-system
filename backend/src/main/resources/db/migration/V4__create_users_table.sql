@@ -1,4 +1,4 @@
--- V4: Create Users Table
+-- V4: Create Users Table (Initial schema with enums and foreign keys)
 
 CREATE TYPE user_role_enum AS ENUM ('ADMIN', 'MANAGER', 'HR');
 CREATE TYPE user_status_enum AS ENUM ('ACTIVE', 'INACTIVE'); 
