@@ -2,9 +2,9 @@ package com.example.backend.model;
 
 import java.time.LocalDate;
 
-import com.example.backend.Enum.EmployeeStatus;
-import com.example.backend.Enum.Gender;
-import com.example.backend.Enum.Shift;
+import com.example.backend.enums.EmployeeStatus;
+import com.example.backend.enums.Gender;
+import com.example.backend.enums.Shift;
 
 public class Employee {
 

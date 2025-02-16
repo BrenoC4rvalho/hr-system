@@ -1,7 +1,7 @@
 package com.example.backend.model;
 
-import com.example.backend.Enum.UserRole;
-import com.example.backend.Enum.UserStatus;
+import com.example.backend.enums.UserRole;
+import com.example.backend.enums.UserStatus;
 
 public class User {
 
