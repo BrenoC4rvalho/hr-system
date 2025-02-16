@@ -18,3 +18,27 @@ xl	80rem (1280px)	@media (width >= 80rem) { ... }
   --color-gray-light: #CED4DA; /* Light Gray */
   --color-deep: #1E1E1E; /* Soft Black */
   --color-white-soft: #F9F9F9; /* Soft White */
+
+futura funcionalidade Level:
+
+public enum JobLevel {
+    TRAINEE,   // Estagiário
+    JUNIOR,    // Júnior
+    MID,       // Pleno
+    SENIOR,    // Sênior
+    LEAD,      // Líder
+    MANAGER;   // Gerente
+}
+
+E tentar armazenar a evolucao do funcionario.
+
+feat: Commits, that adds or remove a new feature
+fix: Commits, that fixes a bug
+refactor: Commits, that rewrite/restructure your code, however does not change any API behaviour
+perf: Commits are special refactor commits, that improve performance
+style: Commits, that do not affect the meaning (white-space, formatting, missing semi-colons, etc)
+test: Commits, that add missing tests or correcting existing tests
+docs: Commits, that affect documentation only
+build: Commits, that affect build components like build tool, ci pipeline, dependencies, project version, ...
+ops: Commits, that affect operational components like infrastructure, deployment, backup, recovery, ...
+chore: Miscellaneous commits e.g. modifying .gitignore
