@@ -1,30 +1,74 @@
 package com.example.backend.model;
 
+import java.time.LocalDateTime;
+import java.util.List;
+
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+import org.hibernate.validator.constraints.Length;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotBlank;
+
+
+@Entity
+@Table(name = "departments")
 public class Department {
 
-    private int id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)    
+    private Long id;
+
+    @Column(nullable = false, unique = true)
+    @NotBlank(message = "The name field cannot be blank.")
+    @Length(min = 2, max = 100, message = "The name field between 2 and 100 characters.")
     private String name;
-    private int managerId;
+
+    @ManyToOne
+    @JoinColumn(name = "manager_id", referencedColumnName = "id")
+    private Employee manager;
+
+    @Column(name = "created_at")
+    @CreationTimestamp
+    private LocalDateTime createdAt;
+
+    @Column(name = "updated_at")
+    @UpdateTimestamp
+    private LocalDateTime updatedAt;
+
+    @OneToMany(mappedBy = "department")
+    @JsonIgnore
+    private List<Employee> employees;
 
     public Department() {
     }
 
-    public Department(int id, String name, int managerId) {
+    public Department(Long id, String name, Employee manager) {
         this.id = id;
         this.name = name;
-        this.managerId = managerId;
+        this.manager = manager;
     }
 
-    public Department(String name, int managerId) {
+    public Department(String name, Employee manager) {
         this.name = name;
-        this.managerId = managerId;
+        this.manager = manager;
     }
  
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -36,12 +80,24 @@ public class Department {
         this.name = name;
     }
 
-    public int getManagerId() {
-        return managerId;
+    public Employee getManager() {
+        return manager;
     }
 
-    public void setManagerId(int managerId) {
-        this.managerId = managerId;
+    public void setManagerId(Employee manager) {
+        this.manager = manager;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return this.createdAt;
+    }
+
+    public LocalDateTime getUpdatedAt() {
+        return this.updatedAt;
+    }
+
+    public void setUpdatedAt(LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
     }
 
 }
