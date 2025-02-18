@@ -39,7 +39,6 @@ public class User {
     @Length(max = 255, message = "The password hash field cannot be greather then 255 characters.")
     private String passwordHash;
 
-    @NotNull(message = "The role field cannot be null.")
     @Enumerated(jakarta.persistence.EnumType.STRING)
     private UserRole role = UserRole.HR;
 
@@ -47,7 +46,6 @@ public class User {
     @JoinColumn(name = "employee_id", referencedColumnName = "id")
     private Employee employee;
 
-    @NotNull(message = "The status field cannot be null.")
     @Enumerated(jakarta.persistence.EnumType.STRING)
     private UserStatus status = UserStatus.ACTIVE;
 
