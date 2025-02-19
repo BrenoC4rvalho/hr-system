@@ -7,10 +7,12 @@ import com.example.backend.dto.CreateUserDTO;
 import com.example.backend.dto.UserRespondeDTO;
 import com.example.backend.service.UserService;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -25,12 +27,12 @@ public class UserController {
         this.userService = userService;
     }
  
+    @PreAuthorize("hasAnyAuthority('ADMIN','MANAGER')")
     @PostMapping()
-    public ResponseEntity<Object> create(@Valid @RequestBody CreateUserDTO createUserDTO) {
-        
-        UserRespondeDTO newUser = userService.create(createUserDTO);
+    public ResponseEntity<?> create(HttpServletRequest request, @Valid @RequestBody CreateUserDTO createUserDTO) {
+        String roleOfCreatorUser = request.getAttribute("user_role").toString();
+        UserRespondeDTO newUser = userService.create(createUserDTO, roleOfCreatorUser);
         return ResponseEntity.status(HttpStatus.CREATED).body(newUser);
-
     }
 
 }

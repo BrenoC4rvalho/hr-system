@@ -1,7 +1,9 @@
 package com.example.backend.service;
 
+import org.springframework.security.authorization.AuthorizationDeniedException;
 import org.springframework.stereotype.Service;
 
+import com.example.backend.enums.UserRole;
 import com.example.backend.dto.CreateUserDTO;
 import com.example.backend.dto.UserRespondeDTO;
 import com.example.backend.exception.EmployeeNotFoundException;
@@ -38,8 +40,14 @@ public class UserService {
         this.passwordEncoderService = passwordEncoderService;
     }
 
-    public UserRespondeDTO create(CreateUserDTO createUserDTO) {
+    public UserRespondeDTO create(CreateUserDTO createUserDTO, String roleOfCreatorUser) {
         
+        boolean isCreatorUserAdmin = roleOfCreatorUser.equals("ADMIN"); 
+        boolean isNewUserAdmin = createUserDTO.getRole().equals(UserRole.ADMIN);
+        if(isNewUserAdmin && !isCreatorUserAdmin) {
+            throw new AuthorizationDeniedException("You don't have permission to create an admin user.");
+        }
+
         Boolean existsUserWithUsername = userRepository.existsByUsername(createUserDTO.getUsername());
         if (existsUserWithUsername) {
             throw new  IllegalArgumentException("Username already exists.");
