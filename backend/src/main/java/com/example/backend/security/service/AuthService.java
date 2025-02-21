@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 
 import com.example.backend.dto.AuthRequestDTO;
 import com.example.backend.dto.AuthResponseDTO;
+import com.example.backend.enums.UserStatus;
 import com.example.backend.exception.AuthFailedException;
 import com.example.backend.model.User;
 import com.example.backend.repository.UserRepository;
@@ -29,6 +30,10 @@ public class AuthService {
         
         User user = userRepository.findByUsername(authRequestDTO.getUsername())
             .orElseThrow(AuthFailedException::new);
+
+        if(user.getStatus().equals(UserStatus.INACTIVE)) {
+            throw new AuthFailedException();
+        }
         
         Boolean authenticatedPassword = passwordEncoderService.matchPassword(authRequestDTO.getPassword(), user.getPasswordHash());
         if(!authenticatedPassword) {

@@ -1,5 +1,15 @@
 package com.example.backend.controller;
 
+import java.util.List;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -10,11 +20,6 @@ import com.example.backend.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 
 
 @RestController
@@ -26,13 +31,29 @@ public class UserController {
     public UserController(UserService userService) {
         this.userService = userService;
     }
- 
+
+
+    @PreAuthorize("hasAnyAuthority('ADMIN','MANAGER')")
+    @GetMapping()
+    public ResponseEntity<?> index() {
+        List<UserRespondeDTO> users = userService.getAll();
+        return ResponseEntity.status(HttpStatus.OK).body(users);
+    }
+    
     @PreAuthorize("hasAnyAuthority('ADMIN','MANAGER')")
     @PostMapping()
     public ResponseEntity<?> create(HttpServletRequest request, @Valid @RequestBody CreateUserDTO createUserDTO) {
         String roleOfCreatorUser = request.getAttribute("user_role").toString();
         UserRespondeDTO newUser = userService.create(createUserDTO, roleOfCreatorUser);
         return ResponseEntity.status(HttpStatus.CREATED).body(newUser);
+    }
+
+    @PreAuthorize("hasAnyAuthority('ADMIN','MANAGER')")
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?>  delete(HttpServletRequest request, @PathVariable("id") Long id) {
+        String loggedUserRole = request.getAttribute("user_role").toString();
+        userService.delete(id, loggedUserRole);
+        return ResponseEntity.status(HttpStatus.OK).body("The user has been deleted.");
     }
 
 }
