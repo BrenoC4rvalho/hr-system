@@ -1,8 +1,7 @@
 package com.example.backend.service;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.authorization.AuthorizationDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,6 +11,7 @@ import com.example.backend.enums.UserStatus;
 import com.example.backend.dto.CreateUserDTO;
 import com.example.backend.dto.UserRespondeDTO;
 import com.example.backend.exception.EmployeeNotFoundException;
+import com.example.backend.exception.UserAlreadyInactiveException;
 import com.example.backend.exception.UserNotFoundException;
 import com.example.backend.mapper.CreateUserMapper;
 import com.example.backend.mapper.UserResponseMapper;
@@ -46,17 +46,15 @@ public class UserService {
         this.passwordEncoderService = passwordEncoderService;
     }
 
-    public List<UserRespondeDTO> getAll() {
+    public Page<UserRespondeDTO> getAll(Pageable pageable) {
 
-        List<User> users = userRepository.findAll();
+        Page<User> users = userRepository.findAll(pageable);
 
         if(users.isEmpty()) {
             throw new UserNotFoundException();
         }
 
-        return users.stream()
-            .map(userResponseMapper::map)
-            .collect(Collectors.toList());
+        return users.map(userResponseMapper::map);
 
     }
 
@@ -103,6 +101,10 @@ public class UserService {
 
         User user = userRepository.findById(userId)
             .orElseThrow(UserNotFoundException::new);
+
+        if(user.getStatus() == UserStatus.INACTIVE) {
+            throw new UserAlreadyInactiveException();
+        }
         
         boolean isUserAdmin = user.getRole().equals(UserRole.ADMIN);
         boolean isLoggedUserAdmin = "ADMIN".equals(loggedUserRole);
