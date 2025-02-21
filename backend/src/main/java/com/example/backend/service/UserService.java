@@ -1,12 +1,18 @@
 package com.example.backend.service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.security.authorization.AuthorizationDeniedException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.example.backend.enums.UserRole;
+import com.example.backend.enums.UserStatus;
 import com.example.backend.dto.CreateUserDTO;
 import com.example.backend.dto.UserRespondeDTO;
 import com.example.backend.exception.EmployeeNotFoundException;
+import com.example.backend.exception.UserNotFoundException;
 import com.example.backend.mapper.CreateUserMapper;
 import com.example.backend.mapper.UserResponseMapper;
 import com.example.backend.model.Employee;
@@ -40,9 +46,24 @@ public class UserService {
         this.passwordEncoderService = passwordEncoderService;
     }
 
+    public List<UserRespondeDTO> getAll() {
+
+        List<User> users = userRepository.findAll();
+
+        if(users.isEmpty()) {
+            throw new UserNotFoundException();
+        }
+
+        return users.stream()
+            .map(userResponseMapper::map)
+            .collect(Collectors.toList());
+
+    }
+
+    @Transactional
     public UserRespondeDTO create(CreateUserDTO createUserDTO, String roleOfCreatorUser) {
         
-        boolean isCreatorUserAdmin = roleOfCreatorUser.equals("ADMIN"); 
+        boolean isCreatorUserAdmin = "ADMIN".equals(roleOfCreatorUser); 
         boolean isNewUserAdmin = createUserDTO.getRole().equals(UserRole.ADMIN);
         if(isNewUserAdmin && !isCreatorUserAdmin) {
             throw new AuthorizationDeniedException("You don't have permission to create an admin user.");
@@ -77,4 +98,21 @@ public class UserService {
 
     }
 
+    @Transactional
+    public void delete(Long userId, String loggedUserRole) {
+
+        User user = userRepository.findById(userId)
+            .orElseThrow(UserNotFoundException::new);
+        
+        boolean isUserAdmin = user.getRole().equals(UserRole.ADMIN);
+        boolean isLoggedUserAdmin = "ADMIN".equals(loggedUserRole);
+        if(isUserAdmin && !isLoggedUserAdmin) {
+            throw new AuthorizationDeniedException("You don't have permission to delete an admin user.");
+        }
+
+        user.setStatus(UserStatus.INACTIVE);
+        userRepository.save(user);
+
+    }
+    
 }
