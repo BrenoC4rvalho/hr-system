@@ -10,6 +10,7 @@ import com.example.backend.enums.UserRole;
 import com.example.backend.enums.UserStatus;
 import com.example.backend.dto.CreateUserDTO;
 import com.example.backend.dto.UpdatePasswordDTO;
+import com.example.backend.dto.UpdateUserDTO;
 import com.example.backend.dto.UserRespondeDTO;
 import com.example.backend.exception.EmployeeNotFoundException;
 import com.example.backend.exception.UserAlreadyInactiveException;
@@ -78,12 +79,12 @@ public class UserService {
             throw new AuthorizationDeniedException("You don't have permission to create an admin user.");
         }
 
-        Boolean existsUserWithUsername = userRepository.existsByUsername(createUserDTO.getUsername());
-        if (existsUserWithUsername) {
+        boolean existsUserWithUsername = userRepository.existsByUsername(createUserDTO.getUsername());
+        if(existsUserWithUsername) {
             throw new  IllegalArgumentException("Username already exists.");
         }
             
-        Boolean existsUserRelateEmployee = createUserDTO.getEmployeeId() != null ? userRepository.existsByEmployeeId(createUserDTO.getEmployeeId()) : false;
+        boolean existsUserRelateEmployee = createUserDTO.getEmployeeId() != null ? userRepository.existsByEmployeeId(createUserDTO.getEmployeeId()) : false;
         if(existsUserRelateEmployee) {
             throw new IllegalArgumentException("Employee already has a user.");
         }
@@ -104,6 +105,50 @@ public class UserService {
         User savedUser = userRepository.save(newUser);
 
         return userResponseMapper.map(savedUser);
+
+    }
+
+    @Transactional
+    public UserRespondeDTO update(Long userId, UpdateUserDTO updateUserDTO, String loggedUserRole) {
+
+        User user = userRepository.findById(userId)
+        .orElseThrow(UserNotFoundException::new);
+
+        boolean isUserAdmin = user.getRole().equals(UserRole.ADMIN);
+        boolean isLoggedUserAdmin = "ADMIN".equals(loggedUserRole);
+        if(isUserAdmin && !isLoggedUserAdmin) {
+            throw new AuthorizationDeniedException("You don't have permission to update an admin user.");
+        }
+
+        if(updateUserDTO.getUsername() != null && !updateUserDTO.getUsername().equals(user.getUsername())) {
+            boolean existsUserWithUsername = userRepository.existsByUsername(updateUserDTO.getUsername());
+            if(existsUserWithUsername) {
+                throw new  IllegalArgumentException("Username already exists.");
+            }
+
+            user.setUsername(updateUserDTO.getUsername());
+        }
+
+        if(updateUserDTO.getRole() != null) {
+            if(loggedUserRole.equals("MANAGER") && updateUserDTO.getRole().equals(UserRole.ADMIN)) {
+                throw new AuthorizationDeniedException("Manager can't change role to ADMIN.");
+            }
+            user.setRole(updateUserDTO.getRole());
+        }
+
+        if(updateUserDTO.getEmployeeId() != null && user.getEmployee() == null) {
+           Employee employee = employeeRepository.findById(updateUserDTO.getEmployeeId())
+                .orElseThrow(EmployeeNotFoundException::new);
+            user.setEmployee(employee);
+        }
+
+        if(updateUserDTO.getStatus() != null && updateUserDTO.getStatus().equals(UserStatus.ACTIVE)) {
+            user.setStatus(UserStatus.ACTIVE);
+        }
+
+        User userUpdated = userRepository.save(user);
+
+        return userResponseMapper.map(userUpdated);
 
     }
 

@@ -18,11 +18,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.backend.dto.CreateUserDTO;
 import com.example.backend.dto.UpdatePasswordDTO;
+import com.example.backend.dto.UpdateUserDTO;
 import com.example.backend.dto.UserRespondeDTO;
 import com.example.backend.service.UserService;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
+import org.springframework.web.bind.annotation.PutMapping;
+
 
 @RestController
 @RequestMapping("/users")
@@ -58,6 +61,17 @@ public class UserController {
     public ResponseEntity<?> show(@PathVariable("id") Long id) {
         UserRespondeDTO user = userService.getUser(id);
         return ResponseEntity.status(HttpStatus.OK).body(user);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<?> update(
+        HttpServletRequest request,
+        @PathVariable("id") Long id, 
+        @RequestBody UpdateUserDTO updateUserDTO
+    ) {
+        String loggedUserRole = request.getAttribute("user_role").toString();
+        UserRespondeDTO updatedUser = userService.update(id, updateUserDTO, loggedUserRole);
+        return ResponseEntity.status(HttpStatus.OK).body(updatedUser);
     }
 
     @PreAuthorize("hasAnyAuthority('ADMIN') or #id.toString() == authentication.name")
