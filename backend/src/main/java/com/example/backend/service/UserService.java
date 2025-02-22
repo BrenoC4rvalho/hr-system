@@ -120,7 +120,13 @@ public class UserService {
             throw new AuthorizationDeniedException("You don't have permission to update an admin user.");
         }
 
+
         if(updateUserDTO.getUsername() != null && !updateUserDTO.getUsername().equals(user.getUsername())) {
+            
+            if(updateUserDTO.getUsername().length() < 3 || updateUserDTO.getUsername().length() > 50) {
+                throw new  IllegalArgumentException("The username field between 3 and 50 characters.");
+            }
+
             boolean existsUserWithUsername = userRepository.existsByUsername(updateUserDTO.getUsername());
             if(existsUserWithUsername) {
                 throw new  IllegalArgumentException("Username already exists.");
@@ -137,9 +143,16 @@ public class UserService {
         }
 
         if(updateUserDTO.getEmployeeId() != null && user.getEmployee() == null) {
-           Employee employee = employeeRepository.findById(updateUserDTO.getEmployeeId())
+           
+            boolean existsUserRelateEmployee = userRepository.existsByEmployeeId(updateUserDTO.getEmployeeId());
+            if(existsUserRelateEmployee) {
+                throw new IllegalArgumentException("Employee already has a user.");
+            }
+
+            Employee employee = employeeRepository.findById(updateUserDTO.getEmployeeId())
                 .orElseThrow(EmployeeNotFoundException::new);
             user.setEmployee(employee);
+
         }
 
         if(updateUserDTO.getStatus() != null && updateUserDTO.getStatus().equals(UserStatus.ACTIVE)) {
