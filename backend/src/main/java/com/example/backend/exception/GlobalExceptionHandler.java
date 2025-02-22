@@ -73,6 +73,11 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
     }
 
+    @ExceptionHandler(UserAlreadyInactiveException.class)
+    public ResponseEntity<String> handleUserAlreadyExists(UserAlreadyInactiveException e) {
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
+    }
+
     // Employee Exceptions Handler
 
     @ExceptionHandler(EmployeeNotFoundException.class)
