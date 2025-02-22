@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.example.backend.enums.UserRole;
 import com.example.backend.enums.UserStatus;
 import com.example.backend.dto.CreateUserDTO;
+import com.example.backend.dto.UpdatePasswordDTO;
 import com.example.backend.dto.UserRespondeDTO;
 import com.example.backend.exception.EmployeeNotFoundException;
 import com.example.backend.exception.UserAlreadyInactiveException;
@@ -104,6 +105,21 @@ public class UserService {
 
         return userResponseMapper.map(savedUser);
 
+    }
+
+    @Transactional
+    public void updatePassword(Long userId, UpdatePasswordDTO updatePasswordDTO) {
+
+        User user = userRepository.findById(userId)
+        .orElseThrow(UserNotFoundException::new);
+
+        if(user.getStatus() == UserStatus.INACTIVE) {
+            throw new UserAlreadyInactiveException();
+        }
+
+        user.setPasswordHash(passwordEncoderService.encodePassword(updatePasswordDTO.getPassword()));
+        userRepository.save(user);
+        
     }
 
     @Transactional
