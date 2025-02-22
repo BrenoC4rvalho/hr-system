@@ -46,6 +46,16 @@ public class UserService {
         this.passwordEncoderService = passwordEncoderService;
     }
 
+
+    public UserRespondeDTO getUser(Long userId) {
+
+        User user = userRepository.findById(userId)
+            .orElseThrow(UserNotFoundException::new);
+
+        return userResponseMapper.map(user);
+
+    }
+
     public Page<UserRespondeDTO> getAll(Pageable pageable) {
 
         Page<User> users = userRepository.findAll(pageable);

@@ -6,6 +6,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -50,6 +52,14 @@ public class UserController {
         UserRespondeDTO newUser = userService.create(createUserDTO, roleOfCreatorUser);
         return ResponseEntity.status(HttpStatus.CREATED).body(newUser);
     }
+
+    @PreAuthorize("hasAnyAuthority('ADMIN','MANAGER') or #id == authentication.name")
+    @GetMapping("/{id}")
+    public ResponseEntity<?> show(@PathVariable("id") Long id) {
+        UserRespondeDTO user = userService.getUser(id);
+        return ResponseEntity.status(HttpStatus.OK).body(user);
+    }
+    
 
     @PreAuthorize("hasAnyAuthority('ADMIN','MANAGER')")
     @DeleteMapping("/{id}")
