@@ -51,7 +51,7 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.CREATED).body(newUser);
     }
 
-    @PreAuthorize("hasAnyAuthority('ADMIN','MANAGER') or #id == authentication.name")
+    @PreAuthorize("hasAnyAuthority('ADMIN','MANAGER') or #id.toString() == authentication.name")
     @GetMapping("/{id}")
     public ResponseEntity<?> show(@PathVariable("id") Long id) {
         UserRespondeDTO user = userService.getUser(id);
