@@ -3,7 +3,6 @@ package com.example.backend.security.service;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
@@ -30,7 +29,6 @@ class TokenServiceTest {
 
     private final Long userId = 1L;
     private final UserRole userRole = UserRole.ADMIN;
-    private final String fakeToken = "fake.jwt.token";
     private final Algorithm mockAlgorithm = Algorithm.HMAC256("secret");
 
     @BeforeEach

@@ -9,7 +9,15 @@ public class AuthRequestDTO {
     
     @NotBlank(message = "The password field is required.")
     private String password;
-    
+
+    public AuthRequestDTO(
+        @NotBlank(message = "The username field is required.") String username,
+        @NotBlank(message = "The password field is required.") String password
+    ) {
+        this.username = username;
+        this.password = password;
+    }
+
     public String getUsername() {
         return username;
     }
