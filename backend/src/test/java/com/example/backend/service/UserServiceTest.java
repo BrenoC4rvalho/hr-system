@@ -1,5 +1,6 @@
 package com.example.backend.service;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -111,7 +112,7 @@ public class UserServiceTest {
     }
 
     @Test
-    @DisplayName("getAllUser: Should throw exception when user not found")
+    @DisplayName("getAllUser: Should throw exception when users not found")
     void testGetAllUserNotFound() {
         Page<User> emptyPage = Page.empty();
         when(userRepository.findAll(any(PageRequest.class))).thenReturn(emptyPage);
@@ -136,10 +137,31 @@ public class UserServiceTest {
 
     }
 
+    // Tests for method delete
 
     @Test
+    @DisplayName("delete: Should delete user when user exists and active.")
     void testDelete() {
-
+        
+        when(userRepository.findById(1L)).thenReturn(Optional.of(user));
+        
+        userService.delete(1L, "ADMIN");
+        
+        assertEquals(UserStatus.INACTIVE, user.getStatus());
+        verify(userRepository).save(user);
+    
     }
+
+    @Test
+    @DisplayName("delete: Should throw exception when user not found.")
+    void testDeleteUserNotFound() {
+
+        when(userRepository.findById(1L)).thenReturn(Optional.empty());
+        
+        assertThrows(UserNotFoundException.class, () -> userService.delete(1L, "ADMIN"));
+    
+    }
+
+    // end delete
 
 }
