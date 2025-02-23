@@ -1,10 +1,13 @@
 package com.example.backend.service;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -14,6 +17,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 
 import com.example.backend.dto.UserRespondeDTO;
 import com.example.backend.enums.UserRole;
@@ -92,11 +98,28 @@ public class UserServiceTest {
 
     // Test for method getAllUser
 
+    @Test
+    @DisplayName("getAllUser: Should return page of user response DTO when users exist.")
+    void testGetAll() {
+        Page<User> users = new PageImpl<>(List.of(user));
+        when(userRepository.findAll(any(PageRequest.class))).thenReturn(users);
+        when(userResponseMapper.map(any(User.class))).thenReturn(userResponseDTO);
+        
+        Page<UserRespondeDTO> result = userService.getAll(PageRequest.of(0, 10));
+        
+        assertFalse(result.isEmpty());
+    }
 
     @Test
-    void testGetAll() {
-
+    @DisplayName("getAllUser: Should throw exception when user not found")
+    void testGetAllUserNotFound() {
+        Page<User> emptyPage = Page.empty();
+        when(userRepository.findAll(any(PageRequest.class))).thenReturn(emptyPage);
+        
+        assertThrows(UserNotFoundException.class, () -> userService.getAll(PageRequest.of(0, 10)));
     }
+
+    // end getAllUser
 
     @Test
     void testCreate() {
