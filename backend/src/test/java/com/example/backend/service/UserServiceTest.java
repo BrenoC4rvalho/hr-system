@@ -22,9 +22,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 
+import com.example.backend.dto.UpdatePasswordDTO;
 import com.example.backend.dto.UserRespondeDTO;
 import com.example.backend.enums.UserRole;
 import com.example.backend.enums.UserStatus;
+import com.example.backend.exception.UserAlreadyInactiveException;
 import com.example.backend.exception.UserNotFoundException;
 import com.example.backend.mapper.CreateUserMapper;
 import com.example.backend.mapper.UserResponseMapper;
@@ -87,7 +89,7 @@ public class UserServiceTest {
 
     @DisplayName("getUser: Should throw exception when user not found.")
     @Test
-    void getUserNotFound() {
+    void getUserWhenNotFound() {
 
         when(userRepository.findById(1L)).thenReturn(Optional.empty());
 
@@ -113,7 +115,7 @@ public class UserServiceTest {
 
     @Test
     @DisplayName("getAllUser: Should throw exception when users not found")
-    void testGetAllUserNotFound() {
+    void testGetAllWhenUserNotFound() {
         Page<User> emptyPage = Page.empty();
         when(userRepository.findAll(any(PageRequest.class))).thenReturn(emptyPage);
         
@@ -132,10 +134,52 @@ public class UserServiceTest {
 
     }
 
+    //Tests for method updatePassword
+
+    @DisplayName("updatePassword: Should update user password when user exists and active.")
     @Test
     void testUpdatePassword() {
 
+        UpdatePasswordDTO updatePasswordDTO = new UpdatePasswordDTO();
+        updatePasswordDTO.setPassword("newPassword");
+
+        when(userRepository.findById(1L)).thenReturn(Optional.of(user));
+        when(passwordEncoderService.encodePassword("newPassword")).thenReturn("hashedPassword");
+
+        userService.updatePassword(1L, updatePasswordDTO);
+
+        assertEquals("hashedPassword", user.getPasswordHash());
+        verify(userRepository).save(user);
+    
     }
+
+    @DisplayName("updatePassword: Should throw exception when user not found.")
+    @Test
+    void testUpdatePasswordWhenUserNotFound() {
+
+        UpdatePasswordDTO updatePasswordDTO = new UpdatePasswordDTO();
+        updatePasswordDTO.setPassword("newPassword");
+
+        when(userRepository.findById(1L)).thenReturn(Optional.empty());
+
+        assertThrows(UserNotFoundException.class, () -> userService.updatePassword(1L, updatePasswordDTO));
+
+    }
+
+    @DisplayName("updatePassword: Should throw exception when user is inactive")
+    @Test
+    void testUpdatePasswordWhenUserInactive() {
+
+        user.setStatus(UserStatus.INACTIVE);
+        UpdatePasswordDTO updatePasswordDTO = new UpdatePasswordDTO();
+        updatePasswordDTO.setPassword("newPassword");
+
+        when(userRepository.findById(1L)).thenReturn(Optional.of(user));
+
+        assertThrows(UserAlreadyInactiveException.class, () -> userService.updatePassword(1L, updatePasswordDTO));
+        
+    }
+    // end updatePassword
 
     // Tests for method delete
 
@@ -154,7 +198,7 @@ public class UserServiceTest {
 
     @Test
     @DisplayName("delete: Should throw exception when user not found.")
-    void testDeleteUserNotFound() {
+    void testDeleteWhenUserNotFound() {
 
         when(userRepository.findById(1L)).thenReturn(Optional.empty());
         
