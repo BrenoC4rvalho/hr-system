@@ -24,11 +24,13 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.authorization.AuthorizationDeniedException;
 
+import com.example.backend.dto.CreateUserDTO;
 import com.example.backend.dto.UpdatePasswordDTO;
 import com.example.backend.dto.UpdateUserDTO;
 import com.example.backend.dto.UserRespondeDTO;
 import com.example.backend.enums.UserRole;
 import com.example.backend.enums.UserStatus;
+import com.example.backend.exception.EmployeeNotFoundException;
 import com.example.backend.exception.UserAlreadyInactiveException;
 import com.example.backend.exception.UserNotFoundException;
 import com.example.backend.mapper.CreateUserMapper;
@@ -128,10 +130,280 @@ public class UserServiceTest {
 
     // end getAllUser
 
-    @Test
-    void testCreate() {
+    // Test for method createUser
 
+    @Test
+    @DisplayName("create: Should create a user successfully when all input is valid and creator is admin")
+    void testCreateUserSuccessfullyAsAdmin() {
+        CreateUserDTO createUserDTO = new CreateUserDTO();
+        createUserDTO.setUsername("newuser");
+        createUserDTO.setRole(UserRole.MANAGER);
+        createUserDTO.setEmployeeId(1L);
+
+        Employee employee = new Employee();
+        employee.setId(1L);
+
+        User newUser = new User();
+        newUser.setUsername("newuser");
+        newUser.setRole(UserRole.MANAGER);
+        newUser.setEmployee(employee);
+
+        User savedUser = new User();
+        savedUser.setId(1L);
+        savedUser.setUsername("newuser");
+        savedUser.setRole(UserRole.MANAGER);
+        savedUser.setEmployee(employee);
+
+        when(userRepository.existsByUsername("newuser")).thenReturn(false);
+        when(userRepository.existsByEmployeeId(1L)).thenReturn(false);
+        when(employeeRepository.findById(1L)).thenReturn(Optional.of(employee));
+        when(createUserMapper.map(createUserDTO)).thenReturn(newUser);
+        when(passwordEncoderService.encodePassword("newuser")).thenReturn("encodedPassword");
+        when(userRepository.save(any(User.class))).thenReturn(savedUser);
+        when(userResponseMapper.map(savedUser)).thenReturn(new UserRespondeDTO());
+
+        UserRespondeDTO result = userService.create(createUserDTO, "ADMIN");
+
+        assertNotNull(result);
+        verify(userRepository).existsByUsername("newuser");
+        verify(userRepository).existsByEmployeeId(1L);
+        verify(employeeRepository).findById(1L);
+        verify(createUserMapper).map(createUserDTO);
+        verify(passwordEncoderService).encodePassword("newuser");
+        verify(userRepository).save(newUser);
+        verify(userResponseMapper).map(savedUser);
     }
+    
+    @Test
+    @DisplayName("create: Should throw IllegalArgumentException when creating a user with an existing username")
+    void testCreateUserWithExistingUsername() {
+        CreateUserDTO createUserDTO = new CreateUserDTO();
+        createUserDTO.setUsername("existingUsername");
+        createUserDTO.setRole(UserRole.MANAGER);
+    
+        when(userRepository.existsByUsername("existingUsername")).thenReturn(true);
+    
+        assertThrows(IllegalArgumentException.class, () -> 
+            userService.create(createUserDTO, "ADMIN"),
+            "Username already exists."
+        );
+    
+        verify(userRepository).existsByUsername("existingUsername");
+        verify(userRepository, never()).save(any(User.class));
+    }
+
+    @Test
+    @DisplayName("create: Should throw AuthorizationDeniedException when non-admin tries to create an admin user")
+    void testCreateAdminUserByNonAdmin() {
+        CreateUserDTO createUserDTO = new CreateUserDTO();
+        createUserDTO.setRole(UserRole.ADMIN);
+        createUserDTO.setUsername("newadmin");
+
+        assertThrows(AuthorizationDeniedException.class, () -> 
+            userService.create(createUserDTO, "MANAGER"),
+            "You don't have permission to create an admin user."
+        );
+
+        verify(userRepository, never()).existsByUsername(any());
+        verify(userRepository, never()).save(any());
+    }
+
+    @Test
+    @DisplayName("create: Should throw IllegalArgumentException when creating a user for an employee who already has a user")
+    void testCreateUserForEmployeeWithExistingUser() {
+        CreateUserDTO createUserDTO = new CreateUserDTO();
+        createUserDTO.setUsername("newuser");
+        createUserDTO.setRole(UserRole.MANAGER);
+        createUserDTO.setEmployeeId(1L);
+
+        when(userRepository.existsByUsername("newuser")).thenReturn(false);
+        when(userRepository.existsByEmployeeId(1L)).thenReturn(true);
+
+        assertThrows(IllegalArgumentException.class, () -> 
+            userService.create(createUserDTO, "ADMIN"),
+            "Employee already has a user."
+        );
+
+        verify(userRepository).existsByUsername("newuser");
+        verify(userRepository).existsByEmployeeId(1L);
+        verify(employeeRepository, never()).findById(any());
+        verify(userRepository, never()).save(any(User.class));
+    }
+
+    @Test
+    @DisplayName("create: Should create a non-admin user successfully when creator is non-admin")
+    void testCreateNonAdminUserByNonAdmin() {
+        CreateUserDTO createUserDTO = new CreateUserDTO();
+        createUserDTO.setUsername("newuser");
+        createUserDTO.setRole(UserRole.MANAGER);
+        createUserDTO.setEmployeeId(1L);
+
+        Employee employee = new Employee();
+        employee.setId(1L);
+
+        User newUser = new User();
+        newUser.setUsername("newuser");
+        newUser.setRole(UserRole.MANAGER);
+        newUser.setEmployee(employee);
+
+        User savedUser = new User();
+        savedUser.setId(1L);
+        savedUser.setUsername("newuser");
+        savedUser.setRole(UserRole.MANAGER);
+        savedUser.setEmployee(employee);
+
+        when(userRepository.existsByUsername("newuser")).thenReturn(false);
+        when(userRepository.existsByEmployeeId(1L)).thenReturn(false);
+        when(employeeRepository.findById(1L)).thenReturn(Optional.of(employee));
+        when(createUserMapper.map(createUserDTO)).thenReturn(newUser);
+        when(passwordEncoderService.encodePassword("newuser")).thenReturn("encodedPassword");
+        when(userRepository.save(any(User.class))).thenReturn(savedUser);
+        when(userResponseMapper.map(savedUser)).thenReturn(new UserRespondeDTO());
+
+        UserRespondeDTO result = userService.create(createUserDTO, "MANAGER");
+
+        assertNotNull(result);
+        verify(userRepository).existsByUsername("newuser");
+        verify(userRepository).existsByEmployeeId(1L);
+        verify(employeeRepository).findById(1L);
+        verify(createUserMapper).map(createUserDTO);
+        verify(passwordEncoderService).encodePassword("newuser");
+        verify(userRepository).save(newUser);
+        verify(userResponseMapper).map(savedUser);
+    }
+
+    @Test
+    @DisplayName("create: Should throw EmployeeNotFoundException when creating a user with non-existent employeeId")
+    void testCreateUserWithNonExistentEmployeeId() {
+        CreateUserDTO createUserDTO = new CreateUserDTO();
+        createUserDTO.setUsername("newuser");
+        createUserDTO.setRole(UserRole.MANAGER);
+        createUserDTO.setEmployeeId(999L); // Non-existent employee ID
+
+        when(userRepository.existsByUsername("newuser")).thenReturn(false);
+        when(userRepository.existsByEmployeeId(999L)).thenReturn(false);
+        when(employeeRepository.findById(999L)).thenReturn(Optional.empty());
+
+        assertThrows(EmployeeNotFoundException.class, () -> 
+            userService.create(createUserDTO, "ADMIN")
+        );
+
+        verify(userRepository).existsByUsername("newuser");
+        verify(userRepository).existsByEmployeeId(999L);
+        verify(employeeRepository).findById(999L);
+        verify(userRepository, never()).save(any(User.class));
+    }
+
+    @Test
+    @DisplayName("create: Should create a user without an associated employee when employeeId is null")
+    void testCreateUserWithoutEmployee() {
+        CreateUserDTO createUserDTO = new CreateUserDTO();
+        createUserDTO.setUsername("newuser");
+        createUserDTO.setRole(UserRole.MANAGER);
+        createUserDTO.setEmployeeId(null);
+
+        User newUser = new User();
+        newUser.setId(1L);
+        newUser.setUsername("newuser");
+        newUser.setRole(UserRole.MANAGER);
+
+        UserRespondeDTO userResponseDTO = new UserRespondeDTO();
+        userResponseDTO.setId(1L);
+        userResponseDTO.setUsername("newuser");
+        userResponseDTO.setRole(UserRole.MANAGER);
+
+        when(userRepository.existsByUsername("newuser")).thenReturn(false);
+        when(createUserMapper.map(createUserDTO)).thenReturn(newUser);
+        when(passwordEncoderService.encodePassword("newuser")).thenReturn("encodedPassword");
+        when(userRepository.save(any(User.class))).thenReturn(newUser);
+        when(userResponseMapper.map(newUser)).thenReturn(userResponseDTO);
+
+        UserRespondeDTO result = userService.create(createUserDTO, "ADMIN");
+
+        assertNotNull(result);
+        assertEquals(1L, result.getId());
+        assertEquals("newuser", result.getUsername());
+        assertEquals(UserRole.MANAGER, result.getRole());
+
+        verify(userRepository).existsByUsername("newuser");
+        verify(createUserMapper).map(createUserDTO);
+        verify(passwordEncoderService).encodePassword("newuser");
+        verify(userRepository).save(newUser);
+        verify(userResponseMapper).map(newUser);
+        verify(employeeRepository, never()).findById(any());
+    }
+
+
+    @Test
+    @DisplayName("create: Should set the password hash correctly using the passwordEncoderService")
+    void testCreateUserSetsPasswordHashCorrectly() {
+        CreateUserDTO createUserDTO = new CreateUserDTO();
+        createUserDTO.setUsername("newuser");
+        createUserDTO.setRole(UserRole.MANAGER);
+
+        User newUser = new User();
+        newUser.setUsername("newuser");
+
+        when(userRepository.existsByUsername("newuser")).thenReturn(false);
+        when(createUserMapper.map(createUserDTO)).thenReturn(newUser);
+        when(passwordEncoderService.encodePassword("newuser")).thenReturn("hashedPassword");
+        when(userRepository.save(any(User.class))).thenReturn(newUser);
+        when(userResponseMapper.map(newUser)).thenReturn(new UserRespondeDTO());
+
+        userService.create(createUserDTO, "ADMIN");
+
+        assertEquals("hashedPassword", newUser.getPasswordHash());
+        verify(passwordEncoderService).encodePassword("newuser");
+        verify(userRepository).save(newUser);
+    }
+
+    @Test
+    @DisplayName("create: Should return the correct UserRespondeDTO after successful user creation")
+    void testSuccessfulUserCreation() {
+        CreateUserDTO createUserDTO = new CreateUserDTO();
+        createUserDTO.setUsername("newuser");
+        createUserDTO.setRole(UserRole.MANAGER);
+        createUserDTO.setEmployeeId(1L);
+
+        Employee employee = new Employee();
+        employee.setId(1L);
+
+        User newUser = new User();
+        newUser.setId(1L);
+        newUser.setUsername("newuser");
+        newUser.setRole(UserRole.MANAGER);
+        newUser.setEmployee(employee);
+
+        UserRespondeDTO expectedUserResponseDTO = new UserRespondeDTO();
+        expectedUserResponseDTO.setId(1L);
+        expectedUserResponseDTO.setUsername("newuser");
+        expectedUserResponseDTO.setRole(UserRole.MANAGER);
+
+        when(userRepository.existsByUsername("newuser")).thenReturn(false);
+        when(userRepository.existsByEmployeeId(1L)).thenReturn(false);
+        when(employeeRepository.findById(1L)).thenReturn(Optional.of(employee));
+        when(createUserMapper.map(createUserDTO)).thenReturn(newUser);
+        when(passwordEncoderService.encodePassword("newuser")).thenReturn("encodedPassword");
+        when(userRepository.save(any(User.class))).thenReturn(newUser);
+        when(userResponseMapper.map(newUser)).thenReturn(expectedUserResponseDTO);
+
+        UserRespondeDTO result = userService.create(createUserDTO, "ADMIN");
+
+        assertNotNull(result);
+        assertEquals(expectedUserResponseDTO.getId(), result.getId());
+        assertEquals(expectedUserResponseDTO.getUsername(), result.getUsername());
+        assertEquals(expectedUserResponseDTO.getRole(), result.getRole());
+
+        verify(userRepository).existsByUsername("newuser");
+        verify(userRepository).existsByEmployeeId(1L);
+        verify(employeeRepository).findById(1L);
+        verify(createUserMapper).map(createUserDTO);
+        verify(passwordEncoderService).encodePassword("newuser");
+        verify(userRepository).save(newUser);
+        verify(userResponseMapper).map(newUser);
+    }
+
+    //end create
 
     // Tests for method update
 
