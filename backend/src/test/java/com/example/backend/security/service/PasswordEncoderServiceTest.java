@@ -25,7 +25,6 @@ class PasswordEncoderServiceTest {
 
     @BeforeEach
     void setUp() {
-        // Use lenient para evitar erro de UnnecessaryStubbingException
         lenient().when(passwordEncoder.encode(rawPassword)).thenReturn(encodedPassword);
         lenient().when(passwordEncoder.matches(rawPassword, encodedPassword)).thenReturn(true);
     }
