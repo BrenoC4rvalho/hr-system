@@ -19,6 +19,14 @@ public class CreateUserDTO {
 
     private Employee employee;
 
+    public CreateUserDTO() {
+    }
+
+    public CreateUserDTO(String username, UserRole role) {
+        this.username = username;
+        this.role = role;
+    }
+
     public String getUsername() {
         return username;
     }
