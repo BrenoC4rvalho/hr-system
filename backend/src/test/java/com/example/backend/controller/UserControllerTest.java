@@ -7,15 +7,12 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
 
 import com.example.backend.dto.AuthRequestDTO;
 import com.example.backend.dto.AuthResponseDTO;
 import com.example.backend.dto.CreateUserDTO;
+import com.example.backend.dto.UpdatePasswordDTO;
 import com.example.backend.dto.UserRespondeDTO;
 import com.example.backend.enums.UserRole;
 import com.example.backend.service.UserService;
@@ -67,9 +64,81 @@ public class UserControllerTest {
 
     }
 
+    @DisplayName("Test update password as admin.")
     @Test
-    void testUpdatePassword() {
+    void updatePasswordWhenUserIsAdmin() {
 
+        String token = getAuthToken("admin", "password");
+        UserRespondeDTO user = generateUser("manager", UserRole.MANAGER);
+
+
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setBearerAuth(token);
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        UpdatePasswordDTO updatePasswordDTO = new UpdatePasswordDTO("newPassword123");
+        HttpEntity<UpdatePasswordDTO> entity = new HttpEntity<>(updatePasswordDTO, headers);
+
+        ResponseEntity<String> response = restTemplate.exchange(
+            "/users/" + user.getId(),
+            HttpMethod.PATCH,
+            entity,
+            String.class
+        );
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals("Password updated successfully.", response.getBody());
+    
+    }
+
+    @DisplayName("Test update password as the same user.")
+    @Test
+    void updatePasswordWhenUserIsUpdatingOwnPassword() {
+        UserRespondeDTO user = generateUser("manager", UserRole.MANAGER);
+        String token = getAuthToken("manager", "manager");
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setBearerAuth(token);
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        UpdatePasswordDTO updatePasswordDTO = new UpdatePasswordDTO("newPassword123");
+        HttpEntity<UpdatePasswordDTO> entity = new HttpEntity<>(updatePasswordDTO, headers);
+
+        ResponseEntity<String> response = restTemplate.exchange(
+            "/users/" + user.getId(),
+            HttpMethod.PATCH,
+            entity,
+            String.class
+        );
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals("Password updated successfully.", response.getBody());
+    }  
+
+    @DisplayName("Test update password with unauthorized user.")
+    @Test
+    void shouldReturnForbidden_WhenUserIsNotAdminOrSelf() {
+        generateUser("manager", UserRole.MANAGER);
+        UserRespondeDTO userDeleted = generateUser("userDeleted", UserRole.ADMIN);
+        String token = getAuthToken("manager", "manager");
+
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setBearerAuth(token);
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        UpdatePasswordDTO updatePasswordDTO = new UpdatePasswordDTO("newPassword123");
+        HttpEntity<UpdatePasswordDTO> entity = new HttpEntity<>(updatePasswordDTO, headers);
+
+        ResponseEntity<String> response = restTemplate.exchange(
+            "/users/" + userDeleted.getId(),
+            HttpMethod.PATCH,
+            entity,
+            String.class
+        );
+
+        assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
     }
 
     @DisplayName("Test delete user with admin role.")
