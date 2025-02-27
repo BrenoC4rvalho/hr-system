@@ -2,6 +2,7 @@ package com.example.backend.controller;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,7 @@ import com.example.backend.enums.UserRole;
 import com.example.backend.service.UserService;
 
 import org.springframework.http.*;
+import org.springframework.jdbc.core.JdbcTemplate;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
@@ -27,6 +29,15 @@ public class UserControllerTest {
     private TestRestTemplate restTemplate;
 
     @Autowired UserService userService;
+
+
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
+
+    @BeforeEach
+    void cleanDatabase() {
+        jdbcTemplate.execute("DELETE FROM users WHERE id <> 1");
+    }
 
     // generate token for login simulation
     private String getAuthToken(String username, String password) {
