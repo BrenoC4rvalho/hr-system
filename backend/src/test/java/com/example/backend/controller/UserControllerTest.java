@@ -55,9 +55,42 @@ public class UserControllerTest {
 
     }
 
+    @DisplayName("Test get users with admin role.")
     @Test
-    void testIndex() {
+    void shouldReturnUsers_WhenUserHasAdminRole() {
+        String token = getAuthToken("admin", "password");
 
+        HttpHeaders headers = new HttpHeaders();
+        headers.setBearerAuth(token);
+        HttpEntity<Void> entity = new HttpEntity<>(headers);
+
+        ResponseEntity<String> response = restTemplate.exchange(
+            "/users?page=0&size=12",
+            HttpMethod.GET,
+            entity,
+            String.class
+        );
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+    }
+
+    @DisplayName("Test get users with unauthorized role.")
+    @Test
+    void shouldReturnForbidden_WhenUserHasNoPermissionToListUsers() {
+        String token = getAuthToken("user", "password");
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setBearerAuth(token);
+        HttpEntity<Void> entity = new HttpEntity<>(headers);
+
+        ResponseEntity<String> response = restTemplate.exchange(
+            "/users?page=0&size=12",
+            HttpMethod.GET,
+            entity,
+            String.class
+        );
+
+        assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
     }
     
     @Test
