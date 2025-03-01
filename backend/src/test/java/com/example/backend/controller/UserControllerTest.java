@@ -95,10 +95,74 @@ public class UserControllerTest {
         assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
     }
     
+    @DisplayName("Should return 201 Created status code upon successful user creation")
     @Test
-    void testCreate() {
-
+    void shouldReturnCreatedStatusCodeWhenUserIsCreatedSuccessfully() {
+        String token = getAuthToken("admin", "password");
+        CreateUserDTO createUserDTO = new CreateUserDTO("newuser", UserRole.HR);
+    
+        HttpHeaders headers = new HttpHeaders();
+        headers.setBearerAuth(token);
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity<CreateUserDTO> entity = new HttpEntity<>(createUserDTO, headers);
+    
+        ResponseEntity<UserRespondeDTO> response = restTemplate.exchange(
+            "/users",
+            HttpMethod.POST,
+            entity,
+            UserRespondeDTO.class
+        );
+    
+        assertEquals(HttpStatus.CREATED, response.getStatusCode());
+        assertNotNull(response.getBody());
+        assertEquals("newuser", response.getBody().getUsername());
+        assertEquals(UserRole.HR, response.getBody().getRole());
     }
+
+    @DisplayName("Should return 400 Bad Request when creating a user with invalid input data")
+    @Test
+    void shouldReturnBadRequestWhenCreatingUserWithInvalidData() {
+        String token = getAuthToken("admin", "password");
+        CreateUserDTO invalidUserDTO = new CreateUserDTO("", null);  // Invalid username and role
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setBearerAuth(token);
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity<CreateUserDTO> entity = new HttpEntity<>(invalidUserDTO, headers);
+
+        ResponseEntity<String> response = restTemplate.exchange(
+            "/users",
+            HttpMethod.POST,
+            entity,
+            String.class
+        );
+
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+    }
+
+    @DisplayName("Should return 403 Forbidden when a non-ADMIN or non-MANAGER attempts to create a user")
+    @Test
+    void shouldReturnForbiddenWhenNonAdminOrNonManagerAttemptsToCreateUser() {
+        UserRespondeDTO user = generateUser("hruser", UserRole.HR);
+        String token = getAuthToken("hruser", "hruser");
+
+        CreateUserDTO createUserDTO = new CreateUserDTO("newuser", UserRole.HR);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setBearerAuth(token);
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity<CreateUserDTO> entity = new HttpEntity<>(createUserDTO, headers);
+
+        ResponseEntity<String> response = restTemplate.exchange(
+            "/users",
+            HttpMethod.POST,
+            entity,
+            String.class
+        );
+
+        assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
+    }
+    
 
     @DisplayName("Should return 200 OK when an ADMIN requests a user by ID")
     @Test
