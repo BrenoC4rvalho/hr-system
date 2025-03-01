@@ -77,7 +77,8 @@ public class UserControllerTest {
     @DisplayName("Test get users with unauthorized role.")
     @Test
     void shouldReturnForbidden_WhenUserHasNoPermissionToListUsers() {
-        String token = getAuthToken("user", "password");
+        generateUser("user", UserRole.HR);
+        String token = getAuthToken("user", "user");
 
         HttpHeaders headers = new HttpHeaders();
         headers.setBearerAuth(token);
