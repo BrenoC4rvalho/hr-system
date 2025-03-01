@@ -15,6 +15,7 @@ import com.example.backend.dto.AuthRequestDTO;
 import com.example.backend.dto.AuthResponseDTO;
 import com.example.backend.dto.CreateUserDTO;
 import com.example.backend.dto.UpdatePasswordDTO;
+import com.example.backend.dto.UpdateUserDTO;
 import com.example.backend.dto.UserRespondeDTO;
 import com.example.backend.enums.UserRole;
 import com.example.backend.service.UserService;
@@ -235,10 +236,84 @@ public class UserControllerTest {
 
 
 
+    @DisplayName("Should return 200 OK when an ADMIN successfully updates another user's information")
     @Test
-    void testUpdate() {
+    void shouldReturnOkWhenAdminUpdatesAnotherUserInfo() {
+        String token = getAuthToken("admin", "password");
+        UserRespondeDTO user = generateUser("testuser", UserRole.HR);
+        UpdateUserDTO updateUserDTO = new UpdateUserDTO();
+        updateUserDTO.setUsername("updatedUser");
+        updateUserDTO.setRole(UserRole.MANAGER);
+        
+        HttpHeaders headers = new HttpHeaders();
+        headers.setBearerAuth(token);
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity<UpdateUserDTO> entity = new HttpEntity<>(updateUserDTO, headers);
 
+        ResponseEntity<UserRespondeDTO> response = restTemplate.exchange(
+            "/users/" + user.getId(),
+            HttpMethod.PUT,
+            entity,
+            UserRespondeDTO.class
+        );
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertNotNull(response.getBody());
+        assertEquals("updatedUser", response.getBody().getUsername());
+        assertEquals(UserRole.MANAGER, response.getBody().getRole());
     }
+
+    @DisplayName("Should return 404 Not Found when updating a non-existent user")
+    @Test
+    void shouldReturnNotFoundWhenUpdatingNonExistentUser() {
+        String token = getAuthToken("admin", "password");
+        Long nonExistentUserId = 9999L;
+        UpdateUserDTO updateUserDTO = new UpdateUserDTO();
+        updateUserDTO.setUsername("updatedUsername");
+        updateUserDTO.setRole(UserRole.HR);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setBearerAuth(token);
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity<UpdateUserDTO> entity = new HttpEntity<>(updateUserDTO, headers);
+
+        ResponseEntity<String> response = restTemplate.exchange(
+            "/users/" + nonExistentUserId,
+            HttpMethod.PUT,
+            entity,
+            String.class
+        );
+
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+    }
+
+    @DisplayName("Should return 403 Forbidden when a non-ADMIN user attempts to update another user's information")
+    @Test
+    void shouldReturnForbiddenWhenNonAdminAttemptsToUpdateOtherUserInfo() {
+        UserRespondeDTO user1 = generateUser("user1", UserRole.HR);
+        UserRespondeDTO user2 = generateUser("user2", UserRole.HR);
+        String token = getAuthToken("user1", "user1");
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setBearerAuth(token);
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        UpdateUserDTO updateUserDTO = new UpdateUserDTO();
+        updateUserDTO.setUsername("updatedUsername");
+        updateUserDTO.setRole(UserRole.MANAGER);
+
+        HttpEntity<UpdateUserDTO> entity = new HttpEntity<>(updateUserDTO, headers);
+
+        ResponseEntity<String> response = restTemplate.exchange(
+            "/users/" + user2.getId(),
+            HttpMethod.PUT,
+            entity,
+            String.class
+        );
+
+        assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
+    }
+
 
     @DisplayName("Test update password as admin.")
     @Test

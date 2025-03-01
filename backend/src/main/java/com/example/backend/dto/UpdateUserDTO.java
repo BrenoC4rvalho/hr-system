@@ -8,8 +8,18 @@ public class UpdateUserDTO {
     private String username;
     private UserRole role;
     private UserStatus status;
-    private Long EmployeeId;
+    private Long employeeId;
   
+    public UpdateUserDTO(String username, UserRole role, UserStatus status, Long employeeId) {
+        this.username = username;
+        this.role = role;
+        this.status = status;
+        this.employeeId = employeeId;
+    }
+
+    public UpdateUserDTO() {
+    }
+
     public String getUsername() {
         return username;
     }
@@ -30,13 +40,11 @@ public class UpdateUserDTO {
     }
 
     public Long getEmployeeId() {
-        return EmployeeId;
+        return employeeId;
     }
 
     public void setEmployeeId(Long employeeId) {
-        this.EmployeeId = employeeId;
+        this.employeeId = employeeId;
     }
 
-    
-    
 }

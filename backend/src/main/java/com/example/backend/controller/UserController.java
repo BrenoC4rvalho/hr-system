@@ -63,6 +63,7 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(user);
     }
 
+    @PreAuthorize("hasAnyAuthority('ADMIN','MANAGER')")
     @PutMapping("/{id}")
     public ResponseEntity<?> update(
         HttpServletRequest request,
