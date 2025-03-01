@@ -1,5 +1,8 @@
 package com.example.backend.controller;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -45,7 +48,15 @@ public class UserController {
     ) {
         Pageable pageable = PageRequest.of(page, size);
         Page<UserRespondeDTO> users = userService.getAll(pageable);
-        return ResponseEntity.status(HttpStatus.OK).body(users);
+
+        Map<String, Object> response = new HashMap<String, Object>();
+        response.put("totalUsers", users.getTotalElements());
+        response.put("currentPage", users.getNumber());
+        response.put("totalPages", users.getTotalPages());
+        response.put("pageSize", users.getSize());
+        response.put("users", users.getContent());
+
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
     
     @PreAuthorize("hasAnyAuthority('ADMIN','MANAGER')")
