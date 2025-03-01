@@ -1,6 +1,7 @@
 package com.example.backend.controller;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -99,10 +100,76 @@ public class UserControllerTest {
 
     }
 
+    @DisplayName("Should return 200 OK when an ADMIN requests a user by ID")
     @Test
-    void testShow() {
+    void shouldReturnOkWhenAdminRequestsUserById() {
+        String token = getAuthToken("admin", "password");
+        UserRespondeDTO user = generateUser("testuser", UserRole.HR);
 
+        HttpHeaders headers = new HttpHeaders();
+        headers.setBearerAuth(token);
+        HttpEntity<Void> entity = new HttpEntity<>(headers);
+
+        ResponseEntity<UserRespondeDTO> response = restTemplate.exchange(
+            "/users/" + user.getId(),
+            HttpMethod.GET,
+            entity,
+            UserRespondeDTO.class
+        );
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertNotNull(response.getBody());
+        assertEquals(user.getId(), response.getBody().getId());
+        assertEquals(user.getUsername(), response.getBody().getUsername());
+        assertEquals(user.getRole(), response.getBody().getRole());
     }
+
+    @DisplayName("Should return 200 OK when a user requests their own information by ID")
+    @Test
+    void shouldReturnOkWhenUserRequestsOwnInformation() {
+        UserRespondeDTO user = generateUser("testuser", UserRole.HR);
+        String token = getAuthToken("testuser", "testuser");
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setBearerAuth(token);
+        HttpEntity<Void> entity = new HttpEntity<>(headers);
+
+        ResponseEntity<UserRespondeDTO> response = restTemplate.exchange(
+            "/users/" + user.getId(),
+            HttpMethod.GET,
+            entity,
+            UserRespondeDTO.class
+        );
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertNotNull(response.getBody());
+        assertEquals(user.getId(), response.getBody().getId());
+        assertEquals(user.getUsername(), response.getBody().getUsername());
+        assertEquals(user.getRole(), response.getBody().getRole());
+    }
+
+    @DisplayName("Should return 403 Forbidden when a non-ADMIN/MANAGER user requests another user's information")
+    @Test
+    void shouldReturnForbiddenWhenNonAdminManagerRequestsOtherUserInfo() {
+        UserRespondeDTO user1 = generateUser("user1", UserRole.HR);
+        UserRespondeDTO user2 = generateUser("user2", UserRole.HR);
+        String token = getAuthToken("user1", "user1");
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setBearerAuth(token);
+        HttpEntity<Void> entity = new HttpEntity<>(headers);
+
+        ResponseEntity<String> response = restTemplate.exchange(
+            "/users/" + user2.getId(),
+            HttpMethod.GET,
+            entity,
+            String.class
+        );
+
+        assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
+    }
+
+
 
     @Test
     void testUpdate() {
