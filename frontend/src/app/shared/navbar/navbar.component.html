@@ -1,22 +1,23 @@
-<div>
+<div class="flex flex-col justify-between py-5 bg-component shadow-2xl h-screen fixed left-0 top-0">
 
   <nav>
     <ul>
       <li>
         <a
           routerLink="/dashboard"
-          routerLinkActive="active"
+          routerLinkActive="bg-primary"
+          class="text-deep flex gap-1 items-center p-3 text-2xl hover:bg-primary hover:text-deep "
         >
           <lucide-icon [img]="DashboardIcon"></lucide-icon>
-          <p>dashboard</p>
+          <p>Dashboard</p>
         </a>
       </li>
 
       <li>
         <a
           routerLink="/employees"
-          routerLinkActive="active"
-
+          routerLinkActive="bg-primary"
+          class="text-deep flex gap-1 items-center p-3 text-2xl hover:bg-primary hover:text-deep "
         >
           <lucide-icon [img]="EmployeeIcon"></lucide-icon>
           <p>employees</p>
@@ -26,8 +27,8 @@
       <li>
         <a
           routerLink="/admin"
-          routerLinkActive="active"
-
+          routerLinkActive="bg-primary"
+          class="text-deep flex gap-1 items-center p-3 text-2xl hover:bg-primary hover:text-deep"
         >
           <lucide-icon [img]="AdminIcon"></lucide-icon>
           <p>admin</p>
@@ -38,9 +39,9 @@
 
   </nav>
 
-  <div>
-    <div></div>
-    <p>username aaaaa</p>
+  <div class="p-3 flex items-center gap-2">
+    <div class="flex justify-center items-center text-2xl h-14 w-14 rounded-full bg-secondary">B</div>
+    <p class="text-xl text-gray">username</p>
   </div>
 
 </div>
