@@ -9,7 +9,8 @@
     "services:stop": "docker compose stop",
     "services:down": "docker compose down",
     "dev:frontend": "cd frontend && ng serve ",
-    "dev:backend": "export $(grep -v '^#' .env | envsubst | xargs) && cd backend && mvn spring-boot:run"
+    "dev:backend": "export $(grep -v '^#' .env | envsubst | xargs) && cd backend && mvn spring-boot:run",
+    "test:backend": "cd backend && mvn test"
   },
   "author": "",
   "license": "ISC",
