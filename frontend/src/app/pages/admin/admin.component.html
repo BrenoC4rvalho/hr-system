@@ -1,0 +1,26 @@
+<div>
+  <app-navbar></app-navbar>
+  <main class="mx-auto container">
+
+    <div class="flex justify-between item items-end py-3">
+      <h2 class="text-3xl font-semibold text-primary">Admin</h2>
+      <button
+        (click)="openModalNewUser()"
+        class="flex items-center gap-1 text-deep text-base border border-gray p-2 rounded hover:opacity-80 hover:cursor-pointer"
+      >
+        <p>Add new User</p>
+        <lucide-icon class="h-5 w-5" [img]="UserPlusIcon"></lucide-icon>
+      </button>
+    </div>
+
+    <app-list-users></app-list-users>
+
+  </main>
+
+  <div
+    *ngIf="isModalNewUserOpen"
+    class="fixed inset-0 bg-deep/70 flex items-center justify-center"
+  >
+    <app-modal-new-user (closeModal)="closeModalNewUser()" ></app-modal-new-user>
+  </div>
+</div>
