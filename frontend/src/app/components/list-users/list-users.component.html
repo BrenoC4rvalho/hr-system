@@ -1,0 +1,53 @@
+<section class="bg-component shadow w-full p-5 border border-gray-light rounded">
+  <header class="flex justify-between items-center">
+    <h2 class="text-2xl">List Users</h2>
+    <div>
+      <div class="flex items-center border border-gray-light rounded relative">
+        <div class="absolute left-1">
+          <lucide-icon class="w-5 h-5" [img]="UserRoundSearchIcon"></lucide-icon>
+        </div>
+        <input
+          class="pl-7 p-2"
+          type="search"
+          placeholder="Search Employee"
+        >
+      </div>
+    </div>
+  </header>
+  <table class="table-auto w-full mt-4 text-center">
+    <thead class="bg-gray-light">
+      <tr>
+        <th class="rounded-tl rounded-bl py-2">Username</th>
+        <th class="py-2">Role</th>
+        <th class="py-2">Name</th>
+        <th class="py-2">Status</th>
+        <th class="rounded-tr rounded-br py-2">Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="border-b border-gray-light" *ngFor="let user of users">
+        <td class="py-2">{{ user.username }}</td>
+        <td class="py-2">{{ user.role }}</td>
+        <td class="py-2">{{ user.employee }}</td>
+        <td
+          class="py-2 mt-1.5 rounded flex justify-center items-center"
+          [ngClass]="{'bg-green-200 text-green-900': user.status === 'ACTIVE', 'bg-red-200 text-red-900': user.status === 'INACTIVE'}"
+        >
+            {{ user.status }}
+        </td>
+        <td class="py-2">
+          <button class="border border-gray-light mr-1 p-1 rounded hover:opacity-70">
+            <lucide-icon [img]="EyeIcon"></lucide-icon>
+          </button>
+          <button class="border border-gray-light p-1 rounded hover:opacity-70">
+            <lucide-icon [img]="UserXIcon"></lucide-icon>
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <div>
+
+  </div>
+
+</section>
