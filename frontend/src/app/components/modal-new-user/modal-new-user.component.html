@@ -1,0 +1,77 @@
+<div class="relative bg-component shadow-2xl p-5 rounded">
+
+  <button (click)="onClose()" class="text-red-500 absolute right-2 top-2 hover:cursor-pointer">
+    <lucide-icon class="w-7 h-7" [img]="CircleXIcon"></lucide-icon>
+  </button>
+
+  <header class="mb-5 text-4xl font-medium text-primary">
+    <h3>Add new User</h3>
+  </header>
+
+  <form (ngSubmit)="onSubmit()" #createUserForm="ngForm" class="flex flex-col gap-1.5" action="">
+
+    <label class="text-xl" for="">Username</label>
+    <input
+      placeholder="exempleUsername"
+      type="text"
+      class="p-2 text-2xl border border-gray-light focus:outline-primary rounded"
+      name="username"
+      [(ngModel)]="username"
+      required
+      minlength="3"
+      maxlength="50"
+      #usernameField="ngModel"
+    >
+    <div *ngIf="usernameField.invalid && usernameField.touched" class="text-red-500 text-sm">
+
+      <div *ngIf="usernameField.errors?.['minlength']">
+        Username must be at least 3 characters long.
+      </div>
+
+      <div *ngIf="usernameField.errors?.['maxlength']">
+        Username must be less than 50 characters long.
+      </div>
+
+    </div>
+
+    <label class="mt-5 text-xl">Role</label>
+    <select
+      class="p-2 text-2xl border border-gray-light focus:outline-primary rounded"
+      name="role"
+      [(ngModel)]="role"
+      required
+      #roleField="ngModel"
+    >
+      <option value="" disabled>Select Role</option>
+      <option *ngFor="let role of userRoles" [value]="role">{{ role }}</option>
+    </select>
+    <div *ngIf="roleField.invalid && roleField.touched" class="text-red-500 text-sm">
+      Role is required.
+    </div>
+
+    <label class="mt-5 text-xl" for="">Employee</label>
+    <input
+      placeholder="exempleEmployee"
+      type="text"
+      class="p-2 text-2xl border border-gray-light focus:outline-primary rounded"
+      name="employeeId"
+      [(ngModel)]="employeeId"
+      #employeeField="ngModel"
+      >
+
+    <div class="mt-5 flex justify-center">
+      <button
+        class="bg-primary text-white-soft text-xl py-2 px-6 w-fit rounded hover:opacity-80 hover:cursor-pointer
+          disabled:opacity-50 disabled:cursor-auto"
+        type="submit"
+        [disabled]="createUserForm.invalid"
+      >
+        Save
+      </button>
+    </div>
+  </form>
+
+  <app-modal-error [isVisible]="showErrorModal" [errorMessage]="errorMessage" ></app-modal-error>
+
+</div>
+

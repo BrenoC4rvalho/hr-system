@@ -4,6 +4,8 @@ import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { PaginatedUsersResponse } from '../model/paginated-users-response';
 import { Observable } from 'rxjs';
 import { AuthService } from '../../auth/service/auth.service';
+import { CreateUser } from '../model/create-user';
+import { User } from '../model/user';
 
 @Injectable({
   providedIn: 'root'
@@ -25,9 +27,14 @@ export class UserService {
 
   }
 
-  // { username: 3,50  role, employeeId: pode ser null }
-  // return user 201
-  create() {
+  create(body: CreateUser): Observable<User> {
+
+    if (body.username.length < 3 || body.username.length > 50) {
+      throw new Error('Username must be between 3 and 50 characters.');
+    }
+
+    return this.http.post<User>(this.apiUrl, body);
+
 
   }
 
