@@ -24,7 +24,7 @@
         </a>
       </li>
 
-      <li>
+      <li *ngIf="canAccessAdmin()">
         <a
           routerLink="/admin"
           routerLinkActive="bg-primary"
@@ -39,9 +39,17 @@
 
   </nav>
 
-  <div class="p-3 flex items-center gap-2">
-    <div class="flex justify-center items-center text-2xl h-14 w-14 rounded-full bg-secondary">B</div>
-    <p class="text-xl text-gray">username</p>
+  <div
+    *ngIf="currentUser"
+    class="p-3 flex items-center gap-2"
+  >
+    <div class="flex justify-center items-center text-2xl h-14 w-14 rounded-full bg-secondary">{{ currentUser.username[0] }}</div>
+    <div class="text-center">
+      <p class="text-xl text-gray">{{ currentUser.username }}</p>
+      <button (click)="logout()" class="text-sm text-red-400 hover:cursor-pointer">
+        logout
+      </button>
+    </div>
   </div>
 
 </div>
