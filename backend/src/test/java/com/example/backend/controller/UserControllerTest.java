@@ -435,5 +435,27 @@ public class UserControllerTest {
         assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
     }
 
+    @DisplayName("Test get current user with jwt authorization")
+    @Test
+    void getCurrentUserWithJwtAuthorization() {
+        
+        String token = getAuthToken("admin", "password");
+        
+        HttpHeaders headers = new HttpHeaders();
+        headers.setBearerAuth(token);
+        HttpEntity<Void> entity = new HttpEntity<>(headers);
+
+        ResponseEntity<UserRespondeDTO> response = restTemplate.exchange(
+            "/users/me",
+            HttpMethod.GET,
+            entity,
+            UserRespondeDTO.class
+        );
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+
+
+    }
+
 
 }
