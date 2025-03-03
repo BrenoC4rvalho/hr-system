@@ -9,7 +9,7 @@
         <input
           class="pl-7 p-2"
           type="search"
-          placeholder="Search Employee"
+          placeholder="Search User"
         >
       </div>
     </div>
@@ -39,15 +39,26 @@
           <button class="border border-gray-light mr-1 p-1 rounded hover:opacity-70">
             <lucide-icon [img]="EyeIcon"></lucide-icon>
           </button>
-          <button class="border border-gray-light p-1 rounded hover:opacity-70">
+          <button
+            *ngIf="canDeleteAdmin(user.role) && canUserActive(user.status)"
+            (click)="deleteUser(user.id)"
+            class="border border-gray-light p-1 rounded hover:opacity-70 text-red-500"
+          >
             <lucide-icon [img]="UserXIcon"></lucide-icon>
           </button>
         </td>
       </tr>
     </tbody>
   </table>
-  <div>
 
+  <div>
+    botao para anterior
+    antianterior
+    anterior
+    atual
+    proxima
+    bem proxima
+    botao para proxima
   </div>
 
 </section>

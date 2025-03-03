@@ -1,11 +1,12 @@
 import { Component, EventEmitter, Output } from '@angular/core';
-import { AlertCircle, CircleX, LucideAngularModule, XCircle } from 'lucide-angular';
+import { CircleX, LucideAngularModule } from 'lucide-angular';
 import { UserRole } from '../../core/enums/user-role.enum';
 import { CommonModule } from '@angular/common';
 import { UserService } from '../../core/service/user.service';
 import { FormsModule } from '@angular/forms';
 import { User } from '../../core/model/user';
 import { ModalErrorComponent } from "../modal-error/modal-error.component";
+import { AuthService } from '../../auth/service/auth.service';
 
 @Component({
   selector: 'app-modal-new-user',
@@ -14,15 +15,11 @@ import { ModalErrorComponent } from "../modal-error/modal-error.component";
 })
 export class ModalNewUserComponent {
 
-  @Output() closeModal = new EventEmitter<void>();
-
-  onClose() {
-    this.closeModal.emit();
-  }
-
   readonly CircleXIcon = CircleX
 
-  userRoles = Object.values(UserRole);
+  @Output() closeModal = new EventEmitter<void>();
+  @Output() createdUser = new EventEmitter<User>();
+
 
   username: string = ''
   role: UserRole = UserRole.HR
@@ -31,12 +28,32 @@ export class ModalNewUserComponent {
   showErrorModal: boolean = false;
   errorMessage: string = '';
 
-  constructor(private userService: UserService) { }
+  userRoles: UserRole[];
+
+  constructor(private userService: UserService, private authService: AuthService) {
+    this.userRoles = this.getFilterdRoles();
+   }
+
+  onClose() {
+    this.closeModal.emit();
+  }
+
+  private getFilterdRoles(): UserRole[] {
+
+    const roles = Object.values(UserRole);
+
+    if(this.authService.getUser()?.role !== UserRole.ADMIN) {
+      return roles.filter(role => role!== UserRole.ADMIN);
+    }
+
+    return roles;
+  }
 
   onSubmit(): void {
     this.userService.create({ username: this.username, role: this.role, employeeId: this.employeeId }).subscribe({
       next: (response: User) => {
-        alert("user created successfully")
+        this.createdUser.emit(response);
+        this.closeModal.emit();
       },
       error: (error) => {
         console.log(error)
@@ -49,12 +66,8 @@ export class ModalNewUserComponent {
         }
       },
       complete: () => {
-        console.log('User created successfully');
       }
     })
   }
-
-
-
 
 }

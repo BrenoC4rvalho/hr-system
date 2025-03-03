@@ -4,6 +4,7 @@ import { ListUsersComponent } from '../../components/list-users/list-users.compo
 import { UserPlus, LucideAngularModule } from 'lucide-angular';
 import { ModalNewUserComponent } from "../../components/modal-new-user/modal-new-user.component";
 import { CommonModule } from '@angular/common';
+import { User } from '../../core/model/user';
 
 @Component({
   selector: 'app-admin',
@@ -11,6 +12,8 @@ import { CommonModule } from '@angular/common';
   templateUrl: './admin.component.html',
 })
 export class AdminComponent {
+
+  newUser: User | undefined;
 
   readonly UserPlusIcon = UserPlus;
 
@@ -24,5 +27,8 @@ export class AdminComponent {
     this.isModalNewUserOpen = false;
   }
 
+  onUserCreated($event: User) {
+    this.newUser = $event;
+  }
 
 }

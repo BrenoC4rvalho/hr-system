@@ -1,16 +1,22 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { User } from '../../core/model/user';
 import { UserService } from '../../core/service/user.service';
 import { PaginatedUsersResponse } from '../../core/model/paginated-users-response';
 import { CommonModule } from '@angular/common';
 import { Eye, LucideAngularModule, UserRoundSearch, UserX } from 'lucide-angular';
+import { AuthService } from '../../auth/service/auth.service';
+import { UserRole } from '../../core/enums/user-role.enum';
+import { UserStatus } from '../../core/enums/user-status.enum';
 
 @Component({
   selector: 'app-list-users',
   imports: [CommonModule, LucideAngularModule],
   templateUrl: './list-users.component.html',
 })
-export class ListUsersComponent implements OnInit {
+export class ListUsersComponent implements OnInit, OnChanges {
+
+
+  @Input() newUser: User | undefined;
 
   readonly UserRoundSearchIcon = UserRoundSearch;
   readonly EyeIcon = Eye;
@@ -22,10 +28,17 @@ export class ListUsersComponent implements OnInit {
   pageSize: number = 12;
   totalPages: number = 0;
 
-  constructor(private userService: UserService) {}
+  constructor(private userService: UserService, private authService: AuthService) {}
 
   ngOnInit(): void {
     this.getUsers(this.currentPage, this.pageSize)
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+      if(this.newUser !== undefined) {
+        this.users.push(this.newUser);
+        this.newUser = undefined;
+      }
   }
 
   getUsers(page: number, size: number): void {
@@ -44,6 +57,22 @@ export class ListUsersComponent implements OnInit {
         console.log(this.users)
       }
     })
+  }
+
+  canDeleteAdmin(userDeleteRole: UserRole): boolean {
+    if(!(this.authService.getUser()?.role === UserRole.ADMIN) && userDeleteRole === UserRole.ADMIN) {
+      return false;
+    }
+
+    return true;
+  }
+
+  canUserActive(status: UserStatus): boolean {
+    return status === UserStatus.ACTIVE;
+  }
+
+  deleteUser(userId: number): void {
+    this.userService.delete(userId).subscribe();
   }
 
 }
