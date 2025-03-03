@@ -4,6 +4,7 @@ import { environment } from '../../../environments/environments';
 import { AuthResponse } from '../model/auth-response.model';
 import { BehaviorSubject, catchError, Observable, tap } from 'rxjs';
 import { User } from '../../core/model/user';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +16,7 @@ export class AuthService {
   private userSubject = new BehaviorSubject<User | null>(null);
   user$ = this.userSubject.asObservable();
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private router: Router) {}
 
   initializeUser(): void {
     if(this.getToken()) {
@@ -26,7 +27,10 @@ export class AuthService {
   login(username: string, password: string): Observable<AuthResponse> {
 
     return this.http.post<AuthResponse>(`${this.apiUrl}/auth`, { username, password}).pipe(
-      tap((response) => this.setToken(response.token)),
+      tap((response) => {
+        this.setToken(response.token);
+        this.initializeUser();
+      }),
       catchError((error) => {
         console.error('Login failed:', error);
         throw error;
@@ -69,6 +73,7 @@ export class AuthService {
   logout() {
     localStorage.removeItem('JWT_Token');
     this.userSubject.next(null);
+    this.router.navigate(['/login']);
   }
 
 }
