@@ -102,4 +102,12 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body("The user has been deleted.");
     }
 
+    @GetMapping("/me")
+    public ResponseEntity<?> getCurrentUser(HttpServletRequest request) {
+        Long id = (Long) request.getAttribute("user_id");
+        UserRespondeDTO user = userService.getUser(id); 
+        return ResponseEntity.status(HttpStatus.OK).body(user);
+    }
+    
+
 }
