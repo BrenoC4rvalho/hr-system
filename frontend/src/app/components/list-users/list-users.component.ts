@@ -7,10 +7,11 @@ import { Eye, LucideAngularModule, UserRoundSearch, UserX } from 'lucide-angular
 import { AuthService } from '../../auth/service/auth.service';
 import { UserRole } from '../../core/enums/user-role.enum';
 import { UserStatus } from '../../core/enums/user-status.enum';
+import { PaginationComponent } from "../pagination/pagination.component";
 
 @Component({
   selector: 'app-list-users',
-  imports: [CommonModule, LucideAngularModule],
+  imports: [CommonModule, LucideAngularModule, PaginationComponent],
   templateUrl: './list-users.component.html',
 })
 export class ListUsersComponent implements OnInit, OnChanges {
@@ -57,6 +58,11 @@ export class ListUsersComponent implements OnInit, OnChanges {
         console.log(this.users)
       }
     })
+  }
+
+  onPageChange(newPage: number): void {
+    console.log('Page changed')
+    this.getUsers(newPage, this.pageSize);
   }
 
   canDeleteAdmin(userDeleteRole: UserRole): boolean {

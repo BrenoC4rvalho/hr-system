@@ -1,0 +1,34 @@
+<div class="flex text-white-soft text-2xl border border-deep rounded">
+  <button
+    (click)="firstPage()"
+    class="px-1 bg-primary border-r border-r-black hover:cursor-pointer disabled:cursor-auto disabled:bg-primary/75 rounded-l-xs"
+    [disabled]="currentPage === 0 "
+  >
+
+    <lucide-angular [img]="ChevronFirstIcon" ></lucide-angular>
+  </button>
+  <button
+    (click)="previousPage()"
+    class="px-1 bg-primary border-r border-r-black hover:cursor-pointer disabled:cursor-auto disabled:bg-primary/75"
+    [disabled]="currentPage === 0 "
+  >
+    <lucide-angular [img]="ChevronLeftIcon" ></lucide-angular>
+  </button>
+  <p class="px-3 bg-primary border-r border-r-black">
+    {{ currentPage + 1 }}
+  </p>
+  <button
+    (click)="nextPage()"
+    class="px-1 bg-primary border-r border-r-black hover:cursor-pointer disabled:cursor-auto disabled:bg-primary/75"
+    [disabled]="currentPage === (totalPages - 1)"
+  >
+    <lucide-angular [img]="ChevronRightIcon" ></lucide-angular>
+  </button>
+  <button
+    (click)="lastPage()"
+    class="px-1 bg-primary hover:cursor-pointer disabled:cursor-auto disabled:bg-primary/75 rounded-r-xs"
+    [disabled]="currentPage === (totalPages - 1)"
+  >
+    <lucide-angular [img]="ChevronLastIcon" ></lucide-angular>
+  </button>
+</div>

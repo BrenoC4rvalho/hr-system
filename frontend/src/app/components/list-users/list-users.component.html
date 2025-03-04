@@ -51,14 +51,13 @@
     </tbody>
   </table>
 
-  <div>
-    botao para anterior
-    antianterior
-    anterior
-    atual
-    proxima
-    bem proxima
-    botao para proxima
-  </div>
+  <app-pagination
+    class="flex justify-center mt-5"
+    [currentPage]="currentPage"
+    [totalPages]="totalPages"
+    (pageChanged)="onPageChange($event)"
+  >
+  </app-pagination>
+
 
 </section>
