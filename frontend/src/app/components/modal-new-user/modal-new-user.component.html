@@ -71,7 +71,7 @@
     </div>
   </form>
 
-  <app-modal-error [isVisible]="showErrorModal" [errorMessage]="errorMessage" ></app-modal-error>
+  <app-modal-error [isVisible]="showErrorModal" [errorMessage]="errorMessage" (closed)="showErrorModal = false"></app-modal-error>
 
 </div>
 

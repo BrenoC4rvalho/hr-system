@@ -5,16 +5,19 @@ import { LogoComponent } from "../../shared/logo/logo.component";
 import { AuthService } from '../service/auth.service';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { ModalErrorComponent } from "../../components/modal-error/modal-error.component";
 
 @Component({
   selector: 'app-login',
-  imports: [CommonModule, LucideAngularModule, LogoComponent, FormsModule],
+  imports: [CommonModule, LucideAngularModule, LogoComponent, FormsModule, ModalErrorComponent],
   templateUrl: './login.component.html',
 })
 export class LoginComponent {
 
   isPasswordVisible: boolean = false;
-  loginError: boolean = false;
+
+  showErrorModal: boolean = false;
+  errorMessage: string = '';
 
   readonly XCircleIcon = XCircle;
   readonly AlertCircleIcon = AlertCircle;
@@ -32,7 +35,13 @@ export class LoginComponent {
         this.router.navigate(['/employees']);
       },
       (error) => {
-        this.loginError = true
+        if(error && error.error) {
+          this.showErrorModal = true;
+          this.errorMessage = error.error;
+        } else {
+          this.showErrorModal = true;
+          this.errorMessage = 'An unexpected error occurred. Please try again later.';
+        }
       }
     )
   }

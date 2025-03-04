@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { AlertCircle, LucideAngularModule, XCircle } from 'lucide-angular';
 
 @Component({
@@ -14,9 +14,11 @@ export class ModalErrorComponent {
 
   @Input() isVisible: boolean = false;
   @Input() errorMessage: string = '';
+  @Output() closed = new EventEmitter<void>();
 
   close(): void {
     this.isVisible = false;
+    this.closed.emit();
   }
 
 }

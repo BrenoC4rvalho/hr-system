@@ -50,7 +50,7 @@
       </div>
 
       <button
-        class="bg-primary hover:opacity-90 hover:cursor-pointer text-white-soft font-semibold p-2 rounded disabled:opacity-50"
+        class="bg-primary hover:opacity-90 hover:cursor-pointer text-white-soft font-semibold p-2 rounded disabled:opacity-50 disabled:cursor-auto"
         type="submit"
         [disabled]="loginForm.invalid"
         >
@@ -60,17 +60,4 @@
   </main>
 </div>
 
-<!-- erro global with login -->
-<div *ngIf="loginError" class="fixed bottom-8 right-8 w-96 bg-red-100 text-red-700 p-4 rounded-lg shadow-lg flex items-center space-x-4 z-50">
-  <!-- icon error -->
-  <div class="flex-shrink-0">
-    <lucide-icon [img]="AlertCircleIcon" class="h-6 w-6 text-red-500"></lucide-icon>
-  </div>
-  <div>
-    <p class="font-semibold text-lg">Login failed. Please check your credentials and try again.</p>
-  </div>
-
-  <button (click)="loginError = false" class="text-red-500 hover:text-red-700 focus:outline-none">
-    <lucide-icon [img]="XCircleIcon" class="h-6 w-6"></lucide-icon>
-  </button>
-</div>
+<app-modal-error [isVisible]="showErrorModal" [errorMessage]="errorMessage" (closed)="showErrorModal = false" ></app-modal-error>
