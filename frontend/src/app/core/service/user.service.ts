@@ -18,30 +18,23 @@ export class UserService {
 
 
   getAll(page: number, size: number): Observable<PaginatedUsersResponse> {
-
     const params = new HttpParams()
       .set('page', page.toString())
       .set('size', size.toString())
-
     return this.http.get<PaginatedUsersResponse>(this.apiUrl, { params });
-
   }
 
   create(body: CreateUser): Observable<User> {
-
     if (body.username.length < 3 || body.username.length > 50) {
       throw new Error('Username must be between 3 and 50 characters.');
     }
-
     return this.http.post<User>(this.apiUrl, body);
-
-
   }
 
   //path /id
   // return user 200
-  show() {
-
+  show(id: number): Observable<User> {
+    return this.http.get<User>(`${this.apiUrl}/${id}`);
   }
 
   // path /id  {username: 3,50, role, status, employeeId}
@@ -59,8 +52,8 @@ export class UserService {
 
   // path /id
   // return string and 200
-  delete() {
-
+  delete(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
 
 }
