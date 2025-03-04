@@ -46,8 +46,7 @@ export class AuthService {
     return localStorage.getItem('JWT_Token');
   }
 
-  private loadUser(): Observable<User> {
-    console.log('Loading user');
+  loadUser(): Observable<User> {
     return this.http.get<User>(`${this.apiUrl}/users/me`).pipe(
       tap((user) => {
         this.userSubject.next(user);
