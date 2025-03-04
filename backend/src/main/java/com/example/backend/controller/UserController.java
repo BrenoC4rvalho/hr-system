@@ -96,10 +96,14 @@ public class UserController {
 
     @PreAuthorize("hasAnyAuthority('ADMIN','MANAGER')")
     @DeleteMapping("/{id}")
-    public ResponseEntity<?>  delete(HttpServletRequest request, @PathVariable("id") Long id) {
+    public ResponseEntity<Map<String, String>> delete(HttpServletRequest request, @PathVariable("id") Long id) {
         String loggedUserRole = request.getAttribute("user_role").toString();
         userService.delete(id, loggedUserRole);
-        return ResponseEntity.status(HttpStatus.OK).body("The user has been deleted.");
+
+        Map<String, String> response = new HashMap<>();
+        response.put("message", "The user has been deleted.");
+
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     @GetMapping("/me")
