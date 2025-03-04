@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { ServerErrorComponent } from "./pages/error/serverError/serverError.component";
 import { CommonModule } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
 import { AuthService } from './auth/service/auth.service';
 
 @Component({

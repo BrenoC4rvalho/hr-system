@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { User } from '../../core/model/user';
 import { UserService } from '../../core/service/user.service';
 import { PaginatedUsersResponse } from '../../core/model/paginated-users-response';
@@ -54,8 +54,6 @@ export class ListUsersComponent implements OnInit, OnChanges {
         console.error('Error getting users:', error);
       },
       complete: () => {
-        console.log('Users retrieved successfully');
-        console.log(this.users)
       }
     })
   }

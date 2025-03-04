@@ -51,10 +51,8 @@ export class AuthService {
     return this.http.get<User>(`${this.apiUrl}/users/me`).pipe(
       tap((user) => {
         this.userSubject.next(user);
-        console.log('User loaded:', user);
       }),
       catchError(error => {
-        console.error('Failed to load user:', error);
         this.userSubject.next(null);
         this.logout();
         throw error;

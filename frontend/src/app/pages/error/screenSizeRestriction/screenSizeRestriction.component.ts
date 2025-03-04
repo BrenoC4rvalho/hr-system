@@ -1,5 +1,5 @@
 import { Component } from "@angular/core"
-import { LucideAngularComponent, LucideAngularModule, ScreenShareOff } from "lucide-angular";
+import { LucideAngularModule, ScreenShareOff } from "lucide-angular";
 
 @Component({
   selector: 'app-screen-size-restriction',
