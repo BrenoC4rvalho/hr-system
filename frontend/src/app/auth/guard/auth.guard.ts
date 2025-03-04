@@ -1,41 +1,58 @@
-import { ActivatedRouteSnapshot, CanActivate, GuardResult, MaybeAsync, Router, RouterStateSnapshot } from "@angular/router";
-import { AuthService } from "../service/auth.service";
-import { Injectable } from "@angular/core";
-import { catchError, map, Observable, of, switchMap, take } from "rxjs";
-import { UserRole } from "../../core/enums/user-role.enum";
-import { User } from "../../core/model/user";
-
+import { Injectable } from '@angular/core';
+import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, Router } from '@angular/router';
+import { Observable, of } from 'rxjs';
+import { take, switchMap, map, catchError } from 'rxjs/operators';
+import { AuthService } from '../service/auth.service';
+import { User } from '../../core/model/user';
+import { UserStatus } from '../../core/enums/user-status.enum';
+import { UserRole } from '../../core/enums/user-role.enum';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AuthGuard implements CanActivate {
-
   constructor(private authService: AuthService, private router: Router) {}
 
-  canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> | Promise<boolean> | boolean {
-
-    if(!this.authService.isAuthenticated()) {
-      this.router.navigate(['/login']);
+  canActivate(
+    route: ActivatedRouteSnapshot,
+    state: RouterStateSnapshot
+  ): Observable<boolean> | boolean {
+    if (!this.authService.isAuthenticated()) {
+      this.redirectToLogin();
       return false;
     }
 
     return this.authService.user$.pipe(
       take(1),
-      switchMap((user) => {
-        if (!user && this.authService.getToken()) {
-          return this.authService.loadUser().pipe(
-            map((loadedUser) => this.checkRoles(loadedUser, route))
-          );
-        }
-        return of(this.checkRoles(user, route));
-      }),
-      catchError(() => {
-        this.router.navigate(['/login']);
-        return of(false);
-      })
+      switchMap((user: User | null) => this.handleUser(user, route)),
+      catchError((error) => this.handleError(error, state))
     );
+  }
 
+  private handleUser(user: User | null, route: ActivatedRouteSnapshot): Observable<boolean> {
+    if (!user && this.authService.getToken()) {
+      return this.authService.loadUser().pipe(
+        map((loadedUser: User) => this.validateUser(loadedUser, route))
+      );
+    }
+    return of(this.validateUser(user, route));
+  }
+
+  private validateUser(user: User | null, route: ActivatedRouteSnapshot): boolean {
+    if (this.checkStatusInactive(user)) {
+      this.authService.logout();
+      this.redirectToLogin();
+      return false;
+    }
+    if (!this.checkRoles(user, route)) {
+      this.router.navigate(['/forbidden']);
+      return false;
+    }
+    return true;
+  }
+
+  private checkStatusInactive(user: User | null): boolean {
+    return user?.status === UserStatus.INACTIVE;
   }
 
   private checkRoles(user: User | null, route: ActivatedRouteSnapshot): boolean {
@@ -45,13 +62,23 @@ export class AuthGuard implements CanActivate {
       return true;
     }
 
-    if (user && requiredRoles.includes(user.role)) {
-      return true;
+    if (!user || !user.role || !requiredRoles.includes(user.role)) {
+      this.router.navigate(['/forbidden']);
+      return false;
     }
 
-    this.router.navigate(['/forbidden']);
-    return false;
+    return true;
+  }
+
+  private redirectToLogin(): void {
+    this.router.navigate(['/login']);
+  }
+
+  private handleError(error: any, state: RouterStateSnapshot): Observable<boolean> {
+    console.error('AuthGuard error:', error);
+    this.authService.logout();
+    this.redirectToLogin();
+    return of(false);
   }
 
 }
-
