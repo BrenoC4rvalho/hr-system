@@ -40,9 +40,9 @@
             <lucide-icon [img]="EyeIcon"></lucide-icon>
           </button>
           <button
-            *ngIf="canDeleteAdmin(user.role) && canUserActive(user.status)"
+            [disabled]="!canDeleteAdmin(user.role) || !canUserActive(user.status)"
             (click)="deleteUser(user.id)"
-            class="border border-gray-light p-1 rounded hover:opacity-70 text-red-500"
+            class="border border-gray-light p-1 rounded hover:opacity-70 text-red-500 disabled:invisible"
           >
             <lucide-icon [img]="UserXIcon"></lucide-icon>
           </button>
@@ -61,3 +61,5 @@
 
 
 </section>
+
+<app-modal-error [isVisible]="showErrorModal" [errorMessage]="errorMessage" (closed)="showErrorModal = false" ></app-modal-error>

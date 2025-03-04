@@ -56,7 +56,6 @@ export class ModalNewUserComponent {
         this.closeModal.emit();
       },
       error: (error) => {
-        console.log(error)
         if (error && error.error) {
           this.showErrorModal = true;
           this.errorMessage = error.error;

@@ -27,7 +27,6 @@ export class NavbarComponent implements OnInit {
         this.currentUser = user;
       }
     )
-    console.log(this.currentUser)
   }
 
   canAccessAdmin(): boolean {

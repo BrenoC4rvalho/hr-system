@@ -8,10 +8,11 @@ import { AuthService } from '../../auth/service/auth.service';
 import { UserRole } from '../../core/enums/user-role.enum';
 import { UserStatus } from '../../core/enums/user-status.enum';
 import { PaginationComponent } from "../pagination/pagination.component";
+import { ModalErrorComponent } from "../modal-error/modal-error.component";
 
 @Component({
   selector: 'app-list-users',
-  imports: [CommonModule, LucideAngularModule, PaginationComponent],
+  imports: [CommonModule, LucideAngularModule, PaginationComponent, ModalErrorComponent],
   templateUrl: './list-users.component.html',
 })
 export class ListUsersComponent implements OnInit, OnChanges {
@@ -22,6 +23,9 @@ export class ListUsersComponent implements OnInit, OnChanges {
   readonly UserRoundSearchIcon = UserRoundSearch;
   readonly EyeIcon = Eye;
   readonly UserXIcon = UserX;
+
+  showErrorModal: boolean = false;
+  errorMessage: string = '';
 
   users: User[] = [];
 
@@ -51,7 +55,13 @@ export class ListUsersComponent implements OnInit, OnChanges {
         this.pageSize = response.pageSize;
       },
       error: (error) => {
-        console.error('Error getting users:', error);
+        if(error && error.error) {
+          this.showErrorModal = true;
+          this.errorMessage = error.error;
+        } else {
+          this.showErrorModal = true;
+          this.errorMessage = 'An unexpected error occurred. Please try again later.';
+        }
       },
       complete: () => {
       }
@@ -59,7 +69,6 @@ export class ListUsersComponent implements OnInit, OnChanges {
   }
 
   onPageChange(newPage: number): void {
-    console.log('Page changed')
     this.getUsers(newPage, this.pageSize);
   }
 
@@ -76,7 +85,22 @@ export class ListUsersComponent implements OnInit, OnChanges {
   }
 
   deleteUser(userId: number): void {
-    this.userService.delete(userId).subscribe();
+    this.userService.delete(userId).subscribe({
+      next: () => {
+        const user = this.users.find(user => user.id === userId);
+        user ? user.status = UserStatus.INACTIVE : '';
+      },
+      error: (error) => {
+        console.log(error)
+        if(error && error.error) {
+          this.showErrorModal = true;
+          this.errorMessage = 'vtnc';
+        } else {
+          this.showErrorModal = true;
+          this.errorMessage = 'An unexpected error occurred. Please try again later.';
+        }
+      }
+    });
   }
 
 }
