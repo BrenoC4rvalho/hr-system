@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { NavbarComponent } from '../../shared/navbar/navbar.component';
 import { ListUsersComponent } from '../../components/list-users/list-users.component';
 import { UserPlus, LucideAngularModule } from 'lucide-angular';
-import { ModalNewUserComponent } from "../../components/modal-new-user/modal-new-user.component";
+import { ModalNewUserComponent } from "../../components/new-user-modal/new-user-modal.component";
 import { CommonModule } from '@angular/common';
 import { User } from '../../core/model/user';
 

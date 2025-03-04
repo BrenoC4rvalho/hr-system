@@ -8,7 +8,7 @@ import { AuthService } from '../../auth/service/auth.service';
 import { UserRole } from '../../core/enums/user-role.enum';
 import { UserStatus } from '../../core/enums/user-status.enum';
 import { PaginationComponent } from "../pagination/pagination.component";
-import { ModalErrorComponent } from "../modal-error/modal-error.component";
+import { ModalErrorComponent } from "../error-modal/error-modal";
 
 @Component({
   selector: 'app-list-users',

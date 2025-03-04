@@ -5,7 +5,7 @@ import { LogoComponent } from "../../shared/logo/logo.component";
 import { AuthService } from '../service/auth.service';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { ModalErrorComponent } from "../../components/modal-error/modal-error.component";
+import { ModalErrorComponent } from "../../components/error-modal/error-modal";
 
 @Component({
   selector: 'app-login',

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { environment } from '../../../environments/environments';
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { PaginatedUsersResponse } from '../model/paginated-users-response';
 import { Observable } from 'rxjs';
 import { AuthService } from '../../auth/service/auth.service';
