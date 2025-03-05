@@ -5,11 +5,11 @@ import { LogoComponent } from "../../shared/logo/logo.component";
 import { AuthService } from '../service/auth.service';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { ModalErrorComponent } from "../../components/error-modal/error-modal";
+import { ErrorModalComponent } from "../../components/error-modal/error-modal";
 
 @Component({
   selector: 'app-login',
-  imports: [CommonModule, LucideAngularModule, LogoComponent, FormsModule, ModalErrorComponent],
+  imports: [CommonModule, LucideAngularModule, LogoComponent, FormsModule, ErrorModalComponent],
   templateUrl: './login.component.html',
 })
 export class LoginComponent {

@@ -21,6 +21,6 @@
     *ngIf="isModalNewUserOpen"
     class="fixed inset-0 bg-deep/70 flex items-center justify-center"
   >
-    <app-modal-new-user (createdUser)="onUserCreated($event)" (closeModal)="closeModalNewUser()" ></app-modal-new-user>
+    <app-new-user-modal (createdUser)="onUserCreated($event)" (closeModal)="closeModalNewUser()" ></app-new-user-modal>
   </div>
 </div>
