@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { LucideAngularModule, Eye, EyeClosed, AlertCircle, XCircle } from 'lucide-angular';
 import { LogoComponent } from "../../shared/logo/logo.component";
 import { AuthService } from '../service/auth.service';
@@ -12,7 +12,7 @@ import { ErrorModalComponent } from "../../components/error-modal/error-modal";
   imports: [CommonModule, LucideAngularModule, LogoComponent, FormsModule, ErrorModalComponent],
   templateUrl: './login.component.html',
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit{
 
   isPasswordVisible: boolean = false;
 
@@ -44,6 +44,12 @@ export class LoginComponent {
         }
       }
     )
+  }
+
+  ngOnInit(): void {
+    if (this.authService.isAuthenticated()) {
+      this.router.navigate(['/dashboard']);
+    }
   }
 
   togglePasswordVisibility() {
