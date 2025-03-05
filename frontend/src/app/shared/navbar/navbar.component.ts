@@ -5,10 +5,12 @@ import { AuthService } from '../../auth/service/auth.service';
 import { User } from '../../core/model/user';
 import { CommonModule } from '@angular/common';
 import { UserRole } from '../../core/enums/user-role.enum';
+import { ErrorModalComponent } from '../../components/error-modal/error-modal';
+import { UserProfileModalComponent } from '../../components/user-profile-modal/user-profile-modal.component';
 
 @Component({
   selector: 'app-navbar',
-  imports: [RouterModule, LucideAngularModule, CommonModule],
+  imports: [RouterModule, LucideAngularModule, CommonModule, ErrorModalComponent, UserProfileModalComponent],
   templateUrl: './navbar.component.html',
 })
 export class NavbarComponent implements OnInit {
