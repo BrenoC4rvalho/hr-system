@@ -98,7 +98,7 @@ export class ListUsersComponent implements OnInit, OnChanges {
         console.log(error)
         if(error && error.error) {
           this.showErrorModal = true;
-          this.errorMessage = 'vtnc';
+          this.errorMessage = error.error;
         } else {
           this.showErrorModal = true;
           this.errorMessage = 'An unexpected error occurred. Please try again later.';
@@ -113,6 +113,7 @@ export class ListUsersComponent implements OnInit, OnChanges {
   }
 
   showErrorUserProfileModal(): void {
+    this.showUserProfileModal = false;
     this.showErrorModal = true;
     this.errorMessage = 'An unexpected error occurred while fetching user information. Please try again later.';
   }
