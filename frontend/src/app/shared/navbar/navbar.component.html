@@ -43,13 +43,32 @@
     *ngIf="currentUser"
     class="p-3 flex items-center gap-2"
   >
-    <div class="flex justify-center items-center text-2xl h-14 w-14 rounded-full bg-secondary">{{ currentUser.username[0] }}</div>
+    <button (click)="openUserProfileModal()">
+      <div class="flex justify-center items-center text-2xl h-14 w-14 rounded-full bg-secondary">{{ currentUser.username[0] }}</div>
+    </button>
     <div class="text-center">
-      <p class="text-xl text-gray">{{ currentUser.username }}</p>
+      <button (click)="openUserProfileModal()">
+        <p class="text-xl text-gray">{{ currentUser.username }}</p>
+      </button>
       <button (click)="logout()" class="text-sm text-red-400 hover:cursor-pointer">
         logout
       </button>
     </div>
   </div>
 
+</div>
+
+<app-error-modal [isVisible]="showErrorModal" [errorMessage]="errorMessage" (closed)="showErrorModal = false" ></app-error-modal>
+
+<div
+    *ngIf="showUserProfileModal"
+    class="fixed inset-0 bg-deep/70 flex items-center justify-center"
+>
+  <app-user-profile-modal
+    [isVisible]="showUserProfileModal"
+    [userId]="currentUser.id"
+    (closed)="showUserProfileModal = false"
+    (errorUserProfileModal)="showErrorUserProfileModal()"
+  >
+  </app-user-profile-modal>
 </div>

@@ -17,7 +17,12 @@ export class NavbarComponent implements OnInit {
   readonly DashboardIcon = LayoutDashboard;
   readonly AdminIcon = ShieldUser;
 
+  showUserProfileModal: boolean = false;
+
   currentUser: User | null = null;
+
+  showErrorModal: boolean = false;
+  errorMessage: string = '';
 
   constructor(private authService: AuthService) {}
 
@@ -35,6 +40,16 @@ export class NavbarComponent implements OnInit {
 
   logout(): void {
     this.authService.logout();
+  }
+
+  openUserProfileModal(): void {
+    this.showUserProfileModal = true;
+  }
+
+  showErrorUserProfileModal(): void {
+    this.showUserProfileModal = false;
+    this.showErrorModal = true;
+    this.errorMessage = 'An unexpected error occurred while fetching user information. Please try again later.';
   }
 
 }
