@@ -8,11 +8,12 @@ import { AuthService } from '../../auth/service/auth.service';
 import { UserRole } from '../../core/enums/user-role.enum';
 import { UserStatus } from '../../core/enums/user-status.enum';
 import { PaginationComponent } from "../pagination/pagination.component";
-import { ModalErrorComponent } from "../error-modal/error-modal";
+import { ErrorModalComponent } from "../error-modal/error-modal";
+import { UserProfileModalComponent } from "../user-profile-modal/user-profile-modal.component";
 
 @Component({
   selector: 'app-list-users',
-  imports: [CommonModule, LucideAngularModule, PaginationComponent, ModalErrorComponent],
+  imports: [CommonModule, LucideAngularModule, PaginationComponent, ErrorModalComponent, UserProfileModalComponent],
   templateUrl: './list-users.component.html',
 })
 export class ListUsersComponent implements OnInit, OnChanges {
@@ -26,6 +27,9 @@ export class ListUsersComponent implements OnInit, OnChanges {
 
   showErrorModal: boolean = false;
   errorMessage: string = '';
+
+  showUserProfileModal: boolean = false;
+  currentUserId: number | undefined;
 
   users: User[] = [];
 
@@ -101,6 +105,16 @@ export class ListUsersComponent implements OnInit, OnChanges {
         }
       }
     });
+  }
+
+  openUserProfileModal(userId: number): void {
+    this.currentUserId = userId;
+    this.showUserProfileModal = true;
+  }
+
+  showErrorUserProfileModal(): void {
+    this.showErrorModal = true;
+    this.errorMessage = 'An unexpected error occurred while fetching user information. Please try again later.';
   }
 
 }

@@ -36,7 +36,10 @@
             {{ user.status }}
         </td>
         <td class="py-2">
-          <button class="border border-gray-light mr-1 p-1 rounded hover:opacity-70">
+          <button
+            (click)="openUserProfileModal(user.id)"
+            class="border border-gray-light mr-1 p-1 rounded hover:opacity-70"
+          >
             <lucide-icon [img]="EyeIcon"></lucide-icon>
           </button>
           <button
@@ -62,4 +65,17 @@
 
 </section>
 
-<app-modal-error [isVisible]="showErrorModal" [errorMessage]="errorMessage" (closed)="showErrorModal = false" ></app-modal-error>
+<app-error-modal [isVisible]="showErrorModal" [errorMessage]="errorMessage" (closed)="showErrorModal = false" ></app-error-modal>
+
+<div
+    *ngIf="showUserProfileModal"
+    class="fixed inset-0 bg-deep/70 flex items-center justify-center"
+>
+  <app-user-profile-modal
+    [isVisible]="showUserProfileModal"
+    [userId]="currentUserId"
+    (closed)="showUserProfileModal = false"
+    (errorUserProfileModal)="showErrorUserProfileModal()"
+  >
+  </app-user-profile-modal>
+</div>
