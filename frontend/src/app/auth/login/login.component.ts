@@ -30,7 +30,7 @@ export class LoginComponent {
   constructor(private authService: AuthService, private router: Router) {}
 
   onSubmit(): void {
-    this.authService.login(this.username, this.password).subscribe(
+    this.authService.login(this.username.trim(), this.password.trim()).subscribe(
       (response) => {
         this.router.navigate(['/employees']);
       },
