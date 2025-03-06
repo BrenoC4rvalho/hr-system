@@ -10,10 +10,11 @@ import { UserStatus } from '../../core/enums/user-status.enum';
 import { PaginationComponent } from "../pagination/pagination.component";
 import { ErrorModalComponent } from "../error-modal/error-modal";
 import { UserProfileModalComponent } from "../user-profile-modal/user-profile-modal.component";
+import { ConfirmButtonComponent } from "../../confirm-button/confirm-button.component";
 
 @Component({
   selector: 'app-list-users',
-  imports: [CommonModule, LucideAngularModule, PaginationComponent, ErrorModalComponent, UserProfileModalComponent],
+  imports: [CommonModule, LucideAngularModule, PaginationComponent, ErrorModalComponent, UserProfileModalComponent, ConfirmButtonComponent],
   templateUrl: './list-users.component.html',
 })
 export class ListUsersComponent implements OnInit, OnChanges {
@@ -27,6 +28,10 @@ export class ListUsersComponent implements OnInit, OnChanges {
 
   showErrorModal: boolean = false;
   errorMessage: string = '';
+
+  showConfirmButton: boolean = false;
+  currentUserIdToDelete: number | undefined;
+  currentUsernameToDelete: string | undefined;
 
   showUserProfileModal: boolean = false;
   currentUserId: number | undefined;
@@ -88,6 +93,12 @@ export class ListUsersComponent implements OnInit, OnChanges {
     return status === UserStatus.ACTIVE;
   }
 
+  showConfirmDeleteUser(userId: number, username: string) {
+    this.currentUserIdToDelete = userId;
+    this.currentUsernameToDelete = username;
+    this.showConfirmButton = true;
+  }
+
   deleteUser(userId: number): void {
     this.userService.delete(userId).subscribe({
       next: () => {
@@ -95,7 +106,6 @@ export class ListUsersComponent implements OnInit, OnChanges {
         user ? user.status = UserStatus.INACTIVE : '';
       },
       error: (error) => {
-        console.log(error)
         if(error && error.error) {
           this.showErrorModal = true;
           this.errorMessage = error.error;
@@ -103,6 +113,9 @@ export class ListUsersComponent implements OnInit, OnChanges {
           this.showErrorModal = true;
           this.errorMessage = 'An unexpected error occurred. Please try again later.';
         }
+      },
+      complete: () => {
+        this.showConfirmButton = false;
       }
     });
   }

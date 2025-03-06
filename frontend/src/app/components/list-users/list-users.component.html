@@ -44,12 +44,13 @@
           </button>
           <button
             [disabled]="!canDeleteAdmin(user.role) || !canUserActive(user.status)"
-            (click)="deleteUser(user.id)"
+            (click)="showConfirmDeleteUser(user.id, user.username)"
             class="border border-gray-light p-1 rounded hover:opacity-70 text-red-500 disabled:invisible"
           >
             <lucide-icon [img]="UserXIcon"></lucide-icon>
           </button>
         </td>
+
       </tr>
     </tbody>
   </table>
@@ -78,4 +79,18 @@
     (errorUserProfileModal)="showErrorUserProfileModal()"
   >
   </app-user-profile-modal>
+</div>
+
+<div
+  *ngIf="showConfirmButton"
+  class="fixed inset-0 bg-deep/70 flex items-center justify-center"
+>
+  <app-confirm-button
+    *ngIf="currentUserIdToDelete"
+    confirmButtonText="Do you want to delete the user {{ currentUsernameToDelete }}?"
+    [isVisible]="showConfirmButton"
+    (onClosed)="showConfirmButton = false"
+    (onConfirm)="deleteUser(currentUserIdToDelete)"
+  >
+  </app-confirm-button>
 </div>

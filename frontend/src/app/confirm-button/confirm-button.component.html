@@ -1,0 +1,23 @@
+<div *ngIf="isVisible" class="relative flex flex-col items-center bg-component shadow-2xl p-10 rounded border-2 border-deep">
+
+  <button (click)="onClose()" class="text-red-500 absolute right-2 top-2 hover:cursor-pointer">
+    <lucide-icon class="w-7 h-7" [img]="CircleXIcon"></lucide-icon>
+  </button>
+
+  <p class="text-3xl mt-3 mb-7" >{{ confirmButtonText }}</p>
+  <div class="text-2xl flex gap-5 text-deep">
+    <button
+      (click)="confirm()"
+      class="bg-green-400 px-3 border border-deep rounded hover:bg-green-500 hover:cursor-pointer"
+    >
+      Yes
+    </button>
+    <button
+      (click)="onClose()"
+      class="bg-red-400 px-4 border border-deep text-deep rounded hover:bg-red-500 hover:cursor-pointer"
+    >
+      No
+    </button>
+  </div>
+
+</div>
