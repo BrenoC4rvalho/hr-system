@@ -6,6 +6,7 @@ import { AuthGuard } from './auth/guard/auth.guard';
 import { AdminComponent } from './pages/admin/admin.component';
 import { UserRole } from './core/enums/user-role.enum';
 import { ForbiddenComponent } from './pages/error/forbidden/forbidden.component';
+import { UpdatePasswordComponent } from './pages/update-password/update-password.component';
 
 export const routes: Routes = [
   {
@@ -22,6 +23,10 @@ export const routes: Routes = [
     component: AdminComponent,
     canActivate: [AuthGuard],
     data: {roles: [ UserRole.ADMIN, UserRole.MANAGER ] }
+  },
+  {
+    path: 'updatePassword',
+    component: UpdatePasswordComponent,
   },
   {
     path: 'forbidden',
