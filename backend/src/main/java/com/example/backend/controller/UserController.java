@@ -90,13 +90,17 @@ public class UserController {
     @PatchMapping("/{id}")
     public ResponseEntity<?> updatePassword(@PathVariable("id") Long id, @Valid @RequestBody UpdatePasswordDTO updatePasswordDTO) {
         userService.updatePassword(id, updatePasswordDTO);
-        return ResponseEntity.status(HttpStatus.OK).body("Password updated successfully.");
+
+        Map<String, String> response = new HashMap<>();
+        response.put("message", "Password updated successfully.");
+
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
     
 
     @PreAuthorize("hasAnyAuthority('ADMIN','MANAGER')")
     @DeleteMapping("/{id}")
-    public ResponseEntity<Map<String, String>> delete(HttpServletRequest request, @PathVariable("id") Long id) {
+    public ResponseEntity<?> delete(HttpServletRequest request, @PathVariable("id") Long id) {
         String loggedUserRole = request.getAttribute("user_role").toString();
         userService.delete(id, loggedUserRole);
 
