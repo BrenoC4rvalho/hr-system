@@ -46,8 +46,8 @@ export class UserService {
 
   //path /id  password
   // return string and 200
-  updatePassword() {
-
+  updatePassword(id: number, password: string): Observable<void> {
+    return this.http.patch<void>(`${this.apiUrl}/${id}`, { password })
   }
 
   // path /id
