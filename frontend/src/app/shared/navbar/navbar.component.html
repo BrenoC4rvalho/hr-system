@@ -1,9 +1,7 @@
 <div class="fixed left-0 top-0 h-screen bg-component shadow-2xl flex flex-col justify-between py-5 transition-transform transform -translate-x-full md:translate-x-0 md:w-64" [class.translate-x-0]="isSidebarOpen">
 
-  <!-- Botão de menu para telas pequenas -->
-  <button class="absolute top-4 left-4 md:hidden p-2 bg-primary text-white rounded" (click)="toggleSidebar()">
-    a
-    <lucide-icon [img]="MenuIcon"></lucide-icon>
+  <button class="fixed md:hidden top-4 left-4 p-2 bg-primary text-white rounded" (click)="toggleSidebar()">
+    <lucide-icon [img]="XCircleIcon" class="h-6 w-6"></lucide-icon>
   </button>
 
   <nav class="mt-12 md:mt-0">
@@ -71,3 +69,7 @@
   >
   </app-user-profile-modal>
 </div>
+
+<button class="fixed top-4 left-4 md:hidden p-2 bg-primary text-white rounded" (click)="toggleSidebar()" *ngIf="!isSidebarOpen">
+  <lucide-icon [img]="MenuIcon"></lucide-icon>
+</button>
