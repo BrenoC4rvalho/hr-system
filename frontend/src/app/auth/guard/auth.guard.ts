@@ -39,6 +39,7 @@ export class AuthGuard implements CanActivate {
   }
 
   private validateUser(user: User | null, route: ActivatedRouteSnapshot): boolean {
+
     if (this.checkStatusInactive(user)) {
       this.authService.logout();
       this.redirectToLogin();
@@ -77,15 +78,10 @@ export class AuthGuard implements CanActivate {
     const userId = user?.id;
 
     if(!requiredIsSelf) {
-      return true;
+      return false;
     }
 
-    if(userId == userIdFromRoute) {
-      return true;
-    }
-
-    return false;
-
+    return userId == userIdFromRoute;
   }
 
   private redirectToLogin(): void {
