@@ -44,10 +44,12 @@ export class AuthGuard implements CanActivate {
       this.redirectToLogin();
       return false;
     }
-    if (!this.checkRoles(user, route)) {
+
+    if (!this.checkRoles(user, route) && !this.checkIsSelf(user, route)) {
       this.router.navigate(['/forbidden']);
       return false;
     }
+
     return true;
   }
 
@@ -63,11 +65,27 @@ export class AuthGuard implements CanActivate {
     }
 
     if (!user || !user.role || !requiredRoles.includes(user.role)) {
-      this.router.navigate(['/forbidden']);
       return false;
     }
 
     return true;
+  }
+
+  private checkIsSelf(user: User | null, route: ActivatedRouteSnapshot): boolean {
+    const requiredIsSelf = route.data['self'];
+    const userIdFromRoute: number = route.params['id'];
+    const userId = user?.id;
+
+    if(!requiredIsSelf) {
+      return true;
+    }
+
+    if(userId == userIdFromRoute) {
+      return true;
+    }
+
+    return false;
+
   }
 
   private redirectToLogin(): void {

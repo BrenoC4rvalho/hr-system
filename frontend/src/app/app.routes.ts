@@ -25,8 +25,10 @@ export const routes: Routes = [
     data: {roles: [ UserRole.ADMIN, UserRole.MANAGER ] }
   },
   {
-    path: 'updatePassword',
+    path: 'updatePassword/:id',
     component: UpdatePasswordComponent,
+    canActivate: [AuthGuard],
+    data: { roles: [ UserRole.ADMIN ], self: true }
   },
   {
     path: 'forbidden',
