@@ -1,51 +1,62 @@
 <div
-  class="relative bg-component shadow-2xl p-5 rounded min-w-3xl"
+  class="relative bg-component shadow-2xl p-6 rounded-lg min-w-3xl"
   *ngIf="isVisible && user"
 >
-
-  <button (click)="onClose()" class="text-red-500 absolute right-2 top-2 hover:cursor-pointer">
+  <button
+    (click)="onClose()"
+    class="text-red-500 absolute right-3 top-3 hover:text-red-700 transition"
+    aria-label="Close"
+  >
     <lucide-icon class="w-7 h-7" [img]="CircleXIcon"></lucide-icon>
   </button>
 
-  <header class="text-3xl font-medium text-primary">
+  <header class="text-3xl font-semibold text-primary mb-4">
     <h3>User Profile</h3>
   </header>
 
-  <div>
+  <div class="space-y-6">
 
-    <div class="flex items-center gap-4 my-5">
-      <div
-        class="flex items-center justify-center w-32 h-32 object-cover rounded-full bg-primary"
-      >
-        <p class="text-5xl text-white-soft">{{user.username[0]}}</p>
+    <div class="flex items-center gap-6">
+      <div class="w-32 h-32 flex items-center justify-center rounded-full bg-primary text-white-soft text-5xl font-bold">
+        {{ user.username[0] }}
       </div>
-      <div class="">
-        <div class="flex gap-1 text-2xl">
-          <p>{{ user.username }}</p>
-        </div>
-        <div class="flex gap-1 text-2xl">
-          <p>{{ user.role }}</p>
-        </div>
+      <div>
+        <p class="text-2xl font-medium">{{ user.username }}</p>
+        <p class="text-lg text-gray-600">{{ user.role }}</p>
       </div>
     </div>
 
-
-
-
-    <div class="flex gap-1 text-2xl">
-      <label for="">Employee ID:</label>
-      <p>{{ user.employee }}</p>
+    <div class="text-lg">
+      <span class="font-semibold">Employee ID:</span> {{ user.employee }}
     </div>
 
-    <div class="flex gap-1 text-2xl items-center">
-      <label for="">Status:</label>
-      <p
-        class="rounded flex justify-center items-center px-5"
-        [ngClass]="{'bg-green-200 text-green-900': user.status === 'ACTIVE', 'bg-red-200 text-red-900': user.status === 'INACTIVE'}"
+    <div class="flex items-center gap-2 text-lg">
+      <span class="font-semibold">Status:</span>
+      <span
+        class="px-4 py-1 rounded-lg font-medium"
+        [ngClass]="{
+          'bg-green-200 text-green-900': user.status === 'ACTIVE',
+          'bg-red-200 text-red-900': user.status === 'INACTIVE'
+        }"
       >
         {{ user.status }}
-      </p>
-
+      </span>
     </div>
 
+    <!-- Botões -->
+    <div class="flex gap-3 mt-4">
+      <button
+        class="bg-secondary px-6 py-2 rounded-lg text-white font-medium transition hover:bg-secondary/80"
+      >
+        Edit
+      </button>
+      <a [routerLink]="['/updatePassword', user.id]">
+        <button
+          class="border border-secondary px-6 py-2 rounded-lg font-medium text-secondary transition hover:bg-primary hover:text-white"
+        >
+          Change Password
+        </button>
+      </a>
+    </div>
+  </div>
 </div>

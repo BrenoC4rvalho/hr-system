@@ -3,10 +3,11 @@ import { User } from '../../core/model/user';
 import { UserService } from '../../core/service/user.service';
 import { CircleX, LucideAngularModule } from 'lucide-angular';
 import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-user-profile-modal',
-  imports: [LucideAngularModule, CommonModule],
+  imports: [LucideAngularModule, CommonModule, RouterModule],
   templateUrl: './user-profile-modal.component.html',
 })
 export class UserProfileModalComponent implements OnChanges {
@@ -36,10 +37,8 @@ export class UserProfileModalComponent implements OnChanges {
       return;
     }
 
-    console.log(this.userId)
     this.userService.show(this.userId).subscribe({
       next: (response: User) => {
-        console.log(response)
         this.user = response;
       },
       error: () => {

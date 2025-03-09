@@ -5,7 +5,7 @@ import { NavbarComponent } from '../../shared/navbar/navbar.component';
 
 @Component({
   selector: 'app-employees',
-  imports: [ListEmployeesComponent, EmployeeProfileComponent, NavbarComponent],
+  imports: [ListEmployeesComponent, NavbarComponent],
   templateUrl: './employees.component.html',
 })
 export class EmployeesComponent {
