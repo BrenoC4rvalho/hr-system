@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { LayoutDashboard, LucideAngularModule, Users, ShieldUser } from 'lucide-angular';
+import { LayoutDashboard, LucideAngularModule, Users, ShieldUser, Menu } from 'lucide-angular';
 import { AuthService } from '../../auth/service/auth.service';
 import { User } from '../../core/model/user';
 import { CommonModule } from '@angular/common';
@@ -18,6 +18,9 @@ export class NavbarComponent implements OnInit {
   readonly EmployeeIcon = Users;
   readonly DashboardIcon = LayoutDashboard;
   readonly AdminIcon = ShieldUser;
+  readonly MenuIcon = Menu;
+
+  isSidebarOpen: boolean = false;
 
   showUserProfileModal: boolean = false;
 
@@ -34,6 +37,10 @@ export class NavbarComponent implements OnInit {
         this.currentUser = user;
       }
     )
+  }
+
+  toggleSidebar() {
+    this.isSidebarOpen = !this.isSidebarOpen;
   }
 
   canAccessAdmin(): boolean {
