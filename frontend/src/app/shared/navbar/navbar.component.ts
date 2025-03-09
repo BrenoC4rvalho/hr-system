@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { LayoutDashboard, LucideAngularModule, Users, ShieldUser, Menu } from 'lucide-angular';
+import { LayoutDashboard, LucideAngularModule, Users, ShieldUser, Menu, XCircle } from 'lucide-angular';
 import { AuthService } from '../../auth/service/auth.service';
 import { User } from '../../core/model/user';
 import { CommonModule } from '@angular/common';
@@ -19,6 +19,7 @@ export class NavbarComponent implements OnInit {
   readonly DashboardIcon = LayoutDashboard;
   readonly AdminIcon = ShieldUser;
   readonly MenuIcon = Menu;
+  readonly XCircleIcon = XCircle;
 
   isSidebarOpen: boolean = false;
 
