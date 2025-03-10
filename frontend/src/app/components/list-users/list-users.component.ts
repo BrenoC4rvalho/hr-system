@@ -10,7 +10,7 @@ import { UserStatus } from '../../core/enums/user-status.enum';
 import { PaginationComponent } from "../pagination/pagination.component";
 import { ErrorModalComponent } from "../error-modal/error-modal";
 import { UserProfileModalComponent } from "../user-profile-modal/user-profile-modal.component";
-import { ConfirmButtonComponent } from "../../confirm-button/confirm-button.component";
+import { ConfirmButtonComponent } from "../confirm-button/confirm-button.component";
 
 @Component({
   selector: 'app-list-users',
