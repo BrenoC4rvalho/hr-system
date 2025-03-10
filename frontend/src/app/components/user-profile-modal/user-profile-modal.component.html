@@ -2,6 +2,7 @@
   class="relative bg-component shadow-2xl p-6 rounded-lg min-w-3xl"
   *ngIf="isVisible && user"
 >
+  <!-- Botão de Fechar -->
   <button
     (click)="onClose()"
     class="text-red-500 absolute right-3 top-3 hover:text-red-700 transition"
@@ -10,50 +11,89 @@
     <lucide-icon class="w-7 h-7" [img]="CircleXIcon"></lucide-icon>
   </button>
 
+  <!-- Cabeçalho -->
   <header class="text-3xl font-semibold text-primary mb-4">
     <h3>User Profile</h3>
   </header>
 
   <div class="space-y-6">
-
+    <!-- Avatar + Nome -->
     <div class="flex items-center gap-6">
       <div class="w-32 h-32 flex items-center justify-center rounded-full bg-primary text-white-soft text-5xl font-bold">
         {{ user.username[0] }}
       </div>
-      <div>
-        <p class="text-2xl font-medium">{{ user.username }}</p>
-        <p class="text-lg text-gray-600">{{ user.role }}</p>
+      <div class="flex-1">
+        <input
+          *ngIf="isEditing"
+          [(ngModel)]="editableUser.username"
+          class="text-2xl font-medium border p-2 w-full rounded"
+        />
+        <p *ngIf="!isEditing" class="text-2xl font-medium">{{ user.username }}</p>
       </div>
     </div>
 
-    <div class="text-lg">
-      <span class="font-semibold">Employee ID:</span> {{ user.employee }}
+    <!-- Role -->
+    <div class="text-lg flex flex-col">
+      <label class="font-semibold">Role:</label>
+      <select *ngIf="isEditing" [(ngModel)]="editableUser.role" class="border p-2 rounded">
+        <option *ngFor="let role of userRoles" [value]="role">{{ role }}</option>
+      </select>
+      <p *ngIf="!isEditing">{{ user.role }}</p>
     </div>
 
-    <div class="flex items-center gap-2 text-lg">
-      <span class="font-semibold">Status:</span>
-      <span
-        class="px-4 py-1 rounded-lg font-medium"
-        [ngClass]="{
-          'bg-green-200 text-green-900': user.status === 'ACTIVE',
-          'bg-red-200 text-red-900': user.status === 'INACTIVE'
-        }"
-      >
+    <!-- Employee ID -->
+    <div class="text-lg flex flex-col">
+      <label class="font-semibold">Employee ID:</label>
+      <input
+        *ngIf="isEditing"
+        [(ngModel)]="editableUser.employee"
+        class="border p-2 rounded"
+      />
+      <p *ngIf="!isEditing">{{ user.employee }}</p>
+    </div>
+
+    <!-- Status -->
+    <div class="text-lg flex flex-col">
+      <label class="font-semibold">Status:</label>
+      <select *ngIf="isEditing" [(ngModel)]="editableUser.status" class="border p-2 rounded">
+        <option *ngFor="let status of userStatus" [value]="status">{{ status }}</option>
+      </select>
+      <p *ngIf="!isEditing" [ngClass]="{
+        'text-green-600': user.status === 'ACTIVE',
+        'text-red-600': user.status === 'INACTIVE'
+      }">
         {{ user.status }}
-      </span>
+      </p>
     </div>
 
     <!-- Botões -->
-    <div class="flex gap-3 mt-4">
+    <div class="flex gap-3 mt-4 justify-end">
       <button
+        *ngIf="!isEditing"
+        (click)="toggleEdit()"
         class="bg-secondary px-6 py-2 rounded-lg text-white font-medium transition hover:bg-secondary/80"
       >
         Edit
       </button>
+
+      <button
+        *ngIf="isEditing"
+        (click)="saveChanges()"
+        class="bg-green-500 px-6 py-2 rounded-lg text-white font-medium transition hover:bg-green-600"
+      >
+        Save
+      </button>
+
+      <button
+        *ngIf="isEditing"
+        (click)="cancelEdit()"
+        class="bg-gray-400 px-6 py-2 rounded-lg text-white font-medium transition hover:bg-gray-500"
+      >
+        Cancel
+      </button>
+
       <a [routerLink]="['/updatePassword', user.id]">
-        <button
-          class="border border-secondary px-6 py-2 rounded-lg font-medium text-secondary transition hover:bg-primary hover:text-white"
-        >
+        <button class="border border-secondary px-6 py-2 rounded-lg font-medium text-secondary transition hover:bg-secondary hover:text-white">
           Change Password
         </button>
       </a>
