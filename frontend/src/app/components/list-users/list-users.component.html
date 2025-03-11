@@ -76,7 +76,7 @@
     [isVisible]="showUserProfileModal"
     [userId]="currentUserId"
     (closed)="showUserProfileModal = false"
-    (errorUserProfileModal)="showErrorUserProfileModal()"
+    (errorUserProfileModal)="showErrorUserProfileModal($event)"
   >
   </app-user-profile-modal>
 </div>

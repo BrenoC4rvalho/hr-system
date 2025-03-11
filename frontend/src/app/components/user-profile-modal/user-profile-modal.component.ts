@@ -7,6 +7,7 @@ import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { UserRole } from '../../core/enums/user-role.enum';
 import { UserStatus } from '../../core/enums/user-status.enum';
+import { AuthService } from '../../auth/service/auth.service';
 
 @Component({
   selector: 'app-user-profile-modal',
@@ -20,7 +21,7 @@ export class UserProfileModalComponent implements OnChanges {
   @Input() userId: number | undefined;
   @Input() isVisible: boolean = false;
   @Output() closed = new EventEmitter<void>()
-  @Output() errorUserProfileModal = new EventEmitter<void>()
+  @Output() errorUserProfileModal = new EventEmitter<string>()
 
   isEditing = false;
 
@@ -28,10 +29,12 @@ export class UserProfileModalComponent implements OnChanges {
 
   user: User | undefined;
 
-  userRoles: UserRole[] = Object.values(UserRole)
+  userRoles: UserRole[];
   userStatus: UserStatus[] = Object.values(UserStatus);
 
-  constructor(private userService: UserService) { }
+  constructor(private userService: UserService, private authService: AuthService) {
+    this.userRoles = this.getFilterdRoles();
+   }
 
   ngOnChanges(changes: SimpleChanges): void {
     if(changes['isVisible'] && this.isVisible) {
@@ -53,12 +56,23 @@ export class UserProfileModalComponent implements OnChanges {
 
       },
       error: () => {
-        this.errorUserProfileModal.emit();
+        this.errorUserProfileModal.emit("An unexpected error occurred while fetching user information. Please try again later.");
       }
     })
 
     return undefined;
 
+  }
+
+  private getFilterdRoles(): UserRole[] {
+
+    const roles = Object.values(UserRole);
+
+    if(this.authService.getUser()?.role !== UserRole.ADMIN) {
+      return roles.filter(role => role!== UserRole.ADMIN);
+    }
+
+    return roles;
   }
 
   onClose() {
@@ -80,8 +94,11 @@ export class UserProfileModalComponent implements OnChanges {
           this.isEditing = false;
         },
         error: (err) => {
-          console.error('Error updating user:', err);
-          alert('Error updating user.');
+          if(err.error) {
+            this.errorUserProfileModal.emit(err.error);
+          } else {
+            this.errorUserProfileModal.emit("An unexpected error occurred while fetching user information. Please try again later.");
+          }
         }
       });
     }

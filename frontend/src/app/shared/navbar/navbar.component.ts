@@ -56,10 +56,10 @@ export class NavbarComponent implements OnInit {
     this.showUserProfileModal = true;
   }
 
-  showErrorUserProfileModal(): void {
+  showErrorUserProfileModal(errorMessage: string): void {
     this.showUserProfileModal = false;
     this.showErrorModal = true;
-    this.errorMessage = 'An unexpected error occurred while fetching user information. Please try again later.';
+    this.errorMessage = errorMessage;
   }
 
 }
