@@ -6,6 +6,7 @@ import { Observable } from 'rxjs';
 import { AuthService } from '../../auth/service/auth.service';
 import { CreateUser } from '../model/create-user';
 import { User } from '../model/user';
+import { EditUser } from '../model/edit-user';
 
 @Injectable({
   providedIn: 'root'
@@ -39,8 +40,13 @@ export class UserService {
 
   // path /id  {username: 3,50, role, status, employeeId}
   // return user 200
-  update() {
+  update(id: number, body: EditUser ): Observable<User> {
 
+    if(body.username && (body.username.length < 3 || body.username.length > 50)) {
+      throw new Error('Username must be between 3 and 50 characters.');
+    }
+
+    return this.http.put<User>(`${this.apiUrl}/${id}`, body);
   }
 
 

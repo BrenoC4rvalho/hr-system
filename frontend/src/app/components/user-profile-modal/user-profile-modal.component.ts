@@ -35,13 +35,7 @@ export class UserProfileModalComponent implements OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
     if(changes['isVisible'] && this.isVisible) {
-      this.getUserProfile()
-    }
-  }
-
-  ngOnInit() {
-    if(this.user) {
-      this.editableUser = { ...this.user };
+      this.getUserProfile();
     }
   }
 
@@ -55,6 +49,8 @@ export class UserProfileModalComponent implements OnChanges {
     this.userService.show(this.userId).subscribe({
       next: (response: User) => {
         this.user = response;
+        this.editableUser = { ...this.user };
+
       },
       error: () => {
         this.errorUserProfileModal.emit();
@@ -71,8 +67,26 @@ export class UserProfileModalComponent implements OnChanges {
   }
 
   saveChanges() {
-    // fazer requisicao
-    this.isEditing = false;
+
+    if (!this.editableUser.username || this.editableUser.username.length < 3 || this.editableUser.username.length > 50) {
+      alert('Username must be between 3 and 50 characters.');
+      return;
+    }
+
+    if (this.userId !== undefined) {
+      this.userService.update(this.userId, this.editableUser).subscribe({
+        next: (updatedUser) => {
+          this.user = updatedUser;
+          this.isEditing = false;
+        },
+        error: (err) => {
+          console.error('Error updating user:', err);
+          alert('Error updating user.');
+        }
+      });
+    }
+
+
   }
 
   toggleEdit() {
