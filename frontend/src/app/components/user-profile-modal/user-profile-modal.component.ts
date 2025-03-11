@@ -138,4 +138,16 @@ export class UserProfileModalComponent implements OnChanges {
 
   }
 
+  canEdit(): boolean {
+
+    const currentUser = this.authService.getUser();
+
+    if(currentUser?.role === UserRole.HR) {
+      return false;
+    }
+
+    return true;
+
+  }
+
 }
