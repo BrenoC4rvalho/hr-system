@@ -117,4 +117,25 @@ export class UserProfileModalComponent implements OnChanges {
     this.isEditing = false;
   }
 
+  canEditAdminOrSelf(): boolean {
+
+    const currentUser = this.authService.getUser();
+
+    if(!currentUser || !this.editableUser) {
+      return false;
+    }
+
+
+    if(currentUser.id === this.editableUser.id) {
+      return true;
+    }
+
+    if(this.editableUser.role === UserRole.ADMIN) {
+      return currentUser.role === UserRole.ADMIN;
+    }
+
+    return true;
+
+  }
+
 }

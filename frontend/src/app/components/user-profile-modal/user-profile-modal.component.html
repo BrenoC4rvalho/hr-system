@@ -62,7 +62,7 @@
 
     <div class="flex gap-3 mt-4 justify-end">
       <button
-        *ngIf="!isEditing"
+        *ngIf="!isEditing && canEditAdminOrSelf()"
         (click)="toggleEdit()"
         class="bg-secondary px-6 py-2 rounded-lg text-white font-medium transition hover:bg-secondary/80"
       >
@@ -85,7 +85,7 @@
         Cancel
       </button>
 
-      <a [routerLink]="['/updatePassword', user.id]">
+      <a *ngIf="canEditAdminOrSelf()" [routerLink]="['/updatePassword', user.id]">
         <button class="border border-secondary px-6 py-2 rounded-lg font-medium text-secondary transition hover:bg-secondary hover:text-white">
           Change Password
         </button>
