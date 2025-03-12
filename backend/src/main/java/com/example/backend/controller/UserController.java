@@ -117,6 +117,7 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(user);
     }
 
+    @PreAuthorize("hasAnyAuthority('ADMIN','MANAGER')")
     @GetMapping("/search")
     public ResponseEntity<?> search(
             @RequestParam String username,
