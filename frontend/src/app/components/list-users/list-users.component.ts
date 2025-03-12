@@ -11,10 +11,11 @@ import { PaginationComponent } from "../pagination/pagination.component";
 import { ErrorModalComponent } from "../error-modal/error-modal";
 import { UserProfileModalComponent } from "../user-profile-modal/user-profile-modal.component";
 import { ConfirmButtonComponent } from "../confirm-button/confirm-button.component";
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-list-users',
-  imports: [CommonModule, LucideAngularModule, PaginationComponent, ErrorModalComponent, UserProfileModalComponent, ConfirmButtonComponent],
+  imports: [CommonModule, LucideAngularModule, PaginationComponent, ErrorModalComponent, UserProfileModalComponent, ConfirmButtonComponent, FormsModule],
   templateUrl: './list-users.component.html',
 })
 export class ListUsersComponent implements OnInit, OnChanges {
@@ -41,6 +42,9 @@ export class ListUsersComponent implements OnInit, OnChanges {
   currentPage: number = 0;
   pageSize: number = 12;
   totalPages: number = 0;
+
+  searchQueryUsername: string = '';
+  isSearch: boolean = false;
 
   constructor(private userService: UserService, private authService: AuthService) {}
 
@@ -77,8 +81,37 @@ export class ListUsersComponent implements OnInit, OnChanges {
     })
   }
 
+  onSearch(page: number, size: number): void {
+    this.userService.searchByUsername(this.searchQueryUsername, this.currentPage, this.pageSize).subscribe({
+      next: (response) => {
+         this.users = response.users;
+         this.currentPage = response.currentPage;
+         this.totalPages = response.totalPages;
+         this.pageSize = response.pageSize;
+         this.isSearch = true;
+      },
+      error: (error) => {
+        if(error && error.error) {
+          this.showErrorModal = true;
+          this.errorMessage = error.error;
+        } else {
+          this.showErrorModal = true;
+          this.errorMessage = 'An unexpected error occurred. Please try again later.';
+        }
+
+        this.isSearch = false;
+        this.getUsers(0, this.pageSize)
+      }
+
+    })
+  }
+
   onPageChange(newPage: number): void {
-    this.getUsers(newPage, this.pageSize);
+    if(this.isSearch) {
+      this.onSearch(newPage, this.pageSize);
+    } else {
+      this.getUsers(newPage, this.pageSize);
+    }
   }
 
   canDeleteAdmin(userDeleteRole: UserRole): boolean {

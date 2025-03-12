@@ -32,14 +32,10 @@ export class UserService {
     return this.http.post<User>(this.apiUrl, body);
   }
 
-  //path /id
-  // return user 200
   show(id: number): Observable<User> {
     return this.http.get<User>(`${this.apiUrl}/${id}`);
   }
 
-  // path /id  {username: 3,50, role, status, employeeId}
-  // return user 200
   update(id: number, body: EditUser ): Observable<User> {
 
     if(body.username && (body.username.length < 3 || body.username.length > 50)) {
@@ -50,16 +46,21 @@ export class UserService {
   }
 
 
-  //path /id  password
-  // return string and 200
   updatePassword(id: number, password: string): Observable<void> {
     return this.http.patch<void>(`${this.apiUrl}/${id}`, { password })
   }
 
-  // path /id
-  // return string and 200
   delete(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
+  }
+
+  searchByUsername(username: string, page: number, size: number): Observable<PaginatedUsersResponse> {
+    const params = new HttpParams()
+     .set('page', page.toString())
+     .set('size', size.toString())
+     .set('username', username);
+
+    return this.http.get<PaginatedUsersResponse>(`${this.apiUrl}/search/byUsername`, { params });
   }
 
 }

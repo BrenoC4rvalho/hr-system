@@ -10,6 +10,9 @@
           class="pl-7 p-2"
           type="search"
           placeholder="Search User"
+          [(ngModel)]="searchQueryUsername"
+          (keyup)="onSearch(0, 12)"
+          (keydown.enter)="onSearch(0, 12)"
         >
       </div>
     </div>
