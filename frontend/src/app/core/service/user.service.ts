@@ -60,7 +60,7 @@ export class UserService {
      .set('size', size.toString())
      .set('username', username);
 
-    return this.http.get<PaginatedUsersResponse>(`${this.apiUrl}/search/byUsername`, { params });
+    return this.http.get<PaginatedUsersResponse>(`${this.apiUrl}/search`, { params });
   }
 
 }
