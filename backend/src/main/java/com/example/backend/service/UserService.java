@@ -201,4 +201,13 @@ public class UserService {
 
     }
     
+    public Page<UserRespondeDTO> search(String username, Pageable pageable) {
+        Page<User> users = userRepository.findByUsernameContainingIgnoreCase(username, pageable);
+        
+        if(users.isEmpty()) {
+            throw new UserNotFoundException();
+        }
+        
+        return users.map(userResponseMapper::map);
+    }
 }
