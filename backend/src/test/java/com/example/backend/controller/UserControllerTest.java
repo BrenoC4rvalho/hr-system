@@ -2,6 +2,9 @@ package com.example.backend.controller;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.fail;
+
+import java.util.Map;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -19,6 +22,9 @@ import com.example.backend.dto.UpdateUserDTO;
 import com.example.backend.dto.UserRespondeDTO;
 import com.example.backend.enums.UserRole;
 import com.example.backend.service.UserService;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.springframework.http.*;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -339,8 +345,16 @@ public class UserControllerTest {
             String.class
         );
 
+        
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals("Password updated successfully.", response.getBody());
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            Map<String, String> responseBody = objectMapper.readValue(response.getBody(), new TypeReference<>() {});
+            assertEquals("Password updated successfully.", responseBody.get("message"));
+        } catch (JsonProcessingException e) {
+            fail("Failed to parse response body.");
+        }
     
     }
 
@@ -365,7 +379,14 @@ public class UserControllerTest {
         );
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals("Password updated successfully.", response.getBody());
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            Map<String, String> responseBody = objectMapper.readValue(response.getBody(), new TypeReference<>() {});
+            assertEquals("Password updated successfully.", responseBody.get("message"));
+        } catch (JsonProcessingException e) {
+            fail("Failed to parse response body.");
+        }
     }  
 
     @DisplayName("Test update password with unauthorized user.")
@@ -412,7 +433,14 @@ public class UserControllerTest {
         );
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals("The user has been deleted.", response.getBody());
+        
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            Map<String, String> responseBody = objectMapper.readValue(response.getBody(), new TypeReference<>() {});
+            assertEquals("The user has been deleted.", responseBody.get("message"));
+        } catch (JsonProcessingException e) {
+            fail("Failed to parse response body.");
+        }
     }
 
     @DisplayName("Test delete user with unauthorized role.")
