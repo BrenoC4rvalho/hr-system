@@ -22,6 +22,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.authorization.AuthorizationDeniedException;
 
 import com.example.backend.dto.CreateUserDTO;
@@ -635,4 +636,36 @@ public class UserServiceTest {
 
     // end delete
 
+    // Tests for method search
+
+    @Test
+    @DisplayName("search: Should return a page of UserRespondeDTO when users are found")
+    void testSearchUsersFound() {
+        Pageable pageable = PageRequest.of(0, 10);
+        Page<User> usersPage = new PageImpl<>(List.of(user));
+        
+        when(userRepository.findByUsernameContainingIgnoreCase("test", pageable)).thenReturn(usersPage);
+        when(userResponseMapper.map(user)).thenReturn(userResponseDTO);
+        
+        Page<UserRespondeDTO> result = userService.search("test", pageable);
+        
+        assertFalse(result.isEmpty());
+        verify(userRepository).findByUsernameContainingIgnoreCase("test", pageable);
+        verify(userResponseMapper).map(user);
+    }
+
+    @Test
+    @DisplayName("search: Should throw UserNotFoundException when no users are found")
+    void testSearchUsersNotFound() {
+        Pageable pageable = PageRequest.of(0, 10);
+        Page<User> emptyPage = Page.empty();
+        
+        when(userRepository.findByUsernameContainingIgnoreCase("nonexistent", pageable)).thenReturn(emptyPage);
+        
+        assertThrows(UserNotFoundException.class, () -> userService.search("nonexistent", pageable));
+        
+        verify(userRepository).findByUsernameContainingIgnoreCase("nonexistent", pageable);
+    }
+
+    // end search
 }
