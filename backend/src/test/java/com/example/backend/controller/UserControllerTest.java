@@ -22,6 +22,7 @@ import com.example.backend.service.UserService;
 
 import org.springframework.http.*;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
@@ -457,5 +458,72 @@ public class UserControllerTest {
 
     }
 
+    @DisplayName("Test search users.")
+    @Test
+    void shouldReturnUsers_WhenUserExists() {
+    }
+
+    @DisplayName("Test search users not found.")
+    @Test
+    void shouldReturnNotFound_WhenUserDoesNotExist() {
+        String token = getAuthToken("admin", "password");
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setBearerAuth(token);
+        HttpEntity<Void> entity = new HttpEntity<>(headers);
+
+        ResponseEntity<String> response = restTemplate.exchange(
+            "/users/search?username=nonexistentuser&page=0&size=12",
+            HttpMethod.GET,
+            entity,
+            String.class
+        );
+
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+    }
+
+    @DisplayName("Test search users.")
+    @Test
+    void shouldReturnUsers_WhenUserExistsWithSearch() {
+        generateUser("john_doe", UserRole.ADMIN);
+
+        String token = getAuthToken("admin", "password");
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setBearerAuth(token);
+        HttpEntity<Void> entity = new HttpEntity<>(headers);
+
+        ResponseEntity<String> response = restTemplate.exchange(
+            "/users/search?username=john_doe&page=0&size=12",
+            HttpMethod.GET,
+            entity,
+            String.class
+        );
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+    }
+
+
+
+    @DisplayName("Test search users with unauthorized role.")
+    @Test
+    void shouldReturnForbidden_WhenUserHasNoPermissionToSearchUsers() {
+
+        generateUser("breno", UserRole.HR);        
+        String token = getAuthToken("breno", "breno");
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setBearerAuth(token);
+        HttpEntity<Void> entity = new HttpEntity<>(headers);
+
+        ResponseEntity<String> response = restTemplate.exchange(
+            "/users/search?username=john&page=0&size=12",
+            HttpMethod.GET,
+            entity,
+            String.class
+        );
+
+        assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
+    }
 
 }
