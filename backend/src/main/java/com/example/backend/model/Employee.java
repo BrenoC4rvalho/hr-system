@@ -38,7 +38,7 @@ public class Employee {
     private Long id;
 
     @Column(name = "first_name",nullable = false)
-    @NotBlank
+    @NotBlank(message = "The first name field cannot be blank.")
     @Length(min = 3, max = 100, message = "The first name field between 3 and 100 characters.")
     private String firstName;
     
