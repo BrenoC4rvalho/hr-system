@@ -5,8 +5,10 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 import com.example.backend.config.AdminInitializer;
+import com.example.backend.dto.CreatePositionDTO;
 import com.example.backend.dto.PositionDTO;
 import com.example.backend.exception.PositionNotFoundException;
+import com.example.backend.mapper.CreatePositionMapper;
 import com.example.backend.mapper.PositionMapper;
 import com.example.backend.model.Position;
 import com.example.backend.repository.PositionRepository;
@@ -14,16 +16,14 @@ import com.example.backend.repository.PositionRepository;
 @Service
 public class PositionService {
 
-    private final AdminInitializer adminInitializer;
-
-
     private final PositionRepository positionRepository;
     private final PositionMapper positionMapper;
+    private final CreatePositionMapper createPositionMapper;
 
-    public PositionService(PositionRepository positionRepository, PositionMapper positionMapper, AdminInitializer adminInitializer) {
+    public PositionService(PositionRepository positionRepository, PositionMapper positionMapper, CreatePositionMapper createPositionMapper) {
         this.positionRepository = positionRepository;
         this.positionMapper = positionMapper;
-        this.adminInitializer = adminInitializer;
+        this.createPositionMapper = createPositionMapper;
     }
 
     public List<PositionDTO> getAll() {
@@ -36,6 +36,15 @@ public class PositionService {
         return positions.stream()
             .map(positionMapper::map)
             .collect(Collectors.toList());
+    }
+
+    public PositionDTO create(CreatePositionDTO createPositionDTO) {
+
+        Position newPosition = createPositionMapper.map(createPositionDTO);
+
+        newPosition = positionRepository.save(newPosition);
+
+        return positionMapper.map(newPosition);
     }
 
     public PositionDTO getPosition(Long id)  {

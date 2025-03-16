@@ -11,10 +11,13 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.backend.dto.CreatePositionDTO;
 import com.example.backend.dto.PositionDTO;
 import com.example.backend.service.PositionService;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.PostMapping;
+
 
 
 @RestController
@@ -34,6 +37,14 @@ public class PositionController {
         return ResponseEntity.status(HttpStatus.OK).body(positions);
 
     }
+
+    @PostMapping()
+    public ResponseEntity<?> create(@RequestBody CreatePositionDTO createPositionDTO) {
+        PositionDTO newPosition = positionService.create(createPositionDTO);
+    
+        return ResponseEntity.status(HttpStatus.CREATED).body(newPosition);
+    }
+    
 
     @GetMapping("/{id}")
     public ResponseEntity<?> show(@PathVariable("id") Long id) {
