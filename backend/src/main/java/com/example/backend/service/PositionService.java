@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
-import com.example.backend.config.AdminInitializer;
 import com.example.backend.dto.CreatePositionDTO;
 import com.example.backend.dto.PositionDTO;
 import com.example.backend.exception.PositionNotFoundException;

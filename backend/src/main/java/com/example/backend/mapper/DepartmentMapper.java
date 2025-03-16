@@ -9,7 +9,7 @@ public class DepartmentMapper {
         Department department = new Department();
         department.setId(departmentDTO.getId());
         department.setName(departmentDTO.getName());
-        department.setManagerId(departmentDTO.getManager());
+        department.setManager(departmentDTO.getManager());
         return department;
     }
 
