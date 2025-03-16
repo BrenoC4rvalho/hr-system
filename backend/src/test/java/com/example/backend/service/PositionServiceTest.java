@@ -1,5 +1,6 @@
 package com.example.backend.service;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -20,6 +21,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import com.example.backend.dto.PositionDTO;
 import com.example.backend.exception.PositionNotFoundException;
 import com.example.backend.mapper.CreatePositionMapper;
+import com.example.backend.dto.CreatePositionDTO;
 import com.example.backend.mapper.PositionMapper;
 import com.example.backend.model.Position;
 import com.example.backend.repository.PositionRepository;
@@ -41,6 +43,7 @@ public class PositionServiceTest {
 
     private Position position;
     private PositionDTO positionDTO;
+    private CreatePositionDTO createPositionDTO;
 
     @BeforeEach
     void setUp() {
@@ -50,6 +53,10 @@ public class PositionServiceTest {
         position.setDescription("Manages employees");
 
         positionDTO = new PositionDTO();
+
+        createPositionDTO = new CreatePositionDTO();
+        createPositionDTO.setName("Manager");
+        createPositionDTO.setDescription("Manages employees");
     }
 
     @DisplayName("getPosition: Should return position when position exists.")
@@ -77,8 +84,32 @@ public class PositionServiceTest {
     }
 
     @Test
+    @DisplayName("create: Should create a new position")
     void testCreate() {
+        when(createPositionMapper.map(createPositionDTO)).thenReturn(position);
+        when(positionRepository.save(position)).thenReturn(position);
+        when(positionMapper.map(position)).thenReturn(positionDTO);
 
+        PositionDTO result = positionService.create(createPositionDTO);
+
+        assertNotNull(result);
+        verify(createPositionMapper).map(createPositionDTO);
+        verify(positionRepository).save(position);
+        verify(positionMapper).map(position);
+    }
+
+    @Test
+    @DisplayName("create: Should throw exception when name is too short")
+    void testCreateThrowsExceptionForShortName() {
+        createPositionDTO.setName("A");
+        assertThrows(IllegalArgumentException.class, () -> positionService.create(createPositionDTO));
+    }
+
+    @Test
+    @DisplayName("create: Should throw exception when description is too long")
+    void testCreateThrowsExceptionForLongDescription() {
+        createPositionDTO.setDescription("A".repeat(256));
+        assertThrows(IllegalArgumentException.class, () -> positionService.create(createPositionDTO));
     }
 
     @Test
@@ -107,7 +138,46 @@ public class PositionServiceTest {
     
 
     @Test
-    void testUpdate() {
+    @DisplayName("update: Should update position when position exists")
+    void update() {
+        when(positionRepository.findById(1L)).thenReturn(Optional.of(position));
+        when(positionMapper.map(position)).thenReturn(positionDTO);
 
+        PositionDTO updatedDTO = new PositionDTO();
+        updatedDTO.setName("Updated Manager");
+        updatedDTO.setDescription("Updated description");
+
+        PositionDTO result = positionService.update(1L, updatedDTO);
+
+        assertNotNull(result);
+        assertEquals("Updated Manager", position.getName());
+        assertEquals("Updated description", position.getDescription());
+        
+        verify(positionRepository).findById(1L);
+        verify(positionRepository).save(position);
+        verify(positionMapper).map(position);
+    }
+
+    @Test
+    @DisplayName("update: Should throw exception when position not found")
+    void updateThrowsExceptionWhenNotFound() {
+        when(positionRepository.findById(1L)).thenReturn(Optional.empty());
+        assertThrows(PositionNotFoundException.class, () -> positionService.update(1L, positionDTO));
+    }
+
+    @Test
+    @DisplayName("update: Should throw exception when name is too short")
+    void updateThrowsExceptionForShortName() {
+        when(positionRepository.findById(1L)).thenReturn(Optional.of(position));
+        positionDTO.setName("A");
+        assertThrows(IllegalArgumentException.class, () -> positionService.update(1L, positionDTO));
+    }
+
+    @Test
+    @DisplayName("update: Should throw exception when description is too long")
+    void updateThrowsExceptionForLongDescription() {
+        when(positionRepository.findById(1L)).thenReturn(Optional.of(position));
+        positionDTO.setDescription("A".repeat(256));
+        assertThrows(IllegalArgumentException.class, () -> positionService.update(1L, positionDTO));
     }
 }
