@@ -64,8 +64,18 @@ public class DepartmentServiceTest {
 
     
     @Test
-    void testCreate() {
+    @DisplayName("create: Should create a new department")
+    void create() {
+        when(createDepartmentMapper.map(createDepartmentDTO)).thenReturn(department);
+        when(departmentRepository.save(department)).thenReturn(department);
+        when(departmentMapper.map(department)).thenReturn(departmentDTO);
 
+        DepartmentDTO result = departmentService.create(createDepartmentDTO);
+
+        assertNotNull(result);
+        verify(createDepartmentMapper).map(createDepartmentDTO);
+        verify(departmentRepository).save(department);
+        verify(departmentMapper).map(department);
     }
 
    @Test
@@ -88,7 +98,7 @@ public class DepartmentServiceTest {
         when(departmentRepository.findAll()).thenReturn(List.of());
         assertThrows(DepartmentNotFoundException.class, () -> departmentService.getAll());
     }
-    
+
     @Test
     void testGetDepartment() {
 
