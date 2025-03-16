@@ -34,4 +34,11 @@ public class PositionService {
             .collect(Collectors.toList());
     }
 
+    public PositionDTO getPosition(Long id)  {
+        Position position = positionRepository.findById(id)
+           .orElseThrow(() -> new PositionNotFoundException());
+
+        return positionMapper.map(position);
+    }
+
 }
