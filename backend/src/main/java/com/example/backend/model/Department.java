@@ -84,7 +84,7 @@ public class Department {
         return manager;
     }
 
-    public void setManagerId(Employee manager) {
+    public void setManager(Employee manager) {
         this.manager = manager;
     }
 
