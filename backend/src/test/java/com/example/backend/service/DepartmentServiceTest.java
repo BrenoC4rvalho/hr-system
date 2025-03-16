@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 
 import java.util.List;
@@ -104,8 +105,29 @@ public class DepartmentServiceTest {
     }
 
     @Test
-    void testGetDepartment() {
+    @DisplayName("getDepartment: Should return department when found")
+    void getDepartment() {
+        when(departmentRepository.findById(1L)).thenReturn(Optional.of(department));
+        when(departmentMapper.map(department)).thenReturn(departmentDTO);
 
+        DepartmentDTO result = departmentService.getDepartment(1L);
+
+        assertNotNull(result);
+        assertEquals("HR", result.getName());
+
+        verify(departmentRepository).findById(1L);
+        verify(departmentMapper).map(department);
+    }
+
+    @Test
+    @DisplayName("getDepartment: Should throw exception when department is not found")
+    void getDepartmentNotFound() {
+        when(departmentRepository.findById(1L)).thenReturn(Optional.empty());
+
+        assertThrows(DepartmentNotFoundException.class, () -> departmentService.getDepartment(1L));
+
+        verify(departmentRepository).findById(1L);
+        verifyNoInteractions(departmentMapper);
     }
 
     @Test
