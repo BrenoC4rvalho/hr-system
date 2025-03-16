@@ -67,7 +67,7 @@ public class DepartmentService {
         Department department = departmentRepository.findById(id)
            .orElseThrow(() -> new DepartmentNotFoundException());
 
-        if(departmentDTO.getName().length() < 2 || departmentDTO.getName().length() > 100) {
+        if(departmentDTO.getName() != null && (departmentDTO.getName().length() < 2 || departmentDTO.getName().length() > 100)) {
             throw new IllegalArgumentException("Name must be between 2 and 100 characters long.");
         }
 
