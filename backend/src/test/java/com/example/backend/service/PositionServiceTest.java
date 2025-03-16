@@ -1,10 +1,12 @@
 package com.example.backend.service;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -80,8 +82,26 @@ public class PositionServiceTest {
     }
 
     @Test
-    void testGetAll() {
+    @DisplayName("getAllPosition: should return all positions")
+    void GetAll() {
 
+        when(positionRepository.findAll()).thenReturn(List.of(position));
+        when(positionMapper.map(position)).thenReturn(positionDTO);
+ 
+        List<PositionDTO> result = positionService.getAll();
+
+        assertNotNull(result);
+        assertFalse(result.isEmpty());
+
+        verify(positionRepository).findAll();
+        verify(positionMapper).map(position);
+    }
+
+    @Test
+    @DisplayName("getAllPositions: should throw exception when positions not found")
+    void getAllPositionsNotFound() {
+        when(positionRepository.findAll()).thenReturn(List.of());
+        assertThrows(PositionNotFoundException.class, () -> positionService.getAll());
     }
 
     
