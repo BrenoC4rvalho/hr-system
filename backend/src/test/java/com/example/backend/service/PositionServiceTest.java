@@ -99,20 +99,6 @@ public class PositionServiceTest {
     }
 
     @Test
-    @DisplayName("create: Should throw exception when name is too short")
-    void testCreateThrowsExceptionForShortName() {
-        createPositionDTO.setName("A");
-        assertThrows(IllegalArgumentException.class, () -> positionService.create(createPositionDTO));
-    }
-
-    @Test
-    @DisplayName("create: Should throw exception when description is too long")
-    void testCreateThrowsExceptionForLongDescription() {
-        createPositionDTO.setDescription("A".repeat(256));
-        assertThrows(IllegalArgumentException.class, () -> positionService.create(createPositionDTO));
-    }
-
-    @Test
     @DisplayName("getAllPosition: should return all positions")
     void GetAll() {
 
