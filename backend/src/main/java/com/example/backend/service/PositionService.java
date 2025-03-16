@@ -57,11 +57,11 @@ public class PositionService {
         Position position = positionRepository.findById(id)
            .orElseThrow(() -> new PositionNotFoundException());
 
-        if(positionDTO.getName().length() < 2 || positionDTO.getName().length() > 100) {
+        if(positionDTO.getName() != null && (positionDTO.getName().length() < 2 || positionDTO.getName().length() > 100)) {
             throw new IllegalArgumentException("Name must be between 2 and 100 characters long.");
         }
 
-        if(positionDTO.getDescription().length() > 255) {
+        if(positionDTO.getDescription() != null && positionDTO.getDescription().length() > 255) {
             throw new IllegalArgumentException("Description cannot be more than 255 characters long.");
         }
 
