@@ -1,12 +1,15 @@
 package com.example.backend.service;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -18,6 +21,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.example.backend.dto.CreateDepartmentDTO;
 import com.example.backend.dto.DepartmentDTO;
+import com.example.backend.dto.EmployeeDTO;
 import com.example.backend.exception.DepartmentNotFoundException;
 import com.example.backend.mapper.CreateDepartmentMapper;
 import com.example.backend.mapper.DepartmentMapper;
@@ -105,7 +109,60 @@ public class DepartmentServiceTest {
     }
 
     @Test
-    void testUpdate() {
+    @DisplayName("update: Should update department when department exists")
+    void update() {
+        // Mockando um departamento existente
+        Department department = new Department();
+        department.setId(1L);
+        department.setName("Old Department");
+    
+        when(departmentRepository.findById(1L)).thenReturn(Optional.of(department));
+        when(departmentRepository.save(any(Department.class))).thenReturn(department);
+        DepartmentDTO departmentDTO = new DepartmentDTO();
+        departmentDTO.setName("Updated Department");
+        when(departmentMapper.map(any(Department.class))).thenReturn(departmentDTO); 
+    
+        DepartmentDTO updatedDTO = new DepartmentDTO();
+        updatedDTO.setName("Updated Department");
+    
+        DepartmentDTO result = departmentService.update(1L, updatedDTO);
+    
+        assertNotNull(result);
+        assertEquals("Updated Department", result.getName());
+    
+        verify(departmentRepository).findById(1L);
+        verify(departmentRepository).save(department);
+        verify(departmentMapper).map(any(Department.class)); 
+    }
 
+    @Test
+    @DisplayName("update: Should throw exception when department not found")
+    void updateThrowsExceptionWhenNotFound() {
+        when(departmentRepository.findById(1L)).thenReturn(Optional.empty());
+        assertThrows(DepartmentNotFoundException.class, () -> departmentService.update(1L, departmentDTO));
+    }
+
+    @Test
+    @DisplayName("update: Should throw exception when name is too short")
+    void updateThrowsExceptionForShortName() {
+        when(departmentRepository.findById(1L)).thenReturn(Optional.of(department));
+        departmentDTO.setName("A");
+        assertThrows(IllegalArgumentException.class, () -> departmentService.update(1L, departmentDTO));
+    }
+
+    @Test
+    @DisplayName("update: Should throw exception when manager is from another department")
+    void updateThrowsExceptionForInvalidManager() {
+        manager = new Employee();
+        manager.setId(2L);
+        manager.setDepartment(new Department());
+        
+        when(departmentRepository.findById(1L)).thenReturn(Optional.of(department));
+        when(employeeRepository.findById(2L)).thenReturn(Optional.of(manager));
+        
+        departmentDTO.setManager(new Employee());
+        departmentDTO.getManager().setId(2L);
+        
+        assertThrows(IllegalArgumentException.class, () -> departmentService.update(1L, departmentDTO));
     }
 }
