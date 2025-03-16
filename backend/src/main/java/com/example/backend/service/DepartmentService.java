@@ -36,4 +36,11 @@ public class DepartmentService {
             .collect(Collectors.toList());
     }
 
+    public DepartmentDTO getDepartment(Long id) {
+        Department department = departmentRepository.findById(id)
+           .orElseThrow(() -> new DepartmentNotFoundException());
+
+        return departmentMapper.map(department);
+    }
+
 }

@@ -30,5 +30,12 @@ public class DepartmentController {
         List<DepartmentDTO> departments = departmentService.getAll();
         return ResponseEntity.status(HttpStatus.OK).body(departments);
     }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<?> show(@RequestParam Long id) {
+        DepartmentDTO department = departmentService.getDepartment(id);
+        return ResponseEntity.status(HttpStatus.OK).body(department);
+    }
+ 
     
 }
