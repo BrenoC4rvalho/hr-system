@@ -14,6 +14,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.backend.dto.CreatePositionDTO;
 import com.example.backend.dto.PositionDTO;
 import com.example.backend.service.PositionService;
+
+import jakarta.validation.Valid;
+
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -39,7 +42,7 @@ public class PositionController {
     }
 
     @PostMapping()
-    public ResponseEntity<?> create(@RequestBody CreatePositionDTO createPositionDTO) {
+    public ResponseEntity<?> create(@Valid @RequestBody CreatePositionDTO createPositionDTO) {
         PositionDTO newPosition = positionService.create(createPositionDTO);
     
         return ResponseEntity.status(HttpStatus.CREATED).body(newPosition);
