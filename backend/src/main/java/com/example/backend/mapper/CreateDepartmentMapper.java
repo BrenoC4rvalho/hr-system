@@ -1,14 +1,14 @@
 package com.example.backend.mapper;
 
-import com.example.backend.dto.DepartmentDTO;
+import com.example.backend.dto.CreateDepartmentDTO;
 import com.example.backend.model.Department;
 
 public class CreateDepartmentMapper {
 
-    public Department map(DepartmentDTO departmentDTO) {
+    public Department map(CreateDepartmentDTO createDepartmentDTO) {
 
         Department department = new Department();
-        department.setName(departmentDTO.getName());
+        department.setName(createDepartmentDTO.getName());
         return department;
 
     }
