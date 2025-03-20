@@ -87,6 +87,21 @@ public class DepartmentControllerTest {
         assertNotNull(response.getBody());
     }
 
+    @DisplayName("Test get department by id.")
+    @Test
+    void shouldReturnDepartmentById() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setBearerAuth(authToken);
+        HttpEntity<Void> entity = new HttpEntity<>(headers);
+        ResponseEntity<DepartmentDTO> response = restTemplate.exchange(
+            "/departments/" + createdDepartmentId, HttpMethod.GET, entity, DepartmentDTO.class);
+        
+        System.out.println(response);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertNotNull(response.getBody());
+    }
+
     @DisplayName("Test update department.")
     @Test
     void shouldUpdateDepartment() {
