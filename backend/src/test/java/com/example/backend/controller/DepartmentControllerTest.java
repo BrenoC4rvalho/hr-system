@@ -3,6 +3,8 @@ package com.example.backend.controller;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+import java.util.Map;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -85,4 +87,20 @@ public class DepartmentControllerTest {
         assertNotNull(response.getBody());
     }
 
+    @DisplayName("Test update department.")
+    @Test
+    void shouldUpdateDepartment() {
+        DepartmentDTO departmentDTO = new DepartmentDTO();
+        departmentDTO.setName("Updated Department");
+        HttpHeaders headers = new HttpHeaders();
+        headers.setBearerAuth(authToken);
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity<DepartmentDTO> entity = new HttpEntity<>(departmentDTO, headers);
+        
+        ResponseEntity<Map> response = restTemplate.exchange(
+            "/departments/" + createdDepartmentId, HttpMethod.PUT, entity, Map.class);
+        
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals("Department updated successfully.", response.getBody().get("message"));
+    }
 }
