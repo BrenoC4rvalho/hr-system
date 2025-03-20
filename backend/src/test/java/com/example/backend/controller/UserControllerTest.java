@@ -28,7 +28,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.springframework.http.*;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
