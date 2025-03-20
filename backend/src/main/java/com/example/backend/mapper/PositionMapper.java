@@ -1,8 +1,11 @@
 package com.example.backend.mapper;
 
+import org.springframework.stereotype.Component;
+
 import com.example.backend.dto.PositionDTO;
 import com.example.backend.model.Position;
 
+@Component
 public class PositionMapper {
 
     public Position map(PositionDTO positionDTO) {

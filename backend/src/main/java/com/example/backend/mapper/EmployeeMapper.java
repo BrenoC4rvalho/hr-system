@@ -1,8 +1,11 @@
 package com.example.backend.mapper;
 
+import org.springframework.stereotype.Component;
+
 import com.example.backend.dto.EmployeeDTO;
 import com.example.backend.model.Employee;
 
+@Component
 public class EmployeeMapper {
 
     public Employee map(EmployeeDTO employeeDTO) {
