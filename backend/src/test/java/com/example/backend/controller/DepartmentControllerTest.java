@@ -3,6 +3,7 @@ package com.example.backend.controller;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -30,11 +32,39 @@ public class DepartmentControllerTest {
 
     @Autowired UserService userService;
 
+    private String authToken;
+    private Long createdDepartmentId;
+
     private String getAuthToken(String username, String password) {
         AuthRequestDTO request = new AuthRequestDTO(username, password);
         ResponseEntity<AuthResponseDTO> response = restTemplate.postForEntity(
             "/auth", request, AuthResponseDTO.class);
         return response.getBody().getToken();
+    }
+
+    @BeforeEach
+    void setUp() {
+        authToken = getAuthToken("admin", "password");
+        CreateDepartmentDTO request = new CreateDepartmentDTO("HR");
+        HttpHeaders headers = new HttpHeaders();
+        headers.setBearerAuth(authToken);
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity<CreateDepartmentDTO> entity = new HttpEntity<>(request, headers);
+        ResponseEntity<DepartmentDTO> response = restTemplate.postForEntity("/departments", entity, DepartmentDTO.class);
+        createdDepartmentId = response.getBody().getId();
+    }
+
+    @DisplayName("Test get all departments.")
+    @Test
+    void shouldReturnAllDepartments() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setBearerAuth(authToken);
+        HttpEntity<Void> entity = new HttpEntity<>(headers);
+        ResponseEntity<DepartmentDTO[]> response = restTemplate.exchange(
+            "/departments", HttpMethod.GET, entity, DepartmentDTO[].class);
+        
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertNotNull(response.getBody());
     }
 
     @DisplayName("Test create department.")
