@@ -69,6 +69,22 @@ public class PositionControllerTest {
         assertNotNull(response.getBody());
     }
 
+
+    @DisplayName("Test create position.")
+    @Test
+    void shouldCreatePosition() {
+        CreatePositionDTO request = new CreatePositionDTO("Manager", "Test description.");
+        HttpHeaders headers = new HttpHeaders();
+        headers.setBearerAuth(authToken);
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity<CreatePositionDTO> entity = new HttpEntity<>(request, headers);
+        ResponseEntity<PositionDTO> response = restTemplate.postForEntity("/positions", entity, PositionDTO.class);
+
+        assertEquals(HttpStatus.CREATED, response.getStatusCode());
+        assertNotNull(response.getBody());
+    }
+
+
     @DisplayName("Test get position by id.")
     @Test
     void shouldReturnPositionById() {
