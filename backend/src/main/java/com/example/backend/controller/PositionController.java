@@ -50,7 +50,7 @@ public class PositionController {
     
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> show(@PathVariable("id") Long id) {
+    public ResponseEntity<?> show(@PathVariable Long id) {
 
         PositionDTO position = positionService.getPosition(id);
         return ResponseEntity.status(HttpStatus.OK).body(position);

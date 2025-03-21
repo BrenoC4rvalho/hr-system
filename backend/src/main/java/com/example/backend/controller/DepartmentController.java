@@ -50,7 +50,7 @@ public class DepartmentController {
     
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> show(@RequestParam Long id) {
+    public ResponseEntity<?> show(@PathVariable Long id) {
         DepartmentDTO department = departmentService.getDepartment(id);
         return ResponseEntity.status(HttpStatus.OK).body(department);
     }
