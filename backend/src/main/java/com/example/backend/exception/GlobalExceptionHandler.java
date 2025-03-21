@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import com.auth0.jwt.exceptions.JWTVerificationException;
+import com.example.backend.model.Department;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -85,11 +86,27 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
     }
 
+    // Position Exceptions Handler
+
+    @ExceptionHandler(PositionNotFoundException.class)
+    public ResponseEntity<String> handlePositionNotFound(PositionNotFoundException e) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+    }
+
+    // Department Exceptions Handler
+
+    @ExceptionHandler(DepartmentNotFoundException.class)
+    public ResponseEntity<String> handleDepartmentNotFound(DepartmentNotFoundException e) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+    }
+
     // Generic exception handler for other, unaddressed errors
     @ExceptionHandler(Exception.class)
     public ResponseEntity<String> handleGenericException(Exception e) {
         System.out.println(e.getMessage());
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error internal server error .");
     }
+
+
     
 }
