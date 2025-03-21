@@ -5,6 +5,8 @@ import org.springframework.http.MediaType;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+import java.util.Map;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -78,5 +80,22 @@ public class PositionControllerTest {
         
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody());
+    }
+
+    @DisplayName("Test update position.")
+    @Test
+    void shouldUpdatePosition() {
+        PositionDTO positionDTO = new PositionDTO();
+        positionDTO.setName("edit");
+        HttpHeaders headers = new HttpHeaders();
+        headers.setBearerAuth(authToken);
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity<PositionDTO> entity = new HttpEntity<>(positionDTO, headers);
+        
+        ResponseEntity<Map> response = restTemplate.exchange(
+            "/positions/" + createdPositionId, HttpMethod.PUT, entity, Map.class);
+        
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals("Position updated successfully.", response.getBody().get("message"));
     }
 }
