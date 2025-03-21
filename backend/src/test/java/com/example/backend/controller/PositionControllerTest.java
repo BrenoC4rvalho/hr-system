@@ -66,4 +66,17 @@ public class PositionControllerTest {
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody());
     }
+
+    @DisplayName("Test get position by id.")
+    @Test
+    void shouldReturnPositionById() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setBearerAuth(authToken);
+        HttpEntity<Void> entity = new HttpEntity<>(headers);
+        ResponseEntity<PositionDTO> response = restTemplate.exchange(
+            "/positions/" + createdPositionId, HttpMethod.GET, entity, PositionDTO.class);
+        
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertNotNull(response.getBody());
+    }
 }
