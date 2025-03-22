@@ -1,5 +1,8 @@
 package com.example.backend.controller;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -50,8 +53,14 @@ public class EmployeeController {
     }
 
     @DeleteMapping("/{id}")
-    public void delete() {
-        
+    public ResponseEntity<?> delete(@PathVariable Long id) {
+        employeeService.delete(id);
+
+        Map<String, String> response = new HashMap<>();
+        response.put("message", "The employee has been deleted.");
+
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+
     }
 
 }

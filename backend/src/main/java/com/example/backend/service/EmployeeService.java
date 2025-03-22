@@ -36,4 +36,14 @@ public class EmployeeService {
                .orElseThrow(EmployeeNotFoundException::new);
         return employeeMapper.map(employee);
     }
+
+    public void delete(Long id) {
+    
+        Employee employee = employeeRepository.findById(id)
+            .orElseThrow(EmployeeNotFoundException::new);
+            
+        // update termination date 
+        // update status
+
+    }
 }
