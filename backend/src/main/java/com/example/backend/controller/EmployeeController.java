@@ -4,6 +4,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -38,8 +39,9 @@ public class EmployeeController {
     }
 
     @GetMapping("/{id}")
-    public void show() {
-
+    public ResponseEntity<?> show(@PathVariable Long id) {
+        EmployeeDTO employee = employeeService.getEmployee(id);
+        return ResponseEntity.status(HttpStatus.OK).body(employee);
     }
 
     @PutMapping("/{id}")

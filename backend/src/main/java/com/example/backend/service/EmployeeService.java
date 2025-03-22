@@ -5,6 +5,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.example.backend.dto.CreateEmployeeDTO;
 import com.example.backend.dto.EmployeeDTO;
+import com.example.backend.exception.EmployeeNotFoundException;
 import com.example.backend.mapper.CreateEmployeeMapper;
 import com.example.backend.mapper.EmployeeMapper;
 import com.example.backend.model.Employee;
@@ -28,5 +29,11 @@ public class EmployeeService {
         Employee newEmployee = createEmployeeMapper.map(createEmployeeDTO);
         Employee savedEmployee = employeeRepository.save(newEmployee);
         return employeeMapper.map(savedEmployee);
+    }
+
+    public EmployeeDTO getEmployee(Long id) {
+        Employee employee = employeeRepository.findById(id)
+               .orElseThrow(EmployeeNotFoundException::new);
+        return employeeMapper.map(employee);
     }
 }
