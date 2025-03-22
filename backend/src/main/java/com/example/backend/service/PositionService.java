@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.example.backend.dto.CreatePositionDTO;
 import com.example.backend.dto.PositionDTO;
 import com.example.backend.exception.PositionNotFoundException;
@@ -37,6 +39,7 @@ public class PositionService {
             .collect(Collectors.toList());
     }
 
+    @Transactional
     public PositionDTO create(CreatePositionDTO createPositionDTO) {
 
         Position newPosition = createPositionMapper.map(createPositionDTO);
@@ -53,6 +56,7 @@ public class PositionService {
         return positionMapper.map(position);
     }
 
+    @Transactional
     public PositionDTO update(Long id, PositionDTO positionDTO) {
         Position position = positionRepository.findById(id)
            .orElseThrow(() -> new PositionNotFoundException());

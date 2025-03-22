@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.example.backend.dto.CreateDepartmentDTO;
 import com.example.backend.dto.DepartmentDTO;
@@ -49,6 +50,7 @@ public class DepartmentService {
             .collect(Collectors.toList());
     }
 
+    @Transactional
     public DepartmentDTO create(CreateDepartmentDTO createDepartmentDTO) {
         Department department = createDepartmentMapper.map(createDepartmentDTO);
         department = departmentRepository.save(department);
@@ -62,6 +64,7 @@ public class DepartmentService {
         return departmentMapper.map(department);
     }
 
+    @Transactional
     public DepartmentDTO update(Long id, DepartmentDTO departmentDTO) {
 
         Department department = departmentRepository.findById(id)
