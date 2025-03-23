@@ -3,6 +3,9 @@ package com.example.backend.controller;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -12,6 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.backend.dto.CreateEmployeeDTO;
@@ -31,8 +35,22 @@ public class EmployeeController {
     }
 
     @GetMapping() 
-    public void index() {
+    public ResponseEntity<?> index(
+        @RequestParam(defaultValue = "0") int page,
+        @RequestParam(defaultValue = "12") int size
+    ) {
 
+        Pageable pageable = PageRequest.of(page, size);
+        Page<EmployeeDTO> employees = employeeService.getAll(pageable);
+
+        Map<String, Object> response = new HashMap<String, Object>();
+        response.put("totalEmployees", employees.getTotalElements());
+        response.put("currentPage", employees.getNumber());
+        response.put("totalPages", employees.getTotalPages());
+        response.put("pageSize", employees.getSize());
+        response.put("employees", employees.getContent());
+
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     @PostMapping()

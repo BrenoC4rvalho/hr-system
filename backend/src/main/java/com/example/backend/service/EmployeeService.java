@@ -1,5 +1,7 @@
 package com.example.backend.service;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,6 +24,18 @@ public class EmployeeService {
         this.employeeRepository = employeeRepository;
         this.createEmployeeMapper = createEmployeeMapper;
         this.employeeMapper = employeeMapper;
+    }
+
+    public Page<EmployeeDTO> getAll(Pageable pageable) {
+
+        Page<Employee> employees = employeeRepository.findAll(pageable);
+
+        if(employees.isEmpty()) {
+            throw new EmployeeNotFoundException();
+        }
+
+        return employees.map(employeeMapper::map);
+
     }
 
     @Transactional
