@@ -66,8 +66,12 @@ public class EmployeeController {
     }
 
     @PutMapping("/{id}")
-    public void update() {
-
+    public ResponseEntity<?> update(
+        @PathVariable Long id,
+        @RequestBody EmployeeDTO employeeDTO
+    ) {
+        EmployeeDTO updatedEmployee = employeeService.update(id, employeeDTO);
+        return  ResponseEntity.status(HttpStatus.OK).body(updatedEmployee);
     }
 
     @DeleteMapping("/{id}")

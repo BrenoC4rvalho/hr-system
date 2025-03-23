@@ -51,6 +51,29 @@ public class EmployeeService {
         return employeeMapper.map(employee);
     }
 
+    @Transactional
+    public EmployeeDTO update(Long id, EmployeeDTO employeeDTO) {
+
+        Employee employee = employeeRepository.findById(id)
+           .orElseThrow(EmployeeNotFoundException::new);
+
+        if (employeeDTO.getFirstName() != null) employee.setFirstName(employeeDTO.getFirstName());
+        if (employeeDTO.getLastName() != null) employee.setLastName(employeeDTO.getLastName());
+        if (employeeDTO.getEmail() != null) employee.setEmail(employeeDTO.getEmail());
+        if (employeeDTO.getPhone() != null) employee.setPhone(employeeDTO.getPhone());
+        if (employeeDTO.getGender() != null) employee.setGender(employeeDTO.getGender());
+        if (employeeDTO.getDepartment() != null) employee.setDepartment(employeeDTO.getDepartment());
+        if (employeeDTO.getPosition() != null) employee.setPosition(employeeDTO.getPosition());
+        if (employeeDTO.getShift() != null) employee.setShift(employeeDTO.getShift());
+        if (employeeDTO.getStatus() != null) employee.setStatus(employeeDTO.getStatus());
+        if (employeeDTO.getBirthDate() != null) employee.setBirthDate(employeeDTO.getBirthDate());
+        if (employeeDTO.getHiredDate() != null) employee.setHiredDate(employeeDTO.getHiredDate());
+        if (employeeDTO.getTerminationDate() != null) employee.setTerminationDate(employeeDTO.getTerminationDate());
+
+        Employee employeeUpdated = employeeRepository.save(employee);
+        return employeeMapper.map(employeeUpdated);
+    }
+
     public void delete(Long id) {
     
         Employee employee = employeeRepository.findById(id)
