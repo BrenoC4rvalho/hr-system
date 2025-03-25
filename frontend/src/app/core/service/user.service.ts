@@ -3,7 +3,6 @@ import { environment } from '../../../environments/environments';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { PaginatedUsersResponse } from '../model/paginated-users-response';
 import { Observable } from 'rxjs';
-import { AuthService } from '../../auth/service/auth.service';
 import { CreateUser } from '../model/create-user';
 import { User } from '../model/user';
 import { EditUser } from '../model/edit-user';
@@ -15,7 +14,7 @@ export class UserService {
 
   private apiUrl = `${environment.apiUrl}/users`;
 
-  constructor(private http: HttpClient, private authService: AuthService) { }
+  constructor(private http: HttpClient) { }
 
 
   getAll(page: number, size: number): Observable<PaginatedUsersResponse> {
