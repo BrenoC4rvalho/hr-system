@@ -25,6 +25,8 @@ import com.example.backend.dto.AuthRequestDTO;
 import com.example.backend.dto.AuthResponseDTO;
 import com.example.backend.dto.CreatePositionDTO;
 import com.example.backend.dto.PositionDTO;
+import com.example.backend.model.Position;
+import com.example.backend.repository.PositionRepository;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
@@ -33,8 +35,12 @@ public class PositionControllerTest {
     @Autowired
     private TestRestTemplate restTemplate;
 
+    @Autowired
+    private PositionRepository positionRepository;
+
     private String authToken;
-    private Long createdPositionId;
+    private HttpHeaders headers;
+    private Position testPosition;
 
     private String getAuthToken(String username, String password) {
         AuthRequestDTO request = new AuthRequestDTO(username, password);
@@ -50,56 +56,53 @@ public class PositionControllerTest {
         jdbcTemplate.execute("DELETE FROM positions");
     }
 
+    private Position createTestPosition() {
+        Position position = new Position();
+        position.setName("Manager");
+        position.setDescription("Test description.");
+        return positionRepository.save(position);
+    }
+
     @BeforeEach
     void setUp() {
         this.cleanDatabase();
         authToken = getAuthToken("admin", "password");
-        CreatePositionDTO request = new CreatePositionDTO("Manager", "Test description.");
-        HttpHeaders headers = new HttpHeaders();
+        headers = new HttpHeaders();
         headers.setBearerAuth(authToken);
         headers.setContentType(MediaType.APPLICATION_JSON);
-        HttpEntity<CreatePositionDTO> entity = new HttpEntity<>(request, headers);
-        ResponseEntity<PositionDTO> response = restTemplate.postForEntity("/positions", entity,PositionDTO.class);
-        createdPositionId = response.getBody().getId();
+        
+        testPosition = createTestPosition();
     }
 
     @DisplayName("Test get all positions.")
     @Test
     void shouldReturnAllPositions() {
-        HttpHeaders headers = new HttpHeaders();
-        headers.setBearerAuth(authToken);
-        HttpEntity<Void> entity = new HttpEntity<>(headers);
+        HttpEntity<Void> requestEntity = new HttpEntity<>(headers);
         ResponseEntity<PositionDTO[]> response = restTemplate.exchange(
-            "/positions", HttpMethod.GET, entity, PositionDTO[].class);
+            "/positions", HttpMethod.GET, requestEntity, PositionDTO[].class);
         
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody());
     }
 
-
     @DisplayName("Test create position.")
     @Test
     void shouldCreatePosition() {
-        CreatePositionDTO request = new CreatePositionDTO("Manager", "Test description.");
-        HttpHeaders headers = new HttpHeaders();
-        headers.setBearerAuth(authToken);
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        HttpEntity<CreatePositionDTO> entity = new HttpEntity<>(request, headers);
-        ResponseEntity<PositionDTO> response = restTemplate.postForEntity("/positions", entity, PositionDTO.class);
+        CreatePositionDTO request = new CreatePositionDTO("Supervisor", "Another test description.");
+        HttpEntity<CreatePositionDTO> requestEntity = new HttpEntity<>(request, headers);
+        ResponseEntity<PositionDTO> response = restTemplate.postForEntity(
+            "/positions", requestEntity, PositionDTO.class);
 
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
         assertNotNull(response.getBody());
     }
 
-
     @DisplayName("Test get position by id.")
     @Test
     void shouldReturnPositionById() {
-        HttpHeaders headers = new HttpHeaders();
-        headers.setBearerAuth(authToken);
-        HttpEntity<Void> entity = new HttpEntity<>(headers);
+        HttpEntity<Void> requestEntity = new HttpEntity<>(headers);
         ResponseEntity<PositionDTO> response = restTemplate.exchange(
-            "/positions/" + createdPositionId, HttpMethod.GET, entity, PositionDTO.class);
+            "/positions/" + testPosition.getId(), HttpMethod.GET, requestEntity, PositionDTO.class);
         
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody());
@@ -108,15 +111,12 @@ public class PositionControllerTest {
     @DisplayName("Test update position.")
     @Test
     void shouldUpdatePosition() {
-        PositionDTO positionDTO = new PositionDTO();
-        positionDTO.setName("edit");
-        HttpHeaders headers = new HttpHeaders();
-        headers.setBearerAuth(authToken);
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        HttpEntity<PositionDTO> entity = new HttpEntity<>(positionDTO, headers);
+        PositionDTO updateDTO = new PositionDTO();
+        updateDTO.setName("Updated Position");
+        HttpEntity<PositionDTO> requestEntity = new HttpEntity<>(updateDTO, headers);
         
         ResponseEntity<Map> response = restTemplate.exchange(
-            "/positions/" + createdPositionId, HttpMethod.PUT, entity, Map.class);
+            "/positions/" + testPosition.getId(), HttpMethod.PUT, requestEntity, Map.class);
         
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals("Position updated successfully.", response.getBody().get("message"));
