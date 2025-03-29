@@ -17,6 +17,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ActiveProfiles;
 
 import com.example.backend.dto.AuthRequestDTO;
@@ -43,9 +44,17 @@ public class DepartmentControllerTest {
             "/auth", request, AuthResponseDTO.class);
         return response.getBody().getToken();
     }
+    
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
+
+    private void cleanDatabase() {
+        jdbcTemplate.execute("DELETE FROM departments");
+    }
 
     @BeforeEach
     void setUp() {
+        this.cleanDatabase();
         authToken = getAuthToken("admin", "password");
         CreateDepartmentDTO request = new CreateDepartmentDTO("HR");
         HttpHeaders headers = new HttpHeaders();
@@ -55,6 +64,8 @@ public class DepartmentControllerTest {
         ResponseEntity<DepartmentDTO> response = restTemplate.postForEntity("/departments", entity, DepartmentDTO.class);
         createdDepartmentId = response.getBody().getId();
     }
+
+
 
     @DisplayName("Test get all departments.")
     @Test
