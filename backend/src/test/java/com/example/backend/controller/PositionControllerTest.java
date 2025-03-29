@@ -18,13 +18,12 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ActiveProfiles;
 
 import com.example.backend.dto.AuthRequestDTO;
 import com.example.backend.dto.AuthResponseDTO;
-import com.example.backend.dto.CreateDepartmentDTO;
 import com.example.backend.dto.CreatePositionDTO;
-import com.example.backend.dto.DepartmentDTO;
 import com.example.backend.dto.PositionDTO;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -44,8 +43,16 @@ public class PositionControllerTest {
         return response.getBody().getToken();
     }
 
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
+
+    private void cleanDatabase() {
+        jdbcTemplate.execute("DELETE FROM positions");
+    }
+
     @BeforeEach
     void setUp() {
+        this.cleanDatabase();
         authToken = getAuthToken("admin", "password");
         CreatePositionDTO request = new CreatePositionDTO("Manager", "Test description.");
         HttpHeaders headers = new HttpHeaders();

@@ -3,8 +3,6 @@ package com.example.backend.controller;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-import java.util.Map;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -24,7 +22,9 @@ import com.example.backend.dto.AuthRequestDTO;
 import com.example.backend.dto.AuthResponseDTO;
 import com.example.backend.dto.CreateDepartmentDTO;
 import com.example.backend.dto.DepartmentDTO;
-import com.example.backend.service.UserService;
+import com.example.backend.model.Department;
+import com.example.backend.repository.DepartmentRepository;
+
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
@@ -33,10 +33,15 @@ public class DepartmentControllerTest {
     @Autowired
     private TestRestTemplate restTemplate;
 
-    @Autowired UserService userService;
+    @Autowired
+    private DepartmentRepository departmentRepository;
+
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
 
     private String authToken;
-    private Long createdDepartmentId;
+    private HttpHeaders headers;
+    private Department testDepartment;
 
     private String getAuthToken(String username, String password) {
         AuthRequestDTO request = new AuthRequestDTO(username, password);
@@ -44,37 +49,34 @@ public class DepartmentControllerTest {
             "/auth", request, AuthResponseDTO.class);
         return response.getBody().getToken();
     }
-    
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
 
     private void cleanDatabase() {
         jdbcTemplate.execute("DELETE FROM departments");
+    }
+
+    private Department createTestDepartment() {
+        Department department = new Department();
+        department.setName("HR");
+        return departmentRepository.save(department);
     }
 
     @BeforeEach
     void setUp() {
         this.cleanDatabase();
         authToken = getAuthToken("admin", "password");
-        CreateDepartmentDTO request = new CreateDepartmentDTO("HR");
-        HttpHeaders headers = new HttpHeaders();
+        headers = new HttpHeaders();
         headers.setBearerAuth(authToken);
         headers.setContentType(MediaType.APPLICATION_JSON);
-        HttpEntity<CreateDepartmentDTO> entity = new HttpEntity<>(request, headers);
-        ResponseEntity<DepartmentDTO> response = restTemplate.postForEntity("/departments", entity, DepartmentDTO.class);
-        createdDepartmentId = response.getBody().getId();
+
+        testDepartment = createTestDepartment();
     }
-
-
 
     @DisplayName("Test get all departments.")
     @Test
     void shouldReturnAllDepartments() {
-        HttpHeaders headers = new HttpHeaders();
-        headers.setBearerAuth(authToken);
-        HttpEntity<Void> entity = new HttpEntity<>(headers);
+        HttpEntity<Void> requestEntity = new HttpEntity<>(headers);
         ResponseEntity<DepartmentDTO[]> response = restTemplate.exchange(
-            "/departments", HttpMethod.GET, entity, DepartmentDTO[].class);
+            "/departments", HttpMethod.GET, requestEntity, DepartmentDTO[].class);
         
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody());
@@ -83,50 +85,40 @@ public class DepartmentControllerTest {
     @DisplayName("Test create department.")
     @Test
     void shouldCreateDepartment() {
-
-        String token = getAuthToken("admin", "password");
-
-        CreateDepartmentDTO request = new CreateDepartmentDTO("HR");
-        HttpHeaders headers = new HttpHeaders();
-        headers.setBearerAuth(token);
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        HttpEntity<CreateDepartmentDTO> entity = new HttpEntity<>(request, headers);
+        CreateDepartmentDTO createDepartmentDTO = new CreateDepartmentDTO("Finance");
+        HttpEntity<CreateDepartmentDTO> requestEntity = new HttpEntity<>(createDepartmentDTO, headers);
         
-        ResponseEntity<DepartmentDTO> response = restTemplate.postForEntity("/departments", entity, DepartmentDTO.class);
+        ResponseEntity<DepartmentDTO> response = restTemplate.postForEntity(
+            "/departments", requestEntity, DepartmentDTO.class);
         
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
         assertNotNull(response.getBody());
+        assertEquals("Finance", response.getBody().getName());
     }
 
     @DisplayName("Test get department by id.")
     @Test
     void shouldReturnDepartmentById() {
-        HttpHeaders headers = new HttpHeaders();
-        headers.setBearerAuth(authToken);
-        HttpEntity<Void> entity = new HttpEntity<>(headers);
+        HttpEntity<Void> requestEntity = new HttpEntity<>(headers);
         ResponseEntity<DepartmentDTO> response = restTemplate.exchange(
-            "/departments/" + createdDepartmentId, HttpMethod.GET, entity, DepartmentDTO.class);
+            "/departments/" + testDepartment.getId(), HttpMethod.GET, requestEntity, DepartmentDTO.class);
         
-        System.out.println(response);
-
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody());
+        assertEquals("HR", response.getBody().getName());
     }
 
     @DisplayName("Test update department.")
     @Test
     void shouldUpdateDepartment() {
-        DepartmentDTO departmentDTO = new DepartmentDTO();
-        departmentDTO.setName("Updated Department");
-        HttpHeaders headers = new HttpHeaders();
-        headers.setBearerAuth(authToken);
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        HttpEntity<DepartmentDTO> entity = new HttpEntity<>(departmentDTO, headers);
-        
-        ResponseEntity<Map> response = restTemplate.exchange(
-            "/departments/" + createdDepartmentId, HttpMethod.PUT, entity, Map.class);
+        DepartmentDTO updateDTO = new DepartmentDTO();
+        updateDTO.setName("Updated HR");
+
+        HttpEntity<DepartmentDTO> requestEntity = new HttpEntity<>(updateDTO, headers);
+        ResponseEntity<DepartmentDTO> response = restTemplate.exchange(
+            "/departments/" + testDepartment.getId(), HttpMethod.PUT, requestEntity, DepartmentDTO.class);
         
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals("Department updated successfully.", response.getBody().get("message"));
+        assertNotNull(response.getBody());
     }
 }
