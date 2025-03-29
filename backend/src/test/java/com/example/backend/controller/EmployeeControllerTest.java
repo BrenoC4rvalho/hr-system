@@ -1,14 +1,12 @@
 package com.example.backend.controller;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.time.LocalDate;
 import java.util.Map;
 
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +18,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ActiveProfiles;
 
 import com.example.backend.dto.AuthRequestDTO;
@@ -35,7 +34,6 @@ import com.example.backend.model.Position;
 import com.example.backend.repository.DepartmentRepository;
 import com.example.backend.repository.EmployeeRepository;
 import com.example.backend.repository.PositionRepository;
-import com.example.backend.service.UserService;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
@@ -66,6 +64,7 @@ public class EmployeeControllerTest {
 
     @BeforeEach
     void setUp() {
+        this.cleanDatabase();
         authToken = getAuthToken("admin", "password");
         headers = new HttpHeaders();
         headers.setBearerAuth(authToken);
@@ -74,8 +73,16 @@ public class EmployeeControllerTest {
         testEmployee = createTestEmployee();
     }
 
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
+
+    private void cleanDatabase() {
+        jdbcTemplate.execute("DELETE FROM employees");
+        jdbcTemplate.execute("DELETE FROM departments");
+        jdbcTemplate.execute("DELETE FROM positions");
+    }
+
     private Employee createTestEmployee() {
-        // Criar um departamento e um cargo
         Department department = new Department();
         department.setName("IT");
         department = departmentRepository.save(department);
@@ -84,7 +91,6 @@ public class EmployeeControllerTest {
         position.setName("Software Engineer");
         position = positionRepository.save(position);
 
-        // Criar um funcionário com departamento e cargo
         Employee employee = new Employee();
         employee.setFirstName("Test");
         employee.setLastName("User");
@@ -122,8 +128,13 @@ public class EmployeeControllerTest {
         createEmployeeDTO.setFirstName("John");
         createEmployeeDTO.setLastName("Doe");
         createEmployeeDTO.setEmail("john.doe@example.com");
+        createEmployeeDTO.setPhone("123456789");
         createEmployeeDTO.setDepartment(testEmployee.getDepartment());
         createEmployeeDTO.setPosition(testEmployee.getPosition());
+        createEmployeeDTO.setShift(Shift.MORNING);
+        createEmployeeDTO.setBirthDate(LocalDate.of(1990, 1, 1));
+        createEmployeeDTO.setHiredDate(LocalDate.of(2020, 1, 1));
+        createEmployeeDTO.setGender(Gender.FEMALE);
 
         HttpEntity<CreateEmployeeDTO> requestEntity = new HttpEntity<>(createEmployeeDTO, headers);
 
