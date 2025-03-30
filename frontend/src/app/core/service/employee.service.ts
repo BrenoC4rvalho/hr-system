@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import { environment } from '../../../environments/environments';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { CreateEmployee } from '../model/create-employee';
+import { Employee } from '../model/employee';
 
 @Injectable({
   providedIn: 'root'
@@ -21,5 +23,13 @@ export class EmployeeService {
 
     show(id: number): Observable<any> {
       return this.http.get<any>(`${this.apiUrl}/${id}`);
+    }
+
+    create(body: CreateEmployee): Observable<Employee> {
+      return this.http.post<Employee>(this.apiUrl, body);
+    }
+
+    update(id: number, body: Employee): Observable<Employee> {
+      return this.http.put<Employee>(`${this.apiUrl}/${id}`, body);
     }
 }
