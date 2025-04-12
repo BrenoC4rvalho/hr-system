@@ -7,6 +7,8 @@ import { AdminComponent } from './pages/admin/admin.component';
 import { UserRole } from './core/enums/user-role.enum';
 import { ForbiddenComponent } from './pages/error/forbidden/forbidden.component';
 import { UpdatePasswordComponent } from './pages/update-password/update-password.component';
+import { DepartmentsComponent } from './pages/departments/departments.component';
+import { PositionsComponent } from './pages/positions/positions.component';
 
 export const routes: Routes = [
   {
@@ -16,6 +18,16 @@ export const routes: Routes = [
   {
     path: 'employees',
     component: EmployeesComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'departments',
+    component: DepartmentsComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'positions',
+    component: PositionsComponent,
     canActivate: [AuthGuard]
   },
   {
