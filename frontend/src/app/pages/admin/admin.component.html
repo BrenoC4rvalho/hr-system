@@ -2,7 +2,7 @@
   <app-navbar></app-navbar>
   <main class="w-full p-10 md:ml-64">
 
-    <div class="flex justify-between item items-end py-3">
+    <header class="flex justify-between item items-end py-3">
       <h2 class="text-3xl font-semibold text-primary">Admin</h2>
       <button
         (click)="openModalNewUser()"
@@ -11,7 +11,7 @@
         <p>Add new User</p>
         <lucide-icon class="h-5 w-5" [img]="UserPlusIcon"></lucide-icon>
       </button>
-    </div>
+    </header>
 
     <app-list-users [newUser]="newUser" ></app-list-users>
 
