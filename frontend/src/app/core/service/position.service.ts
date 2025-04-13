@@ -14,11 +14,8 @@ export class PositionService {
 
   constructor(private http: HttpClient) { }
 
-  getAll(page: number, size: number): Observable<Position[]> {
-    const params = new HttpParams()
-     .set('page', page.toString())
-     .set('size', size.toString());
-    return this.http.get<Position[]>(this.apiUrl, { params });
+  getAll(): Observable<Position[]> {
+    return this.http.get<Position[]>(this.apiUrl);
   }
 
   show(id: number): Observable<Position> {

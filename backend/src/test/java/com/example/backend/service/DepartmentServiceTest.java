@@ -22,7 +22,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.example.backend.dto.CreateDepartmentDTO;
 import com.example.backend.dto.DepartmentDTO;
-import com.example.backend.dto.EmployeeDTO;
 import com.example.backend.exception.DepartmentNotFoundException;
 import com.example.backend.mapper.CreateDepartmentMapper;
 import com.example.backend.mapper.DepartmentMapper;

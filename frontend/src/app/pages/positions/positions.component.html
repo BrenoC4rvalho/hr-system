@@ -11,6 +11,33 @@
       </button>
     </header>
 
+    <section class="bg-componet shadow w-full p-5 border border-gray-light rounded">
+      <header class="flex justify-between items-center">
+        <h2 class="text-2xl">List Positions</h2>
+      </header>
+
+      <table class="table-auto w-full mt-4 text-center">
+        <thead class="bg-gray-light">
+          <tr>
+            <th class="rounded-tl rounded-bl py-2">Name</th>
+            <th class="py-2">Description</th>
+            <th class="rounded-tr rounded-br py-2">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="border-b border-gray-light" *ngFor="let position of positions">
+            <td class="py-2">{{ position.name }}</td>
+            <td class="py-2">{{ position.description }}</td>
+            <td class="py-2">
+              <button class="border border-gray-light mr-1 p-1 rounded hover:opacity-70">
+                <lucide-icon [img]="EyeIcon"></lucide-icon>
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
   </main>
 
 </div>
