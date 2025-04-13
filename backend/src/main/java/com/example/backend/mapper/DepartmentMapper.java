@@ -21,6 +21,13 @@ public class DepartmentMapper {
         departmentDTO.setId(department.getId());
         departmentDTO.setName(department.getName());
         departmentDTO.setManager(department.getManager());
+
+        if(department.getEmployees() != null) {
+            departmentDTO.setNumberOfEmployees(department.getEmployees().size());
+        } else {
+            departmentDTO.setNumberOfEmployees(0);
+        }
+        
         return departmentDTO;
     }
     

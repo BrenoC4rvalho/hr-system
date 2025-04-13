@@ -100,4 +100,12 @@ public class Department {
         this.updatedAt = updatedAt;
     }
 
+    public List<Employee> getEmployees() {
+        return employees;
+    }
+
+    public void setEmployees(List<Employee> employees) {
+        this.employees = employees;
+    }
+
 }
