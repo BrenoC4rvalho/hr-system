@@ -14,6 +14,8 @@ export class DepartmentsComponent implements OnInit {
 
   readonly EyeIcon = Eye;
 
+  isModalNewDepartmentOpen: boolean = false;
+
   showErrorModal: boolean = false;
   errorMessage: string = '';
 
@@ -41,4 +43,18 @@ export class DepartmentsComponent implements OnInit {
       }
     })
   }
+
+  openModalNewDepartment() {
+    this.isModalNewDepartmentOpen = true;
+  }
+
+  closeModalNewUser() {
+    this.isModalNewDepartmentOpen = false
+  }
+
+  onDepartmentCreated($event: Department) {
+    this.departments.push($event);
+  }
+
+
 }
