@@ -5,6 +5,7 @@
     <header class="flex justify-between item items-end py-3">
       <h2 class="text-3xl font-semibold text-primary">Departments</h2>
       <button
+        (click)="openModalNewDepartment()"
         class="flex items-center gap-1 text-deep text-base border border-gray p-2 rounded hover:opacity-80 hover:cursor-pointer"
       >
         Add new Department
@@ -42,5 +43,13 @@
     </section>
 
   </main>
+
+  <div
+    *ngIf="isModalNewDepartmentOpen"
+    class="fixed inset-0 bg-deep/70 flex items-center justify-center"
+  >
+    <app-new-department-modal (createdDepartment)="onDepartmentCreated($event)" (closeModal)="closeModalNewDepartment()"></app-new-department-modal>
+
+  </div>
 
 </div>

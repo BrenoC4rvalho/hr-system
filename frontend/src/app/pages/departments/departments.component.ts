@@ -4,10 +4,11 @@ import { Department } from '../../core/model/department';
 import { DepartmentService } from '../../core/service/department.service';
 import { CommonModule } from '@angular/common';
 import { Eye, LucideAngularModule } from 'lucide-angular';
+import { NewDepartmentModalComponent } from "../../components/new-department-modal/new-department-modal.component";
 
 @Component({
   selector: 'app-departments',
-  imports: [NavbarComponent, CommonModule, LucideAngularModule],
+  imports: [NavbarComponent, CommonModule, LucideAngularModule, NewDepartmentModalComponent],
   templateUrl: './departments.component.html',
 })
 export class DepartmentsComponent implements OnInit {
@@ -48,7 +49,7 @@ export class DepartmentsComponent implements OnInit {
     this.isModalNewDepartmentOpen = true;
   }
 
-  closeModalNewUser() {
+  closeModalNewDepartment() {
     this.isModalNewDepartmentOpen = false
   }
 
