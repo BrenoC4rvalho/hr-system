@@ -1,0 +1,75 @@
+<div class="relative bg-component shadow-2xl p-5 rounded">
+
+  <button (click)="onClose()" class="text-red-500 absolute right-2 top-2 hover:cursor-pointer">
+    <lucide-icon class="w-7 h-7" [img]="CircleXIcon"></lucide-icon>
+  </button>
+
+  <header class="mb-5 text-4xl font-medium text-primary">
+    <h3>Add new Position</h3>
+  </header>
+
+  <form (ngSubmit)="onSubmit()" #createPositionForm="ngForm" class="flex flex-col gap-1.5">
+
+    <label class="text-xl" for="name">Name</label>
+    <input
+      placeholder="exampleName"
+      type="text"
+      class="p-2 text-2xl border border-gray-light focus:outline-primary rounded"
+      name="name"
+      [(ngModel)]="name"
+      required
+      minlength="2"
+      maxlength="100"
+      #nameField="ngModel"
+    >
+    <div *ngIf="nameField.invalid && nameField.touched" class="text-red-500 text-sm">
+      <div *ngIf="nameField.errors?.['minlength']">
+        Name must be at least 2 characters long.
+      </div>
+      <div *ngIf="nameField.errors?.['maxlength']">
+        Name must be less than 100 characters long.
+      </div>
+      <div *ngIf="nameField.errors?.['required']">
+        Name is required.
+      </div>
+    </div>
+
+    <label class="mt-5 text-xl" for="description">Description</label>
+    <textarea
+      placeholder="Position description"
+      class="p-2 text-2xl border border-gray-light focus:outline-primary rounded"
+      name="description"
+      [(ngModel)]="description"
+      required
+      minlength="5"
+      maxlength="255"
+      #descriptionField="ngModel"
+    ></textarea>
+    <div *ngIf="descriptionField.invalid && descriptionField.touched" class="text-red-500 text-sm">
+      <div *ngIf="descriptionField.errors?.['minlength']">
+        Description must be at least 5 characters long.
+      </div>
+      <div *ngIf="descriptionField.errors?.['maxlength']">
+        Description must be less than 255 characters long.
+      </div>
+      <div *ngIf="descriptionField.errors?.['required']">
+        Description is required.
+      </div>
+    </div>
+
+    <div class="mt-5 flex justify-center">
+      <button
+        class="bg-primary text-white-soft text-xl py-2 px-6 w-fit rounded hover:opacity-80 hover:cursor-pointer
+        disabled:opacity-50 disabled:cursor-auto"
+        type="submit"
+        [disabled]="createPositionForm.invalid"
+      >
+        Save
+      </button>
+    </div>
+
+  </form>
+
+  <app-error-modal [isVisible]="showErrorModal" [errorMessage]="errorMessage" (closed)="showErrorModal = false"></app-error-modal>
+
+</div>
