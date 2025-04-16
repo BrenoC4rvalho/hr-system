@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Output } from '@angular/core';
 import { CircleX, LucideAngularModule } from 'lucide-angular';
 import { DepartmentService } from '../../core/service/department.service';
-import { FormsModule, NgForm } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Department } from '../../core/model/department';
 
