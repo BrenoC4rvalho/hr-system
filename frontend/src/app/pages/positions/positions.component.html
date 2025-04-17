@@ -5,6 +5,7 @@
     <header class="flex justify-between item items-end py-3">
       <h2 class="text-3xl font-semibold text-primary">Positions</h2>
       <button
+        (click)="openModalNewPosition()"
         class="flex items-center gap-1 text-deep text-base border border-gray p-2 rounded hover:opacity-80 hover:cursor-pointer"
       >
         Add new Position
@@ -39,5 +40,12 @@
     </section>
 
   </main>
+
+  <div
+    *ngIf="isModalNewPositionOpen"
+    class="fixed inset-0 bg-deep/70 flex items-center justify-center"
+  >
+    <app-new-position-modal (createdPosition)="onPositionCreated($event)" (closeModal)="closeModalNewPosition()"></app-new-position-modal>
+  </div>
 
 </div>

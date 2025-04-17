@@ -5,15 +5,18 @@ import { Position } from '../../core/model/position';
 import { PositionService } from '../../core/service/position.service';
 import { PaginatedUsersResponse } from '../../core/model/paginated-users-response';
 import { CommonModule } from '@angular/common';
+import { NewPositionModalComponent } from "../../components/new-position-modal/new-position-modal.component";
 
 @Component({
   selector: 'app-positions',
-  imports: [NavbarComponent, LucideAngularModule, CommonModule],
+  imports: [NavbarComponent, LucideAngularModule, CommonModule, NewPositionModalComponent],
   templateUrl: './positions.component.html',
 })
 export class PositionsComponent implements OnInit {
 
   readonly EyeIcon = Eye;
+
+  isModalNewPositionOpen: boolean = false;
 
   showErrorModal: boolean = false;
   errorMessage: string = '';
@@ -41,6 +44,18 @@ export class PositionsComponent implements OnInit {
         }
       }
     })
+  }
+
+  openModalNewPosition() {
+    this.isModalNewPositionOpen = true;
+  }
+
+  closeModalNewPosition() {
+    this.isModalNewPositionOpen = false;
+  }
+
+  onPositionCreated($event: Position) {
+    this.positions.push($event);
   }
 
 }
