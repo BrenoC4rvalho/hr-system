@@ -19,6 +19,7 @@ export class NewPositionModalComponent {
 
   @Output() closeModal = new EventEmitter<void>()
   @Output() createdPosition = new EventEmitter<Position>()
+  @Output() errorMessage = new EventEmitter<string>()
 
   constructor(private positionService: PositionService) {}
 
@@ -33,7 +34,11 @@ export class NewPositionModalComponent {
             this.closeModal.emit();
           },
           error: (error) => {
-
+            if(error && error.error) {
+              this.errorMessage.emit(error.error);
+            } else {
+              this.errorMessage.emit('An unexpected error occurred. Please try again later.');
+            }
           }
         })
   }

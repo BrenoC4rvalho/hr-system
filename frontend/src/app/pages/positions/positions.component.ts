@@ -3,13 +3,13 @@ import { NavbarComponent } from "../../shared/navbar/navbar.component";
 import { Eye, LucideAngularModule } from 'lucide-angular';
 import { Position } from '../../core/model/position';
 import { PositionService } from '../../core/service/position.service';
-import { PaginatedUsersResponse } from '../../core/model/paginated-users-response';
 import { CommonModule } from '@angular/common';
 import { NewPositionModalComponent } from "../../components/new-position-modal/new-position-modal.component";
+import { ErrorModalComponent } from "../../components/error-modal/error-modal";
 
 @Component({
   selector: 'app-positions',
-  imports: [NavbarComponent, LucideAngularModule, CommonModule, NewPositionModalComponent],
+  imports: [NavbarComponent, LucideAngularModule, CommonModule, NewPositionModalComponent, ErrorModalComponent],
   templateUrl: './positions.component.html',
 })
 export class PositionsComponent implements OnInit {
@@ -56,6 +56,11 @@ export class PositionsComponent implements OnInit {
 
   onPositionCreated($event: Position) {
     this.positions.push($event);
+  }
+
+  handleErrorModal($event: string) {
+    this.showErrorModal = true;
+    this.errorMessage = $event;
   }
 
 }

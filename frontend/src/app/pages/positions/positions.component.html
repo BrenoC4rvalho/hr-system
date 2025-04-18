@@ -45,7 +45,13 @@
     *ngIf="isModalNewPositionOpen"
     class="fixed inset-0 bg-deep/70 flex items-center justify-center"
   >
-    <app-new-position-modal (createdPosition)="onPositionCreated($event)" (closeModal)="closeModalNewPosition()"></app-new-position-modal>
+    <app-new-position-modal (errorMessage)="handleErrorModal($event)" (createdPosition)="onPositionCreated($event)" (closeModal)="closeModalNewPosition()"></app-new-position-modal>
   </div>
 
+  <!-- Error Modal -->
+  <app-error-modal
+    [isVisible]="showErrorModal"
+    [errorMessage]="errorMessage"
+    (closed)="showErrorModal = false">
+  </app-error-modal>
 </div>
