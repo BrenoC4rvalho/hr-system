@@ -48,8 +48,15 @@
     *ngIf="isModalNewDepartmentOpen"
     class="fixed inset-0 bg-deep/70 flex items-center justify-center"
   >
-    <app-new-department-modal (createdDepartment)="onDepartmentCreated($event)" (closeModal)="closeModalNewDepartment()"></app-new-department-modal>
+    <app-new-department-modal (errorMessage)="handleErrorModal($event)" (createdDepartment)="onDepartmentCreated($event)" (closeModal)="closeModalNewDepartment()"></app-new-department-modal>
 
   </div>
+
+    <!-- Error Modal -->
+    <app-error-modal
+    [isVisible]="showErrorModal"
+    [errorMessage]="errorMessage"
+    (closed)="showErrorModal = false">
+  </app-error-modal>
 
 </div>

@@ -5,10 +5,11 @@ import { DepartmentService } from '../../core/service/department.service';
 import { CommonModule } from '@angular/common';
 import { Eye, LucideAngularModule } from 'lucide-angular';
 import { NewDepartmentModalComponent } from "../../components/new-department-modal/new-department-modal.component";
+import { ErrorModalComponent } from "../../components/error-modal/error-modal";
 
 @Component({
   selector: 'app-departments',
-  imports: [NavbarComponent, CommonModule, LucideAngularModule, NewDepartmentModalComponent],
+  imports: [NavbarComponent, CommonModule, LucideAngularModule, NewDepartmentModalComponent, ErrorModalComponent],
   templateUrl: './departments.component.html',
 })
 export class DepartmentsComponent implements OnInit {
@@ -55,6 +56,11 @@ export class DepartmentsComponent implements OnInit {
 
   onDepartmentCreated($event: Department) {
     this.departments.push($event);
+  }
+
+  handleErrorModal($event: string) {
+    this.showErrorModal = true;
+    this.errorMessage = $event;
   }
 
 

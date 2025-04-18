@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, output, Output } from '@angular/core';
 import { CircleX, LucideAngularModule } from 'lucide-angular';
 import { DepartmentService } from '../../core/service/department.service';
 import { FormsModule } from '@angular/forms';
@@ -16,6 +16,7 @@ export class NewDepartmentModalComponent {
 
   @Output() closeModal = new EventEmitter<void>()
   @Output() createdDepartment = new EventEmitter<Department>()
+  @Output() errorMessage = new EventEmitter<string>()
 
   name: string = ''
 
@@ -28,7 +29,11 @@ export class NewDepartmentModalComponent {
         this.closeModal.emit();
       },
       error: (error) => {
-
+        if(error && error.error) {
+          this.errorMessage.emit(error.error);
+        } else {
+          this.errorMessage.emit('An unexpected error occurred. Please try again later.');
+        }
       }
     })
   }
