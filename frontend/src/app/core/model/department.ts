@@ -4,7 +4,7 @@ export interface Department {
 
   id: number;
   name: string;
-  manager: Employee;
+  manager?: Employee;
   numberOfEmployees: number;
 
 }
