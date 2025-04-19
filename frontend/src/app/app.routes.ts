@@ -9,11 +9,17 @@ import { ForbiddenComponent } from './pages/error/forbidden/forbidden.component'
 import { UpdatePasswordComponent } from './pages/update-password/update-password.component';
 import { DepartmentsComponent } from './pages/departments/departments.component';
 import { PositionsComponent } from './pages/positions/positions.component';
+import { DashboardComponent } from './pages/dashboard/dashboard.component';
 
 export const routes: Routes = [
   {
     path: 'login',
     component: LoginComponent
+  },
+  {
+    path: 'dashboard',
+    component: DashboardComponent,
+    canActivate: [AuthGuard]
   },
   {
     path: 'employees',
