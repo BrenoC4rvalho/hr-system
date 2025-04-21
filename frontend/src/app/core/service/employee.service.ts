@@ -15,11 +15,11 @@ export class EmployeeService {
 
   constructor(private http: HttpClient) { }
 
-    getAll(page: number, size: number): Observable<PaginatedEmployeesResponse[]> {
+    getAll(page: number, size: number): Observable<PaginatedEmployeesResponse> {
       const params = new HttpParams()
        .set('page', page.toString())
        .set('size', size.toString());
-      return this.http.get<PaginatedEmployeesResponse[]>(this.apiUrl, { params });
+      return this.http.get<PaginatedEmployeesResponse>(this.apiUrl, { params });
     }
 
     show(id: number): Observable<Employee> {
