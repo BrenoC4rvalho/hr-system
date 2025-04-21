@@ -4,11 +4,19 @@
     <header class="flex justify-between item items-end py-3">
       <h2 class="text-3xl font-semibold text-primary">Employees</h2>
       <button
+        (click)="openModalNewEmployee()"
         class="flex items-center gap-1 text-deep text-base border border-gray p-2 rounded hover:opacity-80 hover:cursor-pointer"
       >
         Add new Employee
       </button>
     </header>
-    <app-list-employees></app-list-employees>
+    <app-list-employees [newEmployee]="newEmployee"></app-list-employees>
   </main>
+
+  <div
+    *ngIf="isModalNewEmployeeOpen"
+    class="fixed inset-0 bg-deep/70 flex items-center justify-center"
+  >
+    <app-new-employee-modal></app-new-employee-modal>
+  </div>
 </div>
