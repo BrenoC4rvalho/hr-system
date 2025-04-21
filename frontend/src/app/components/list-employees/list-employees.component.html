@@ -22,7 +22,7 @@
         <th class="rounded-tl rounded-bl py-2">ID</th>
         <th class="py-2">Name</th>
         <th class="py-2 hidden md:table-cell">Phone</th>
-        <th class="py-2 hidden md:table-cell">Role</th>
+        <th class="py-2 hidden md:table-cell">Position</th>
         <th class="py-2 hidden lg:table-cell">Department</th>
         <th class="py-2 hidden lg:table-cell">Shift</th>
         <th class="rounded-tr rounded-br py-2">Action</th>
@@ -31,10 +31,10 @@
     <tbody>
       <tr class="border-b border-gray-light" *ngFor="let employee of employees">
         <td class="py-2">{{ employee.id }}</td>
-        <td class="py-2">{{ employee.name }}</td>
+        <td class="py-2">{{ employee.firstName }}</td>
         <td class="py-2 hidden md:table-cell">{{ employee.phone }}</td>
-        <td class="py-2 hidden md:table-cell">{{ employee.role }}</td>
-        <td class="py-2 hidden lg:table-cell">{{ employee.department }}</td>
+        <td class="py-2 hidden md:table-cell">{{ employee.position.name }}</td>
+        <td class="py-2 hidden lg:table-cell">{{ employee.department.name }}</td>
         <td class="py-2 hidden lg:table-cell">{{ employee.shift }}</td>
         <td class="py-2">
           <button class="border border-gray-light p-1 rounded hover:opacity-70">
