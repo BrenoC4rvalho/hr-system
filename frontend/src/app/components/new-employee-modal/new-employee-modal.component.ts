@@ -34,7 +34,7 @@ export class NewEmployeeModalComponent {
 
 
   constructor(
-    private fb: FormBuilder;
+    private fb: FormBuilder,
     private employeeService: EmployeeService,
     private departmentService: DepartmentService,
     private positionService: PositionService
