@@ -1,0 +1,102 @@
+<div class="relative bg-component shadow-2xl p-5 rounded">
+
+  <button (click)="onClose()" class="text-red-500 absolute right-2 top-2 hover:cursor-pointer">
+    <lucide-icon class="w-7 h-7" [img]="CircleXIcon"></lucide-icon>
+  </button>
+
+  <header class="mb-5 text-4xl font-medium text-primary">
+    <h3>Add new Employee</h3>
+  </header>
+
+
+  <form [formGroup]="form" (ngSubmit)="onSubmit()" class="space-y-4">
+
+    <div>
+      <input type="text" placeholder="First Name" formControlName="firstName" />
+      <div *ngIf="form.get('firstName')?.touched && form.get('firstName')?.invalid" class="text-red-500 text-sm">
+        <div *ngIf="form.get('firstName')?.errors?.['required']">First name is required.</div>
+      </div>
+    </div>
+
+    <div>
+      <input type="text" placeholder="Last name" formControlName="lastName" />
+    </div>
+
+    <div>
+      <input type="email" placeholder="Email" formControlName="email" />
+      <div *ngIf="form.get('email')?.touched && form.get('email')?.invalid" class="text-red-500 text-sm">
+        <div *ngIf="form.get('email')?.errors?.['email']">Invalid email.</div>
+      </div>
+    </div>
+
+    <div>
+      <input type="text" placeholder="Phone" formControlName="phone" />
+      <div *ngIf="form.get('phone')?.touched && form.get('phone')?.invalid" class="text-red-500 text-sm">
+        <div *ngIf="form.get('phone')?.errors?.['required']">Phone is required.</div>
+      </div>
+    </div>
+
+    <div>
+      <select formControlName="gender">
+        <option [ngValue]="null" disabled>Select gender</option>
+        <option *ngFor="let gender of genders" [ngValue]="gender">{{ gender }}</option>
+      </select>
+      <div *ngIf="form.get('gender')?.touched && form.get('gender')?.invalid" class="text-red-500 text-sm">
+        <div *ngIf="form.get('gender')?.errors?.['required']">Gender is required.</div>
+      </div>
+    </div>
+
+    <div>
+      <select formControlName="department">
+        <option [ngValue]="null" disabled>Select departament</option>
+        <option *ngFor="let department of departments" [ngValue]="department">{{ department.name }}</option>
+      </select>
+      <div *ngIf="form.get('department')?.touched && form.get('department')?.invalid" class="text-red-500 text-sm">
+        <div *ngIf="form.get('department')?.errors?.['required']">Department is required.</div>
+      </div>
+    </div>
+
+    <div>
+      <select formControlName="position">
+        <option [ngValue]="null" disabled>Select positon</option>
+        <option *ngFor="let position of positions" [ngValue]="position">{{ position.name }}</option>
+      </select>
+      <div *ngIf="form.get('position')?.touched && form.get('position')?.invalid" class="text-red-500 text-sm">
+        <div *ngIf="form.get('position')?.errors?.['required']">Position is required.</div>
+      </div>
+    </div>
+
+    <div>
+      <select formControlName="shift">
+        <option [ngValue]="null" disabled>Select shift</option>
+        <option *ngFor="let shift of shifts" [ngValue]="shift">{{ shift }}</option>
+      </select>
+    </div>
+
+    <div>
+      <input type="date" formControlName="birthDate" />
+      <div *ngIf="form.get('birthDate')?.touched && form.get('birthDate')?.invalid" class="text-red-500 text-sm">
+        <div *ngIf="form.get('birthDate')?.errors?.['required']">Birthday is required.</div>
+      </div>
+    </div>
+
+    <div>
+      <input type="date" formControlName="hiredDate" />
+      <div *ngIf="form.get('hiredDate')?.touched && form.get('hiredDate')?.invalid" class="text-red-500 text-sm">
+        <div *ngIf="form.get('hiredDate')?.errors?.['required']">Hiring date is required.</div>
+      </div>
+    </div>
+
+    <div class="flex gap-2">
+      <button type="submit" [disabled]="form.invalid" class="bg-blue-500 text-white px-4 py-2 rounded">
+        Save
+      </button>
+      <button type="button" (click)="onClose()" class="bg-gray-400 text-white px-4 py-2 rounded">
+        Cancel
+      </button>
+    </div>
+
+  </form>
+
+
+</div>

@@ -9,11 +9,12 @@ import { Department } from '../../core/model/department';
 import { Position } from '../../core/model/position';
 import { DepartmentService } from '../../core/service/department.service';
 import { PositionService } from '../../core/service/position.service';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-new-employee-modal',
-  imports: [LucideAngularModule],
+  imports: [LucideAngularModule, CommonModule, ReactiveFormsModule],
   templateUrl: './new-employee-modal.component.html',
 })
 export class NewEmployeeModalComponent {
@@ -26,8 +27,8 @@ export class NewEmployeeModalComponent {
 
   form: FormGroup;
 
-  department: Department[] = [];
-  position: Position[] = [];
+  departments: Department[] = [];
+  positions: Position[] = [];
   shifts = Object.values(Shift);
   genders = Object.values(Gender);
 
@@ -88,7 +89,7 @@ export class NewEmployeeModalComponent {
   getDepartments(): void {
     this.departmentService.getAll().subscribe({
       next: (response: Department[]) => {
-        this.department = response;
+        this.departments = response;
       },
       error: (error) => {
         if(error && error.error) {
@@ -104,7 +105,7 @@ export class NewEmployeeModalComponent {
   getPositions(): void {
     this.positionService.getAll().subscribe({
       next: (response: Position[]) => {
-        this.position = response;
+        this.positions = response;
       },
       error: (error) => {
         if(error && error.error) {
