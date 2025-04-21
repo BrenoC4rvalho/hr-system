@@ -1,11 +1,120 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
+import { CircleX, LucideAngularModule } from 'lucide-angular';
+import { Employee } from '../../core/model/employee';
+import { EmployeeService } from '../../core/service/employee.service';
+import { CreateEmployee } from '../../core/model/create-employee';
+import { Shift } from '../../core/enums/shift.enum';
+import { Gender } from '../../core/enums/gender.enum';
+import { Department } from '../../core/model/department';
+import { Position } from '../../core/model/position';
+import { DepartmentService } from '../../core/service/department.service';
+import { PositionService } from '../../core/service/position.service';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-new-employee-modal',
-  imports: [],
+  imports: [LucideAngularModule],
   templateUrl: './new-employee-modal.component.html',
-  styleUrl: './new-employee-modal.component.css'
 })
 export class NewEmployeeModalComponent {
+
+  readonly CircleXIcon = CircleX;
+
+  @Output() closeModal = new EventEmitter<void>()
+  @Output() createdEmployee = new EventEmitter<Employee>()
+  @Output() errorMessage = new EventEmitter<string>()
+
+  form: FormGroup;
+
+  department: Department[] = [];
+  position: Position[] = [];
+  shifts = Object.values(Shift);
+  genders = Object.values(Gender);
+
+
+  constructor(
+    private fb: FormBuilder;
+    private employeeService: EmployeeService,
+    private departmentService: DepartmentService,
+    private positionService: PositionService
+  ) {
+    this.form = this.fb.group({
+      firstName: ['', Validators.required],
+      lastName: [''],
+      email: ['', [Validators.email]],
+      phone: ['', Validators.required],
+      gender: [null, Validators.required],
+      department: [null, Validators.required],
+      position: [null, Validators.required],
+      shift: [null],
+      birthDate: [null, Validators.required],
+      hiredDate: [null, Validators.required],
+    });
+  }
+
+  ngOnInit() {
+    this.getDepartments();
+    this.getPositions();
+  }
+
+  onClose(): void {
+    this.closeModal.emit();
+  }
+
+  onSubmit(): void {
+
+    if(this.form.invalid) {
+      this.errorMessage.emit('Fill in all required fields.')
+      return
+    }
+
+    const newEmployee: CreateEmployee = this.form.value;
+
+    this.employeeService.create(newEmployee).subscribe({
+      next: (response: Employee) => {
+          this.createdEmployee.emit(response);
+          this.closeModal.emit();
+      },
+      error: (error) => {
+        if(error && error.error) {
+          this.errorMessage.emit(error.error);
+        } else {
+          this.errorMessage.emit('An unexpected error occurred. Please try again later.');
+        }
+      }
+    })
+  }
+
+  getDepartments(): void {
+    this.departmentService.getAll().subscribe({
+      next: (response: Department[]) => {
+        this.department = response;
+      },
+      error: (error) => {
+        if(error && error.error) {
+          this.errorMessage.emit(error.error);
+        } else {
+          this.errorMessage.emit('An unexpected error occurred. Please try again later.');
+        }
+        this.closeModal.emit()
+      }
+    })
+  }
+
+  getPositions(): void {
+    this.positionService.getAll().subscribe({
+      next: (response: Position[]) => {
+        this.position = response;
+      },
+      error: (error) => {
+        if(error && error.error) {
+          this.errorMessage.emit(error.error);
+        } else {
+          this.errorMessage.emit('An unexpected error occurred. Please try again later.');
+        }
+        this.closeModal.emit();
+      }
+    })
+  }
 
 }
