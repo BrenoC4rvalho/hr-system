@@ -44,4 +44,12 @@
       </tr>
     </tbody>
   </table>
+
+  <app-pagination
+    class="flex justify-center mt-5"
+    [currentPage]="currentPage"
+    [totalPages]="totalPages"
+    (pageChanged)="onPageChange($event)"
+  >
+  </app-pagination>
 </section>

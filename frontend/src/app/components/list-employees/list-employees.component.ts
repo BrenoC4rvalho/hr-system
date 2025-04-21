@@ -4,10 +4,11 @@ import { LucideAngularModule, Eye, UserRoundSearch } from 'lucide-angular';
 import { Employee } from '../../core/model/employee';
 import { EmployeeService } from '../../core/service/employee.service';
 import { PaginatedEmployeesResponse } from '../../core/model/paginated-employees-response';
+import { PaginationComponent } from "../pagination/pagination.component";
 
 @Component({
   selector: 'app-list-employees',
-  imports: [CommonModule, LucideAngularModule],
+  imports: [CommonModule, LucideAngularModule, PaginationComponent],
   templateUrl: './list-employees.component.html',
 })
 export class ListEmployeesComponent implements OnInit, OnChanges {
