@@ -17,6 +17,6 @@
     *ngIf="isModalNewEmployeeOpen"
     class="fixed inset-0 bg-deep/70 flex items-center justify-center"
   >
-    <app-new-employee-modal></app-new-employee-modal>
+    <app-new-employee-modal (closeModal)="closeModalNewEmployee()"></app-new-employee-modal>
   </div>
 </div>
