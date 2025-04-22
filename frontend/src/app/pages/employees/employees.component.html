@@ -10,13 +10,29 @@
         Add new Employee
       </button>
     </header>
-    <app-list-employees [newEmployee]="newEmployee"></app-list-employees>
+    <app-list-employees (errorMessage)="handleErrorModal($event)" [newEmployee]="newEmployee"></app-list-employees>
   </main>
 
   <div
     *ngIf="isModalNewEmployeeOpen"
     class="fixed inset-0 bg-deep/70 flex items-center justify-center"
   >
-    <app-new-employee-modal (closeModal)="closeModalNewEmployee()"></app-new-employee-modal>
+    <app-new-employee-modal
+      (closeModal)="closeModalNewEmployee()"
+      (errorMessage)="handleErrorModal($event)"
+    >
+    </app-new-employee-modal>
+  </div>
+
+  <div>
+
+    <!-- Error Modal -->
+      <app-error-modal
+        [isVisible]="showErrorModal"
+        [errorMessage]="errorMessage"
+        (closed)="showErrorModal = false"
+      >
+      </app-error-modal>
+
   </div>
 </div>

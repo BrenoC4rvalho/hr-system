@@ -5,13 +5,17 @@ import { NavbarComponent } from '../../shared/navbar/navbar.component';
 import { Employee } from '../../core/model/employee';
 import { NewEmployeeModalComponent } from "../../components/new-employee-modal/new-employee-modal.component";
 import { CommonModule } from '@angular/common';
+import { ErrorModalComponent } from "../../components/error-modal/error-modal";
 
 @Component({
   selector: 'app-employees',
-  imports: [ListEmployeesComponent, NavbarComponent, NewEmployeeModalComponent, CommonModule],
+  imports: [ListEmployeesComponent, NavbarComponent, NewEmployeeModalComponent, CommonModule, ErrorModalComponent],
   templateUrl: './employees.component.html',
 })
 export class EmployeesComponent {
+
+  showErrorModal: boolean = false;
+  errorMessage: string = ''
 
   newEmployee: Employee | undefined;
 
@@ -28,6 +32,12 @@ export class EmployeesComponent {
   onEmployeeCreated($event: Employee) {
     this.newEmployee = $event;
   }
+
+  handleErrorModal($event: string) {
+    this.showErrorModal = true;
+    this.errorMessage = $event;
+  }
+
 
 
 }

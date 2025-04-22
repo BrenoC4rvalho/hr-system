@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { LucideAngularModule, Eye, UserRoundSearch } from 'lucide-angular';
 import { Employee } from '../../core/model/employee';
 import { EmployeeService } from '../../core/service/employee.service';
@@ -14,6 +14,7 @@ import { PaginationComponent } from "../pagination/pagination.component";
 export class ListEmployeesComponent implements OnInit, OnChanges {
 
   @Input() newEmployee: Employee | undefined;
+  @Output() errorMessage = new EventEmitter<string>();
 
   readonly EyeIcon = Eye;
   readonly UserRoundSearchIcon = UserRoundSearch;
@@ -46,7 +47,11 @@ export class ListEmployeesComponent implements OnInit, OnChanges {
         this.pageSize = response.pageSize;
       },
       error: (error) => {
-
+        if(error && error.error) {
+          this.errorMessage.emit(error.error);
+        } else {
+          this.errorMessage.emit('An unexpected error occurred. Please try again later.');
+        }
       }
     })
   }
