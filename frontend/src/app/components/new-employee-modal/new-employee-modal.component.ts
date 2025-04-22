@@ -11,15 +11,14 @@ import { DepartmentService } from '../../core/service/department.service';
 import { PositionService } from '../../core/service/position.service';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { ModalComponent } from "../../shared/modal/modal.component";
 
 @Component({
   selector: 'app-new-employee-modal',
-  imports: [LucideAngularModule, CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, ModalComponent],
   templateUrl: './new-employee-modal.component.html',
 })
 export class NewEmployeeModalComponent {
-
-  readonly CircleXIcon = CircleX;
 
   @Output() closeModal = new EventEmitter<void>()
   @Output() createdEmployee = new EventEmitter<Employee>()
@@ -62,7 +61,7 @@ export class NewEmployeeModalComponent {
     this.closeModal.emit();
   }
 
-  onSubmit(): void {
+  onSave(): void {
 
     if(this.form.invalid) {
       this.errorMessage.emit('Fill in all required fields.')
