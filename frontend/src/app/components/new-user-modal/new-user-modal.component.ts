@@ -3,14 +3,15 @@ import { CircleX, LucideAngularModule } from 'lucide-angular';
 import { UserRole } from '../../core/enums/user-role.enum';
 import { CommonModule } from '@angular/common';
 import { UserService } from '../../core/service/user.service';
-import { FormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { User } from '../../core/model/user';
 import { ErrorModalComponent } from "../error-modal/error-modal";
 import { AuthService } from '../../auth/service/auth.service';
+import { CreateUser } from '../../core/model/create-user';
 
 @Component({
   selector: 'app-new-user-modal',
-  imports: [LucideAngularModule, CommonModule, FormsModule, ErrorModalComponent],
+  imports: [LucideAngularModule, CommonModule, ReactiveFormsModule],
   templateUrl: './new-user-modal.component.html',
 })
 export class NewUserModalComponent {
@@ -21,14 +22,20 @@ export class NewUserModalComponent {
   @Output() createdUser = new EventEmitter<User>();
   @Output() errorMessage = new EventEmitter<string>();
 
-
-  username: string = ''
-  role: UserRole = UserRole.HR
-  employeeId: number | null = null;
+  form: FormGroup;
 
   userRoles: UserRole[];
 
-  constructor(private userService: UserService, private authService: AuthService) {
+  constructor(
+    private fb: FormBuilder,
+    private userService: UserService,
+    private authService: AuthService
+  ) {
+    this.form = this.fb.group({
+      username: ['', Validators.required],
+      role: [null, Validators.required],
+      employeeId: [null]
+    })
     this.userRoles = this.getFilterdRoles();
    }
 
@@ -48,7 +55,15 @@ export class NewUserModalComponent {
   }
 
   onSubmit(): void {
-    this.userService.create({ username: this.username, role: this.role, employeeId: this.employeeId }).subscribe({
+
+    if(this.form.invalid) {
+      this.errorMessage.emit('Fill in all required fields.')
+      return
+    }
+
+    const newUser: CreateUser = this.form.value;
+
+    this.userService.create(newUser).subscribe({
       next: (response: User) => {
         this.createdUser.emit(response);
         this.closeModal.emit();
