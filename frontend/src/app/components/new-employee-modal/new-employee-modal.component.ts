@@ -1,5 +1,4 @@
 import { Component, EventEmitter, Output } from '@angular/core';
-import { CircleX, LucideAngularModule } from 'lucide-angular';
 import { Employee } from '../../core/model/employee';
 import { EmployeeService } from '../../core/service/employee.service';
 import { CreateEmployee } from '../../core/model/create-employee';
@@ -12,10 +11,12 @@ import { PositionService } from '../../core/service/position.service';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ModalComponent } from "../../shared/modal/modal.component";
+import { Field } from '../../core/types/Field';
+import { DynamicFieldComponent } from '../dynamic-field/dynamic-field.component';
 
 @Component({
   selector: 'app-new-employee-modal',
-  imports: [CommonModule, ReactiveFormsModule, ModalComponent],
+  imports: [CommonModule, ReactiveFormsModule, ModalComponent, DynamicFieldComponent],
   templateUrl: './new-employee-modal.component.html',
 })
 export class NewEmployeeModalComponent {
@@ -30,6 +31,29 @@ export class NewEmployeeModalComponent {
   positions: Position[] = [];
   shifts = Object.values(Shift);
   genders = Object.values(Gender);
+
+  inputGroups: Field[][] = [
+    [
+      { label: 'First Name', name: 'firstName', type: 'input', inputType: 'text', placeholder: 'Mariana' },
+      { label: 'Last Name', name: 'lastName', type: 'input', inputType: 'text', placeholder: 'Carvalho' }
+    ],
+    [
+      { label: 'Email', name: 'email', type: 'input', inputType: 'email', placeholder: 'example@email.com' },
+      { label: 'Phone', name: 'phone', type: 'input', inputType: 'text', placeholder: '(00) 00000-0000' }
+    ],
+    [
+      { label: 'Gender', name: 'gender', type: 'select', placeholder: 'Select gender', options: this.genders },
+      { label: 'Department', name: 'department', type: 'select', placeholder: 'Select department', options: this.departments }
+    ],
+    [
+      { label: 'Position', name: 'position', type: 'select', placeholder: 'Select position', options: this.positions },
+      { label: 'Shift', name: 'shift', type: 'select', placeholder: 'Select shift', options: this.shifts }
+    ],
+    [
+      { label: 'Birthday', name: 'birthDate', type: 'input', inputType: 'date', placeholder: '' },
+      { label: 'Hired Date', name: 'hiredDate', type: 'input', inputType: 'date', placeholder: '' }
+    ]
+  ];
 
 
   constructor(
