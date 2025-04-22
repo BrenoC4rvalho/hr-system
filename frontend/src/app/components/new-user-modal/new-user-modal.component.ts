@@ -19,14 +19,12 @@ export class NewUserModalComponent {
 
   @Output() closeModal = new EventEmitter<void>();
   @Output() createdUser = new EventEmitter<User>();
+  @Output() errorMessage = new EventEmitter<string>();
 
 
   username: string = ''
   role: UserRole = UserRole.HR
   employeeId: number | null = null;
-
-  showErrorModal: boolean = false;
-  errorMessage: string = '';
 
   userRoles: UserRole[];
 
@@ -57,14 +55,11 @@ export class NewUserModalComponent {
       },
       error: (error) => {
         if (error && error.error) {
-          this.showErrorModal = true;
-          this.errorMessage = error.error;
+          this.errorMessage.emit(error.error);
         } else {
-          this.showErrorModal = true;
-          this.errorMessage = 'An unexpected error occurred. Please try again later.';
+
+          this.errorMessage.emit('An unexpected error occurred. Please try again later.');
         }
-      },
-      complete: () => {
       }
     })
   }

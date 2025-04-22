@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { User } from '../../core/model/user';
 import { UserService } from '../../core/service/user.service';
 import { PaginatedUsersResponse } from '../../core/model/paginated-users-response';
@@ -15,20 +15,18 @@ import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-list-users',
-  imports: [CommonModule, LucideAngularModule, PaginationComponent, ErrorModalComponent, UserProfileModalComponent, ConfirmButtonComponent, FormsModule],
+  imports: [CommonModule, LucideAngularModule, PaginationComponent, UserProfileModalComponent, ConfirmButtonComponent, FormsModule],
   templateUrl: './list-users.component.html',
 })
 export class ListUsersComponent implements OnInit, OnChanges {
 
 
   @Input() newUser: User | undefined;
+  @Output() errorMessage = new EventEmitter<string>()
 
   readonly UserRoundSearchIcon = UserRoundSearch;
   readonly EyeIcon = Eye;
   readonly UserXIcon = UserX;
-
-  showErrorModal: boolean = false;
-  errorMessage: string = '';
 
   showConfirmButton: boolean = false;
   currentUserIdToDelete: number | undefined;
@@ -69,11 +67,9 @@ export class ListUsersComponent implements OnInit, OnChanges {
       },
       error: (error) => {
         if(error && error.error) {
-          this.showErrorModal = true;
-          this.errorMessage = error.error;
+          this.errorMessage.emit(error.error);
         } else {
-          this.showErrorModal = true;
-          this.errorMessage = 'An unexpected error occurred. Please try again later.';
+          this.errorMessage.emit('An unexpected error occurred. Please try again later.');
         }
       },
       complete: () => {
@@ -92,11 +88,9 @@ export class ListUsersComponent implements OnInit, OnChanges {
       },
       error: (error) => {
         if(error && error.error) {
-          this.showErrorModal = true;
-          this.errorMessage = error.error;
+          this.errorMessage.emit(error.error);
         } else {
-          this.showErrorModal = true;
-          this.errorMessage = 'An unexpected error occurred. Please try again later.';
+          this.errorMessage.emit('An unexpected error occurred. Please try again later.');
         }
 
         this.isSearch = false;
@@ -140,11 +134,9 @@ export class ListUsersComponent implements OnInit, OnChanges {
       },
       error: (error) => {
         if(error && error.error) {
-          this.showErrorModal = true;
-          this.errorMessage = error.error;
+          this.errorMessage.emit(error.error);
         } else {
-          this.showErrorModal = true;
-          this.errorMessage = 'An unexpected error occurred. Please try again later.';
+          this.errorMessage.emit('An unexpected error occurred. Please try again later.');
         }
       },
       complete: () => {
@@ -160,8 +152,7 @@ export class ListUsersComponent implements OnInit, OnChanges {
 
   showErrorUserProfileModal(errorMessage: string): void {
     this.showUserProfileModal = false;
-    this.showErrorModal = true;
-    this.errorMessage = errorMessage;
+    this.errorMessage.emit(errorMessage);
   }
 
 }

@@ -5,13 +5,17 @@ import { UserPlus, LucideAngularModule } from 'lucide-angular';
 import { NewUserModalComponent } from "../../components/new-user-modal/new-user-modal.component";
 import { CommonModule } from '@angular/common';
 import { User } from '../../core/model/user';
+import { ErrorModalComponent } from "../../components/error-modal/error-modal";
 
 @Component({
   selector: 'app-admin',
-  imports: [NavbarComponent, ListUsersComponent, LucideAngularModule, NewUserModalComponent, CommonModule],
+  imports: [NavbarComponent, ListUsersComponent, LucideAngularModule, NewUserModalComponent, CommonModule, ErrorModalComponent],
   templateUrl: './admin.component.html',
 })
 export class AdminComponent {
+
+  showErrorModal: boolean = false;
+  errorMessage: string = ''
 
   newUser: User | undefined;
 
@@ -29,6 +33,11 @@ export class AdminComponent {
 
   onUserCreated($event: User) {
     this.newUser = $event;
+  }
+
+  handleErrorModal($event: string) {
+    this.showErrorModal = true;
+    this.errorMessage = $event;
   }
 
 }

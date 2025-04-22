@@ -13,7 +13,7 @@
       </button>
     </header>
 
-    <app-list-users [newUser]="newUser" ></app-list-users>
+    <app-list-users (errorMessage)="handleErrorModal($event)" [newUser]="newUser" ></app-list-users>
 
   </main>
 
@@ -21,6 +21,19 @@
     *ngIf="isModalNewUserOpen"
     class="fixed inset-0 bg-deep/70 flex items-center justify-center"
   >
-    <app-new-user-modal (createdUser)="onUserCreated($event)" (closeModal)="closeModalNewUser()" ></app-new-user-modal>
+    <app-new-user-modal
+      (errorMessage)="handleErrorModal($event)"
+      (createdUser)="onUserCreated($event)"
+      (closeModal)="closeModalNewUser()"
+    >
+    </app-new-user-modal>
   </div>
+
+  <!-- Error Modal -->
+  <app-error-modal
+    [isVisible]="showErrorModal"
+    [errorMessage]="errorMessage"
+    (closed)="showErrorModal = false">
+  </app-error-modal>
+
 </div>
