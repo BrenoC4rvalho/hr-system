@@ -1,0 +1,22 @@
+<div class="relative bg-component shadow-2xl p-5 rounded border-2 border-primary">
+  <header class="mb-5">
+    <h2 class="text-4xl font-medium text-primary">{{ headerText }}</h2>
+  </header>
+
+  <ng-content></ng-content>
+
+  <div class="flex gap-2 justify-end">
+    <button
+      class="text-white-soft bg-primary px-4 py-1 rounded hover:cursor-pointer hover:bg-primary/70 "
+      (click)="save()"
+    >
+      Save
+    </button>
+    <button
+      class="text-red-500 border border-red-500 px-3 py-1 rounded hover:cursor-pointer hover:bg-red-100 "
+      (click)="close()"
+    >
+      Cancel
+    </button>
+  </div>
+</div>
