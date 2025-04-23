@@ -1,34 +1,49 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Output } from '@angular/core';
-import { FormsModule, NgModel } from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule, NgModel, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CircleX, LucideAngularModule } from 'lucide-angular';
 import { Position } from '../../core/model/position';
 import { PositionService } from '../../core/service/position.service';
+import { ModalComponent } from "../../shared/modal/modal.component";
+import { CreatePosition } from '../../core/model/create-position';
 
 @Component({
   selector: 'app-new-position-modal',
-  imports: [CommonModule, FormsModule, LucideAngularModule],
+  imports: [CommonModule, LucideAngularModule, ModalComponent, ReactiveFormsModule],
   templateUrl: './new-position-modal.component.html',
 })
 export class NewPositionModalComponent {
-
-  readonly CircleXIcon = CircleX;
-
-  name: string = '';
-  description: string = '';
 
   @Output() closeModal = new EventEmitter<void>()
   @Output() createdPosition = new EventEmitter<Position>()
   @Output() errorMessage = new EventEmitter<string>()
 
-  constructor(private positionService: PositionService) {}
+  form: FormGroup;
+
+  constructor(
+    private fb: FormBuilder,
+    private positionService: PositionService
+  ) {
+    this.form = this.fb.group({
+      name: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(100)]],
+      description: [Validators.required, Validators.minLength(5), Validators.maxLength(255)]
+    })
+  }
 
   onClose(): void {
     this.closeModal.emit();
   }
 
-  onSubmit(): void {
-    this.positionService.create({ name: this.name, description: this.description }).subscribe({
+  onSave(): void {
+
+    if(this.form.invalid) {
+      this.errorMessage.emit('Fill in all required fields.')
+      return
+    }
+
+    const newPosition: CreatePosition = this.form.value;
+
+    this.positionService.create(newPosition).subscribe({
           next: (response: Position) => {
             this.createdPosition.emit(response);
             this.closeModal.emit();
