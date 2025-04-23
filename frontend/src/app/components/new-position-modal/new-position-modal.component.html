@@ -1,14 +1,10 @@
-<div class="relative bg-component shadow-2xl p-5 rounded">
-
-  <button (click)="onClose()" class="text-red-500 absolute right-2 top-2 hover:cursor-pointer">
-    <lucide-icon class="w-7 h-7" [img]="CircleXIcon"></lucide-icon>
-  </button>
-
-  <header class="mb-5 text-4xl font-medium text-primary">
-    <h3>Add new Position</h3>
-  </header>
-
-  <form (ngSubmit)="onSubmit()" #createPositionForm="ngForm" class="flex flex-col gap-1.5">
+<app-modal
+  [headerText]="'Add new Position'"
+  [disableSave]="form.invalid"
+  (closeCliked)="onClose()"
+  (saveClicked)="onSave()"
+>
+  <form [formGroup]="form" class="space-y-6"">
 
     <label class="text-xl" for="name">Name</label>
     <input
@@ -57,17 +53,6 @@
       </div>
     </div>
 
-    <div class="mt-5 flex justify-center">
-      <button
-        class="bg-primary text-white-soft text-xl py-2 px-6 w-fit rounded hover:opacity-80 hover:cursor-pointer
-        disabled:opacity-50 disabled:cursor-auto"
-        type="submit"
-        [disabled]="createPositionForm.invalid"
-      >
-        Save
-      </button>
-    </div>
-
   </form>
+</app-modal>
 
-</div>
