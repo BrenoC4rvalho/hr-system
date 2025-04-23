@@ -112,7 +112,9 @@ export class NewEmployeeModalComponent {
   getDepartments(): void {
     this.departmentService.getAll().subscribe({
       next: (response: Department[]) => {
-        this.departments = response;
+        response.forEach(department => {
+          this.departments.push(department);
+        })
       },
       error: (error) => {
         if(error && error.error) {
@@ -128,7 +130,9 @@ export class NewEmployeeModalComponent {
   getPositions(): void {
     this.positionService.getAll().subscribe({
       next: (response: Position[]) => {
-        this.positions = response;
+        response.forEach(position => {
+          this.positions.push(position);
+        })
       },
       error: (error) => {
         if(error && error.error) {
