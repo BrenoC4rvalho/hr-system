@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { CircleX, LucideAngularModule } from 'lucide-angular';
 import { UserRole } from '../../core/enums/user-role.enum';
 import { CommonModule } from '@angular/common';
@@ -9,13 +9,16 @@ import { ErrorModalComponent } from "../error-modal/error-modal";
 import { AuthService } from '../../auth/service/auth.service';
 import { CreateUser } from '../../core/model/create-user';
 import { ModalComponent } from "../../shared/modal/modal.component";
+import { Field } from '../../core/types/Field';
+import { Employee } from '../../core/model/employee';
+import { DynamicFieldComponent } from "../dynamic-field/dynamic-field.component";
 
 @Component({
   selector: 'app-new-user-modal',
-  imports: [LucideAngularModule, CommonModule, ReactiveFormsModule, ModalComponent],
+  imports: [LucideAngularModule, CommonModule, ReactiveFormsModule, ModalComponent, DynamicFieldComponent],
   templateUrl: './new-user-modal.component.html',
 })
-export class NewUserModalComponent {
+export class NewUserModalComponent implements OnInit {
 
   readonly CircleXIcon = CircleX
 
@@ -25,7 +28,12 @@ export class NewUserModalComponent {
 
   form: FormGroup;
 
-  userRoles: UserRole[];
+  employees: Employee[] = []
+  userRoles: UserRole[] = [];
+
+  inputGroups: Field[][] = [];
+
+
 
   constructor(
     private fb: FormBuilder,
@@ -33,12 +41,26 @@ export class NewUserModalComponent {
     private authService: AuthService
   ) {
     this.form = this.fb.group({
-      username: ['', Validators.required],
+      username: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(50)]],
       role: [null, Validators.required],
-      employeeId: [null]
+      employee: [null]
     })
+  }
+
+  ngOnInit() {
     this.userRoles = this.getFilterdRoles();
-   }
+
+    this.inputGroups = [
+      [
+        { label: 'Username', name: 'username', type: 'input', inputType: 'text', placeholder: 'employeeHR' },
+        { label: 'Role', name: 'role', type: 'select', placeholder: 'Select role', options: this.userRoles }
+      ],
+      [
+        { label: 'Employee', name: 'employee', type: 'select', placeholder: 'Select employee', options: this.employees }
+      ]
+    ]
+  }
+
 
   onClose() {
     this.closeModal.emit();

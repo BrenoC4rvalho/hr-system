@@ -5,52 +5,12 @@
   (saveClicked)="onSave()"
 >
 
-  <form [formGroup]="form" class="flex flex-col gap-1.5">
-
-    <!-- Username -->
-    <label class="text-xl" for="username">Username</label>
-    <input
-      id="username"
-      placeholder="exempleUsername"
-      formControlName="username"
-      type="text"
-      class="p-2 text-2xl border border-gray-light focus:outline-primary rounded"
-    >
-    <div *ngIf="form.get('username')?.invalid && form.get('username')?.touched" class="text-red-500 text-sm">
-      <div *ngIf="form.get('username')?.errors?.['minlength']">
-        Username must be at least 3 characters long.
-      </div>
-      <div *ngIf="form.get('username')?.errors?.['maxlength']">
-        Username must be less than 50 characters long.
-      </div>
-      <div *ngIf="form.get('username')?.errors?.['required']">
-        Username is required.
-      </div>
+  <form [formGroup]="form" class="space-y-6">
+    <div *ngFor="let group of inputGroups" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <ng-container *ngFor="let field of group">
+        <app-dynamic-field [field]="field" [form]="form"></app-dynamic-field>
+      </ng-container>
     </div>
-
-    <!-- Role -->
-    <label class="mt-5 text-xl" for="role">Role</label>
-    <select
-      id="role"
-      class="p-2 text-2xl border border-gray-light focus:outline-primary rounded"
-      formControlName="role"
-    >
-      <option value="" disabled>Select Role</option>
-      <option *ngFor="let role of userRoles" [value]="role">{{ role }}</option>
-    </select>
-    <div *ngIf="form.get('role')?.invalid && form.get('role')?.touched" class="text-red-500 text-sm">
-      Role is required.
-    </div>
-
-    <!-- Employee -->
-    <label class="mt-5 text-xl" for="employeeId">Employee</label>
-    <input
-      id="employeeId"
-      placeholder="exempleEmployee"
-      type="text"
-      class="p-2 text-2xl border border-gray-light focus:outline-primary rounded"
-      formControlName="employeeId"
-    >
   </form>
 </app-modal>
 
