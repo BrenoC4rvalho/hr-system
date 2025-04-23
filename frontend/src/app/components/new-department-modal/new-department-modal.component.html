@@ -1,14 +1,11 @@
-<div class="relative bg-component shadow-2xl p-5 rounded">
+<app-modal
+  [headerText]="'Add new department'"
+  [disableSave]="form.invalid"
+  (closeCliked)="onClose()"
+  (saveClicked)="onSave()"
+>
 
-  <button (click)="onClose()" class="text-red-500 absolute right-2 top-2 hover:cursor-pointer">
-    <lucide-icon class="w-7 h-7" [img]="CircleXIcon"></lucide-icon>
-  </button>
-
-  <header class="mb-5 text-4xl font-medium text-primary">
-    <h3>Add new Department</h3>
-  </header>
-
-  <form (ngSubmit)="onSubmit()" #createDepartmentForm="ngForm" class="flex flex-col gap-1.5">
+  <form class="flex flex-col gap-1.5">
 
     <label class="text-xl" for="name">Name</label>
     <input
@@ -35,17 +32,7 @@
       </div>
     </div>
 
-    <div class="mt-5 flex justify-center">
-      <button
-        class="bg-primary text-white-soft text-xl py-2 px-6 w-fit rounded hover:opacity-80 hover:cursor-pointer
-        disabled:opacity-50 disabled:cursor-auto"
-        type="submit"
-        [disabled]="createDepartmentForm.invalid"
-      >
-        Save
-      </button>
-    </div>
-
   </form>
 
-</div>
+</app-modal>
+
