@@ -8,10 +8,11 @@ import { User } from '../../core/model/user';
 import { ErrorModalComponent } from "../error-modal/error-modal";
 import { AuthService } from '../../auth/service/auth.service';
 import { CreateUser } from '../../core/model/create-user';
+import { ModalComponent } from "../../shared/modal/modal.component";
 
 @Component({
   selector: 'app-new-user-modal',
-  imports: [LucideAngularModule, CommonModule, ReactiveFormsModule],
+  imports: [LucideAngularModule, CommonModule, ReactiveFormsModule, ModalComponent],
   templateUrl: './new-user-modal.component.html',
 })
 export class NewUserModalComponent {
@@ -54,7 +55,7 @@ export class NewUserModalComponent {
     return roles;
   }
 
-  onSubmit(): void {
+  onSave(): void {
 
     if(this.form.invalid) {
       this.errorMessage.emit('Fill in all required fields.')
