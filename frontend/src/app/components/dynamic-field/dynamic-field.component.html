@@ -1,5 +1,5 @@
-<div class="flex flex-col w-full">
-  <label class="mb-2 text-sm font-medium text-gray-700">{{ field.label }}</label>
+<div class="flex flex-col w-full" [formGroup]="form" >
+  <label class="mb-2 text-sm font-medium text-gray">{{ field.label }}</label>
 
   <!-- input -->
   <input
@@ -7,14 +7,14 @@
     [type]="field.inputType"
     [placeholder]="field.placeholder"
     [formControlName]="field.name"
-    class="w-full px-4 py-2 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm transition"
+    class="w-full px-4 py-2 rounded-xl border border-gray-light focus:outline-none focus:ring-2 focus:ring-primary shadow-sm transition"
   />
 
   <!-- select -->
   <select
     *ngIf="field.type === 'select'"
     [formControlName]="field.name"
-    class="w-full px-4 py-2 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm transition"
+    class="w-full px-4 py-2 rounded-xl border border-gray-light focus:outline-none focus:ring-2 focus:ring-primary shadow-sm transition"
   >
     <option [ngValue]="null" disabled hidden>{{ field.placeholder }}</option>
     <option *ngFor="let option of field.options" [ngValue]="option">
@@ -23,7 +23,7 @@
   </select>
 
   <!-- ERRO -->
-  <div *ngIf="control?.touched && control?.invalid" class="text-sm text-red-500 mt-0.5">
+  <div *ngIf="control?.touched && control?.invalid" class="text-sm text-red-500 mt-1">
     <div *ngIf="control?.errors?.['required']">
       {{ field.label }} is required.
     </div>
@@ -31,4 +31,5 @@
       Invalid email.
     </div>
   </div>
+
 </div>

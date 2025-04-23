@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { Field } from '../../core/types/Field';
 
 @Component({
   selector: 'app-dynamic-field',
