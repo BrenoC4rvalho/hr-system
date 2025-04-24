@@ -4,55 +4,12 @@
   (closeCliked)="onClose()"
   (saveClicked)="onSave()"
 >
-  <form [formGroup]="form" class="space-y-6"">
-
-    <label class="text-xl" for="name">Name</label>
-    <input
-      placeholder="exampleName"
-      type="text"
-      class="p-2 text-2xl border border-gray-light focus:outline-primary rounded"
-      name="name"
-      [(ngModel)]="name"
-      required
-      minlength="2"
-      maxlength="100"
-      #nameField="ngModel"
-    >
-    <div *ngIf="nameField.invalid && nameField.touched" class="text-red-500 text-sm">
-      <div *ngIf="nameField.errors?.['minlength']">
-        Name must be at least 2 characters long.
-      </div>
-      <div *ngIf="nameField.errors?.['maxlength']">
-        Name must be less than 100 characters long.
-      </div>
-      <div *ngIf="nameField.errors?.['required']">
-        Name is required.
-      </div>
+  <form [formGroup]="form" class="space-y-6">
+    <div *ngFor="let group of inputGroups" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <ng-container *ngFor="let field of group">
+        <app-dynamic-field [field]="field" [form]="form"></app-dynamic-field>
+      </ng-container>
     </div>
-
-    <label class="mt-5 text-xl" for="description">Description</label>
-    <textarea
-      placeholder="Position description"
-      class="p-2 text-2xl border border-gray-light focus:outline-primary rounded"
-      name="description"
-      [(ngModel)]="description"
-      required
-      minlength="5"
-      maxlength="255"
-      #descriptionField="ngModel"
-    ></textarea>
-    <div *ngIf="descriptionField.invalid && descriptionField.touched" class="text-red-500 text-sm">
-      <div *ngIf="descriptionField.errors?.['minlength']">
-        Description must be at least 5 characters long.
-      </div>
-      <div *ngIf="descriptionField.errors?.['maxlength']">
-        Description must be less than 255 characters long.
-      </div>
-      <div *ngIf="descriptionField.errors?.['required']">
-        Description is required.
-      </div>
-    </div>
-
   </form>
 </app-modal>
 
