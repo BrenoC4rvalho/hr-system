@@ -5,33 +5,12 @@
   (saveClicked)="onSave()"
 >
 
-  <form class="flex flex-col gap-1.5">
-
-    <label class="text-xl" for="name">Name</label>
-    <input
-      placeholder="exampleName"
-      type="text"
-      class="p-2 text-2xl border border-gray-light focus:outline-primary rounded"
-      name="name"
-      [(ngModel)]="name"
-      required
-      minlength="2"
-      maxlength="100"
-      #nameField="ngModel"
-    >
-
-    <div *ngIf="nameField.invalid && nameField.touched" class="text-red-500 text-sm">
-      <div *ngIf="nameField.errors?.['minlength']">
-        Name must be at least 2 characters long.
-      </div>
-      <div *ngIf="nameField.errors?.['maxlength']">
-        Name must be less than 100 characters long.
-      </div>
-      <div *ngIf="nameField.errors?.['required']">
-        Name is required.
-      </div>
+  <form [formGroup]="form" class="space-y-6">
+    <div *ngFor="let group of inputGroups" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <ng-container *ngFor="let field of group">
+        <app-dynamic-field [field]="field" [form]="form"></app-dynamic-field>
+      </ng-container>
     </div>
-
   </form>
 
 </app-modal>

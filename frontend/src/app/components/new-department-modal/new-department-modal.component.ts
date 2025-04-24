@@ -1,15 +1,17 @@
-import { Component, EventEmitter, output, Output } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { CircleX, LucideAngularModule } from 'lucide-angular';
 import { DepartmentService } from '../../core/service/department.service';
-import { FormBuilder, FormGroup, FormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Department } from '../../core/model/department';
 import { ModalComponent } from "../../shared/modal/modal.component";
 import { CreateDepartment } from '../../core/model/create-department';
+import { DynamicFieldComponent } from "../dynamic-field/dynamic-field.component";
+import { Field } from '../../core/types/Field';
 
 @Component({
   selector: 'app-new-department-modal',
-  imports: [LucideAngularModule, FormsModule, CommonModule, ModalComponent],
+  imports: [LucideAngularModule, ReactiveFormsModule, CommonModule, ModalComponent, DynamicFieldComponent],
   templateUrl: './new-department-modal.component.html',
 })
 export class NewDepartmentModalComponent {
@@ -21,6 +23,12 @@ export class NewDepartmentModalComponent {
   @Output() errorMessage = new EventEmitter<string>()
 
   form: FormGroup;
+
+  inputGroups: Field[][] = [
+    [
+      { label: 'Name', name: 'name', type: 'input', inputType: 'text', placeholder: 'Mechanic' }
+    ]
+  ]
 
   constructor(
     private fb: FormBuilder,
