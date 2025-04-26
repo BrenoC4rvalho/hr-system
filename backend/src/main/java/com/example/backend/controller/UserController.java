@@ -118,26 +118,4 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(user);
     }
 
-    @PreAuthorize("hasAnyAuthority('ADMIN','MANAGER')")
-    @GetMapping("/search")
-    public ResponseEntity<?> search(
-            @RequestParam String username,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "12") int size
-    ) {
-        Pageable pageable = PageRequest.of(page, size);
-        Page<UserRespondeDTO> users = userService.search(username, pageable);
-
-        Map<String, Object> response = new HashMap<>();
-        response.put("totalUsers", users.getTotalElements());
-        response.put("currentPage", users.getNumber());
-        response.put("totalPages", users.getTotalPages());
-        response.put("pageSize", users.getSize());
-        response.put("users", users.getContent());
-
-        return ResponseEntity.status(HttpStatus.OK).body(response);
-    }
-    
-    
-
 }
