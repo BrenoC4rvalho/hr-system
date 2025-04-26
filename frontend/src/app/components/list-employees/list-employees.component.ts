@@ -56,7 +56,6 @@ export class ListEmployeesComponent implements OnInit, OnChanges {
   }
 
   getEmployees(page: number, size: number): void {
-    console.log("aqui")
 
     const positionId = this.selectedPosition ? this.selectedPosition.id : null;
     const departmentId = this.selectedDepartment ? this.selectedDepartment.id : null;

@@ -11,8 +11,7 @@
           type="search"
           placeholder="Search User"
           [(ngModel)]="searchQueryUsername"
-          (keyup)="onSearch(0, 12)"
-          (keydown.enter)="onSearch(0, 12)"
+          (input)="onSearch()"
         >
       </div>
     </div>

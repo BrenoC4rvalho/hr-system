@@ -8,7 +8,6 @@ import { AuthService } from '../../auth/service/auth.service';
 import { UserRole } from '../../core/enums/user-role.enum';
 import { UserStatus } from '../../core/enums/user-status.enum';
 import { PaginationComponent } from "../pagination/pagination.component";
-import { ErrorModalComponent } from "../error-modal/error-modal";
 import { UserProfileModalComponent } from "../user-profile-modal/user-profile-modal.component";
 import { ConfirmButtonComponent } from "../confirm-button/confirm-button.component";
 import { FormsModule } from '@angular/forms';
@@ -42,7 +41,6 @@ export class ListUsersComponent implements OnInit, OnChanges {
   totalPages: number = 0;
 
   searchQueryUsername: string = '';
-  isSearch: boolean = false;
 
   constructor(private userService: UserService, private authService: AuthService) {}
 
@@ -58,7 +56,10 @@ export class ListUsersComponent implements OnInit, OnChanges {
   }
 
   getUsers(page: number, size: number): void {
-    this.userService.getAll(page, size).subscribe({
+
+    const username = this.searchQueryUsername;
+
+    this.userService.getAll(page, size, username).subscribe({
       next: (response: PaginatedUsersResponse) => {
         this.users = response.users;
         this.currentPage = response.currentPage;
@@ -71,41 +72,16 @@ export class ListUsersComponent implements OnInit, OnChanges {
         } else {
           this.errorMessage.emit('An unexpected error occurred. Please try again later.');
         }
-      },
-      complete: () => {
       }
     })
   }
 
-  onSearch(page: number, size: number): void {
-    this.userService.searchByUsername(this.searchQueryUsername, this.currentPage, this.pageSize).subscribe({
-      next: (response) => {
-         this.users = response.users;
-         this.currentPage = response.currentPage;
-         this.totalPages = response.totalPages;
-         this.pageSize = response.pageSize;
-         this.isSearch = true;
-      },
-      error: (error) => {
-        if(error && error.error) {
-          this.errorMessage.emit(error.error);
-        } else {
-          this.errorMessage.emit('An unexpected error occurred. Please try again later.');
-        }
-
-        this.isSearch = false;
-        this.getUsers(0, this.pageSize)
-      }
-
-    })
+  onSearch(): void {
+    this.getUsers(0, this.pageSize);
   }
 
   onPageChange(newPage: number): void {
-    if(this.isSearch) {
-      this.onSearch(newPage, this.pageSize);
-    } else {
-      this.getUsers(newPage, this.pageSize);
-    }
+    this.getUsers(newPage, this.pageSize);
   }
 
   canDeleteAdmin(userDeleteRole: UserRole): boolean {

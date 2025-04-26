@@ -17,10 +17,14 @@ export class UserService {
   constructor(private http: HttpClient) { }
 
 
-  getAll(page: number, size: number): Observable<PaginatedUsersResponse> {
+  getAll(page: number, size: number, username: string): Observable<PaginatedUsersResponse> {
+
     const params = new HttpParams()
       .set('page', page.toString())
       .set('size', size.toString())
+      .set('username', username);
+
+
     return this.http.get<PaginatedUsersResponse>(this.apiUrl, { params });
   }
 
