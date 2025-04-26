@@ -37,11 +37,13 @@ public class EmployeeController {
     @GetMapping() 
     public ResponseEntity<?> index(
         @RequestParam(defaultValue = "0") int page,
-        @RequestParam(defaultValue = "12") int size
+        @RequestParam(defaultValue = "12") int size,
+        @RequestParam(required = false) Long positionId,
+        @RequestParam(required = false) Long departmentId
     ) {
 
         Pageable pageable = PageRequest.of(page, size);
-        Page<EmployeeDTO> employees = employeeService.getAll(pageable);
+        Page<EmployeeDTO> employees = employeeService.getAll(pageable, positionId, departmentId);
 
         Map<String, Object> response = new HashMap<String, Object>();
         response.put("totalEmployees", employees.getTotalElements());

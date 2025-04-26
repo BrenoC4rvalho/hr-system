@@ -2,6 +2,7 @@ package com.example.backend.service;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,11 +27,25 @@ public class EmployeeService {
         this.employeeMapper = employeeMapper;
     }
 
-    public Page<EmployeeDTO> getAll(Pageable pageable) {
+    public Page<EmployeeDTO> getAll(Pageable pageable, Long positionId, Long departmentId) {
 
-        Page<Employee> employees = employeeRepository.findAll(pageable);
+        Specification<Employee> spec = Specification.where(null);
 
-        if(employees.isEmpty()) {
+        if (positionId != null) {
+            spec = spec.and((root, query, cb) ->
+                cb.equal(root.join("position").get("id"), positionId)
+            );
+        }
+
+        if (departmentId != null) {
+            spec = spec.and((root, query, cb) ->
+                cb.equal(root.join("department").get("id"), departmentId)
+            );
+        }
+
+        Page<Employee> employees = employeeRepository.findAll(spec, pageable);
+
+        if (employees.isEmpty()) {
             throw new EmployeeNotFoundException();
         }
 
