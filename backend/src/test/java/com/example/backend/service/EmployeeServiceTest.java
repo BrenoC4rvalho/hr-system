@@ -4,11 +4,14 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.List;
 import java.util.Optional;
+
+import javax.swing.text.html.HTMLDocument.HTMLReader.SpecialAction;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -19,6 +22,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 
 import com.example.backend.dto.CreateEmployeeDTO;
 import com.example.backend.dto.EmployeeDTO;
@@ -58,16 +62,17 @@ class EmployeeServiceTest {
 
         Pageable pageable = PageRequest.of(0, 10);
         Page<Employee> employeePage = new PageImpl<>(List.of(employee));
-        when(employeeRepository.findAll(pageable)).thenReturn(employeePage);
+        when(employeeRepository.findAll(any(Specification.class), eq(pageable)))
+            .thenReturn(employeePage);
         when(employeeMapper.map(employee)).thenReturn(employeeDTO);
 
-        Page<EmployeeDTO> result = employeeService.getAll(pageable);
+        Page<EmployeeDTO> result = employeeService.getAll(pageable, null, null, null);
 
         assertNotNull(result);
         assertEquals(1, result.getTotalElements());
         assertEquals("John", result.getContent().get(0).getFirstName());
 
-        verify(employeeRepository).findAll(pageable);
+        verify(employeeRepository).findAll(any(Specification.class), eq(pageable));
         verify(employeeMapper).map(employee);
     }
 
@@ -76,11 +81,12 @@ class EmployeeServiceTest {
         Pageable pageable = PageRequest.of(0, 10);
         Page<Employee> emptyPage = Page.empty();
 
-        when(employeeRepository.findAll(pageable)).thenReturn(emptyPage);
+        when(employeeRepository.findAll(any(Specification.class), eq(pageable)))
+            .thenReturn(emptyPage);
 
-        assertThrows(EmployeeNotFoundException.class, () -> employeeService.getAll(pageable));
+        assertThrows(EmployeeNotFoundException.class, () -> employeeService.getAll(pageable, null, null, null));
 
-        verify(employeeRepository).findAll(pageable);
+        verify(employeeRepository).findAll(any(Specification.class), eq(pageable));
     }
 
     @Test

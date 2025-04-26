@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import com.auth0.jwt.exceptions.JWTVerificationException;
-import com.example.backend.model.Department;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {

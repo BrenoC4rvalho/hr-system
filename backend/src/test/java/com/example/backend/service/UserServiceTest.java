@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -23,6 +24,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.authorization.AuthorizationDeniedException;
 
 import com.example.backend.dto.CreateUserDTO;
@@ -111,22 +113,32 @@ public class UserServiceTest {
     @Test
     @DisplayName("getAllUser: Should return page of user response DTO when users exist.")
     void testGetAll() {
+
+        Pageable pageable = PageRequest.of(0, 10);
         Page<User> users = new PageImpl<>(List.of(user));
-        when(userRepository.findAll(any(PageRequest.class))).thenReturn(users);
+        when(userRepository.findAll(any(Specification.class), eq(pageable)))
+            .thenReturn(users);
         when(userResponseMapper.map(any(User.class))).thenReturn(userResponseDTO);
         
-        Page<UserRespondeDTO> result = userService.getAll(PageRequest.of(0, 10));
+        Page<UserRespondeDTO> result = userService.getAll(PageRequest.of(0, 10), new String());
         
         assertFalse(result.isEmpty());
+
+        verify(userRepository).findAll(any(Specification.class), eq(pageable));
+        verify(userResponseMapper).map(user);
     }
 
     @Test
     @DisplayName("getAllUser: Should throw exception when users not found")
     void testGetAllWhenUserNotFound() {
+        Pageable pageable = PageRequest.of(0, 10);
         Page<User> emptyPage = Page.empty();
-        when(userRepository.findAll(any(PageRequest.class))).thenReturn(emptyPage);
+        when(userRepository.findAll(any(Specification.class), eq(pageable)))
+            .thenReturn(emptyPage);
         
-        assertThrows(UserNotFoundException.class, () -> userService.getAll(PageRequest.of(0, 10)));
+        assertThrows(UserNotFoundException.class, () -> userService.getAll(PageRequest.of(0, 10), new String()));
+    
+        verify(userRepository).findAll(any(Specification.class), eq(pageable));
     }
 
     // end getAllUser
@@ -636,36 +648,5 @@ public class UserServiceTest {
 
     // end delete
 
-    // Tests for method search
-
-    @Test
-    @DisplayName("search: Should return a page of UserRespondeDTO when users are found")
-    void testSearchUsersFound() {
-        Pageable pageable = PageRequest.of(0, 10);
-        Page<User> usersPage = new PageImpl<>(List.of(user));
-        
-        when(userRepository.findByUsernameContainingIgnoreCase("test", pageable)).thenReturn(usersPage);
-        when(userResponseMapper.map(user)).thenReturn(userResponseDTO);
-        
-        Page<UserRespondeDTO> result = userService.search("test", pageable);
-        
-        assertFalse(result.isEmpty());
-        verify(userRepository).findByUsernameContainingIgnoreCase("test", pageable);
-        verify(userResponseMapper).map(user);
-    }
-
-    @Test
-    @DisplayName("search: Should throw UserNotFoundException when no users are found")
-    void testSearchUsersNotFound() {
-        Pageable pageable = PageRequest.of(0, 10);
-        Page<User> emptyPage = Page.empty();
-        
-        when(userRepository.findByUsernameContainingIgnoreCase("nonexistent", pageable)).thenReturn(emptyPage);
-        
-        assertThrows(UserNotFoundException.class, () -> userService.search("nonexistent", pageable));
-        
-        verify(userRepository).findByUsernameContainingIgnoreCase("nonexistent", pageable);
-    }
-
-    // end search
+   
 }
