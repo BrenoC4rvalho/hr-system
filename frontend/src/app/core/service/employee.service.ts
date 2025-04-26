@@ -26,11 +26,11 @@ export class EmployeeService {
        .set('size', size.toString());
 
        if (positionId) {
-        params = params.set('position', positionId.toString());
+        params = params.set('positionId', positionId.toString());
       }
 
       if (departmentId) {
-        params = params.set('department', departmentId.toString());
+        params = params.set('departmentId', departmentId.toString());
       }
 
       return this.http.get<PaginatedEmployeesResponse>(this.apiUrl, { params });
