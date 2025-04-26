@@ -5,10 +5,15 @@ import { Employee } from '../../core/model/employee';
 import { EmployeeService } from '../../core/service/employee.service';
 import { PaginatedEmployeesResponse } from '../../core/model/paginated-employees-response';
 import { PaginationComponent } from "../pagination/pagination.component";
+import { Department } from '../../core/model/department';
+import { Position } from '../../core/model/position';
+import { DepartmentService } from '../../core/service/department.service';
+import { PositionService } from '../../core/service/position.service';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-list-employees',
-  imports: [CommonModule, LucideAngularModule, PaginationComponent],
+  imports: [CommonModule, LucideAngularModule, PaginationComponent, FormsModule],
   templateUrl: './list-employees.component.html',
 })
 export class ListEmployeesComponent implements OnInit, OnChanges {
@@ -20,15 +25,26 @@ export class ListEmployeesComponent implements OnInit, OnChanges {
   readonly UserRoundSearchIcon = UserRoundSearch;
 
   employees: Employee[] = [];
+  departments: Department[] = [];
+  positions: Position[] = [];
+
+  selectedPosition: Position | null = null;
+  selectedDepartment: Department | null = null;
 
   currentPage: number = 0;
   pageSize: number = 12;
   totalPages: number = 0;
 
-  constructor(private employeeService: EmployeeService) {}
+  constructor(
+    private employeeService: EmployeeService,
+    private departmentService: DepartmentService,
+    private positionService: PositionService
+  ) {}
 
   ngOnInit(): void {
-    this.getEmployees(this.currentPage, this.pageSize)
+    this.getEmployees(this.currentPage, this.pageSize);
+    this.getDepartments();
+    this.getPositions();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -39,12 +55,56 @@ export class ListEmployeesComponent implements OnInit, OnChanges {
   }
 
   getEmployees(page: number, size: number): void {
-    this.employeeService.getAll(page, size).subscribe({
+    console.log("aqui")
+
+    const positionId = this.selectedPosition ? this.selectedPosition.id : null;
+    const departmentId = this.selectedDepartment ? this.selectedDepartment.id : null;
+
+    console.log(departmentId)
+    console.log(positionId)
+
+    this.employeeService.getAll(page, size, positionId, departmentId).subscribe({
       next: (response: PaginatedEmployeesResponse) => {
+        console.log(response.employees)
         this.employees = response.employees;
         this.currentPage = response.currentPage;
         this.totalPages = response.totalPages;
         this.pageSize = response.pageSize;
+      },
+      error: (error) => {
+        if(error && error.error) {
+          this.errorMessage.emit(error.error);
+        } else {
+          this.errorMessage.emit('An unexpected error occurred. Please try again later.');
+        }
+      }
+    })
+  }
+
+  getPositions() {
+
+    this.positionService.getAll().subscribe({
+      next: (response: Position[]) => {
+        response.forEach(position => {
+          this.positions.push(position);
+        })
+      },
+      error: (error) => {
+        if(error && error.error) {
+          this.errorMessage.emit(error.error);
+        } else {
+          this.errorMessage.emit('An unexpected error occurred. Please try again later.');
+        }
+      }
+    })
+  }
+
+  getDepartments() {
+    this.departmentService.getAll().subscribe({
+      next: (response: Department[]) => {
+        response.forEach(department => {
+          this.departments.push(department);
+        })
       },
       error: (error) => {
         if(error && error.error) {

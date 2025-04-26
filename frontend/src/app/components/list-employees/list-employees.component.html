@@ -12,8 +12,31 @@
           placeholder="Search Employee"
         >
       </div>
-      <button class="text-deep p-2 border border-gray-light rounded hover:opacity-80">All Role</button>
-      <button class="text-deep p-2 border border-gray-light rounded hover:opacity-80">Departments</button>
+
+      <!-- Positions -->
+      <select
+        [(ngModel)]="selectedPosition"
+        (ngModelChange)="getEmployees(currentPage, pageSize)"
+        class="text-deep p-2 border border-gray-light rounded hover:opacity-80"
+      >
+        <option [ngValue]="null">All Positions</option>
+        <option *ngFor="let position of positions" [ngValue]="position">
+          {{ position.name }}
+        </option>
+      </select>
+
+      <!-- Departments -->
+      <select
+        [(ngModel)]="selectedDepartment"
+        (ngModelChange)="getEmployees(currentPage, pageSize)"
+        class="text-deep p-2 border border-gray-light rounded hover:opacity-80"
+      >
+        <option [ngValue]="null">All Departments</option>
+        <option *ngFor="let department of departments" [ngValue]="department">
+          {{ department.name }}
+        </option>
+      </select>
+
     </div>
   </header>
   <table class="table-auto w-full mt-4 text-center">
