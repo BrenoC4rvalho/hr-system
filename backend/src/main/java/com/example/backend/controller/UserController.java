@@ -44,10 +44,11 @@ public class UserController {
     @GetMapping()
     public ResponseEntity<?> index(
         @RequestParam(defaultValue = "0") int page,
-        @RequestParam(defaultValue = "12") int size
+        @RequestParam(defaultValue = "12") int size,
+        @RequestParam(required = false) String username
     ) {
         Pageable pageable = PageRequest.of(page, size);
-        Page<UserRespondeDTO> users = userService.getAll(pageable);
+        Page<UserRespondeDTO> users = userService.getAll(pageable, username);
 
         Map<String, Object> response = new HashMap<String, Object>();
         response.put("totalUsers", users.getTotalElements());
