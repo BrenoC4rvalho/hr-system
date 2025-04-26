@@ -39,11 +39,12 @@ public class EmployeeController {
         @RequestParam(defaultValue = "0") int page,
         @RequestParam(defaultValue = "12") int size,
         @RequestParam(required = false) Long positionId,
-        @RequestParam(required = false) Long departmentId
+        @RequestParam(required = false) Long departmentId,
+        @RequestParam(required = false) String name
     ) {
 
         Pageable pageable = PageRequest.of(page, size);
-        Page<EmployeeDTO> employees = employeeService.getAll(pageable, positionId, departmentId);
+        Page<EmployeeDTO> employees = employeeService.getAll(pageable, positionId, departmentId, name);
 
         Map<String, Object> response = new HashMap<String, Object>();
         response.put("totalEmployees", employees.getTotalElements());

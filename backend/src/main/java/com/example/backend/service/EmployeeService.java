@@ -27,7 +27,7 @@ public class EmployeeService {
         this.employeeMapper = employeeMapper;
     }
 
-    public Page<EmployeeDTO> getAll(Pageable pageable, Long positionId, Long departmentId) {
+    public Page<EmployeeDTO> getAll(Pageable pageable, Long positionId, Long departmentId, String name) {
 
         Specification<Employee> spec = Specification.where(null);
 
@@ -40,6 +40,12 @@ public class EmployeeService {
         if (departmentId != null) {
             spec = spec.and((root, query, cb) ->
                 cb.equal(root.join("department").get("id"), departmentId)
+            );
+        }
+
+        if (name != null && !name.isBlank()) {
+            spec = spec.and((root, query, cb) ->
+                cb.like(cb.lower(root.get("firstName")), "%" + name.toLowerCase() + "%")
             );
         }
 
