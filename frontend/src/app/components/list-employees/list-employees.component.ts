@@ -30,6 +30,7 @@ export class ListEmployeesComponent implements OnInit, OnChanges {
 
   selectedPosition: Position | null = null;
   selectedDepartment: Department | null = null;
+  searchName: string = '';
 
   currentPage: number = 0;
   pageSize: number = 12;
@@ -59,11 +60,9 @@ export class ListEmployeesComponent implements OnInit, OnChanges {
 
     const positionId = this.selectedPosition ? this.selectedPosition.id : null;
     const departmentId = this.selectedDepartment ? this.selectedDepartment.id : null;
+    const name = this.searchName;
 
-    console.log(departmentId)
-    console.log(positionId)
-
-    this.employeeService.getAll(page, size, positionId, departmentId).subscribe({
+    this.employeeService.getAll(page, size, positionId, departmentId, name).subscribe({
       next: (response: PaginatedEmployeesResponse) => {
         console.log(response.employees)
         this.employees = response.employees;
@@ -118,6 +117,10 @@ export class ListEmployeesComponent implements OnInit, OnChanges {
 
   onPageChange(newPage: number): void {
     this.getEmployees(newPage, this.pageSize);
+  }
+
+  onSearch(): void {
+    this.getEmployees(0, this.pageSize);
   }
 
 }

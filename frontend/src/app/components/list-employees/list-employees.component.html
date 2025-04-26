@@ -10,6 +10,8 @@
           class="pl-7 p-2"
           type="search"
           placeholder="Search Employee"
+          [(ngModel)]="searchName"
+          (input)="onSearch()"
         >
       </div>
 
