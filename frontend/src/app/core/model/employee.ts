@@ -15,7 +15,7 @@ export interface Employee {
   department: Department;
   position: Position;
   shift: Shift;
-  Status: EmployeeStatus;
+  status: EmployeeStatus;
   birthDate: Date;
   hiredDate: Date;
   terminationDate: Date;

@@ -3,7 +3,7 @@
  (closeCliked)="onClose()"
 >
 
-  <section class="flex gap-5">
+  <section *ngIf="employee"  class="flex gap-5">
 
     <div class="w-40 h-40 rounded-full bg-red-600">
       <img>
@@ -12,10 +12,15 @@
     <div>
 
       <div class="border-b-2 border-gray-light pb-5">
-        <p class="text-deep font-bold text-2xl">Marcos Willians Guzenks</p>
+        <p class="text-deep font-bold text-2xl">{{ employee.firstName }} {{ employee.lastName }}</p>
         <div class="flex items-center gap-2">
-          <p class="bg-green-200 text-green-600 p-1 rounded border-2 border-green-600">status</p>
-          <p class="text-gray">Developer</p>
+          <p
+            class="p-1 rounded border-2"
+            [ngClass]="getEmployeeStatusClasses(employee.status)"
+          >
+            {{ employee.status }}
+          </p>
+          <p class="text-gray">{{ employee.position.name }}</p>
         </div>
       </div>
 
@@ -23,21 +28,21 @@
         <div>
           <div class="flex gap-3">
             <p class="text-gray">Departament</p>
-            <p>Tecnology</p>
+            <p>{{ employee.department.name }}</p>
           </div>
           <div class="flex gap-3">
             <p class="text-gray">Data Hired</p>
-            <p>March, 17, 2021</p>
+            <p>{{ employee.hiredDate| date: 'MMMM d, y' }}</p>
           </div>
         </div>
         <div>
           <div class="flex gap-1">
             <lucide-icon [img]="MailIcon"></lucide-icon>
-            <p>neymargmail.com</p>
+            <p>{{ employee.email }}</p>
           </div>
           <div class="flex gap-1">
             <lucide-icon [img]="PhoneIcon"></lucide-icon>
-            <p>2492245-6789</p>
+            <p>{{ employee.phone }}</p>
           </div>
         </div>
       </div>
