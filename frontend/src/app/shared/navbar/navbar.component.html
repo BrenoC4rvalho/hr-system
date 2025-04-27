@@ -4,13 +4,13 @@
     <lucide-icon [img]="XCircleIcon" class="h-6 w-6"></lucide-icon>
   </button>
 
-  <nav class="mt-12 md:mt-0">
+  <nav class="mt-5 md:mt-0">
     <ul>
       <li>
         <a
           routerLink="/dashboard"
-          routerLinkActive="bg-primary"
-          class="text-deep flex gap-1 items-center p-3 text-2xl hover:bg-primary hover:text-deep"
+          routerLinkActive="bg-primary text-white/90"
+          class="text-deep flex gap-1 items-center p-3 text-2xl hover:bg-primary hover:text-white/90"
         >
           <lucide-icon [img]="DashboardIcon"></lucide-icon>
           <p>Dashboard</p>
@@ -19,8 +19,8 @@
       <li>
         <a
           routerLink="/employees"
-          routerLinkActive="bg-primary"
-          class="text-deep flex gap-1 items-center p-3 text-2xl hover:bg-primary hover:text-deep"
+          routerLinkActive="bg-primary text-white/90"
+          class="text-deep flex gap-1 items-center p-3 text-2xl hover:bg-primary hover:text-white/90"
         >
           <lucide-icon [img]="EmployeeIcon"></lucide-icon>
           <p>Employees</p>
@@ -29,8 +29,8 @@
       <li *ngIf="canAccessAdmin()">
         <a
           routerLink="/admin"
-          routerLinkActive="bg-primary"
-          class="text-deep flex gap-1 items-center p-3 text-2xl hover:bg-primary hover:text-deep"
+          routerLinkActive="bg-primary text-white/90"
+          class="text-deep flex gap-1 items-center p-3 text-2xl hover:bg-primary hover:text-white/90"
         >
           <lucide-icon [img]="AdminIcon"></lucide-icon>
           <p>Admin</p>
@@ -39,8 +39,8 @@
       <li>
         <a
           routerLink="/departments"
-          routerLinkActive="bg-primary"
-          class="text-deep flex gap-1 items-center p-3 text-2xl hover:bg-primary hover:text-deep"
+          routerLinkActive="bg-primary text-white/90"
+          class="text-deep flex gap-1 items-center p-3 text-2xl hover:bg-primary hover:text-white/90"
         >
           <lucide-icon [img]="DepartmentIcon"></lucide-icon>
           <p>Departments</p>
@@ -49,8 +49,8 @@
       <li>
         <a
           routerLink="/positions"
-          routerLinkActive="bg-primary"
-          class="text-deep flex gap-1 items-center p-3 text-2xl hover:bg-primary hover:text-deep"
+          routerLinkActive="bg-primary text-white/90"
+          class="text-deep flex gap-1 items-center p-3 text-2xl hover:bg-primary hover:text-white/90"
         >
           <lucide-icon [img]="PositionIcon"></lucide-icon>
           <p>Positions</p>
