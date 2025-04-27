@@ -10,10 +10,11 @@ import { Position } from '../../core/model/position';
 import { DepartmentService } from '../../core/service/department.service';
 import { PositionService } from '../../core/service/position.service';
 import { FormsModule } from '@angular/forms';
+import { EmployeeProfileComponent } from "../employee-profile/employee-profile.component";
 
 @Component({
   selector: 'app-list-employees',
-  imports: [CommonModule, LucideAngularModule, PaginationComponent, FormsModule],
+  imports: [CommonModule, LucideAngularModule, PaginationComponent, FormsModule, EmployeeProfileComponent],
   templateUrl: './list-employees.component.html',
 })
 export class ListEmployeesComponent implements OnInit, OnChanges {
@@ -63,7 +64,6 @@ export class ListEmployeesComponent implements OnInit, OnChanges {
 
     this.employeeService.getAll(page, size, positionId, departmentId, name).subscribe({
       next: (response: PaginatedEmployeesResponse) => {
-        console.log(response.employees)
         this.employees = response.employees;
         this.currentPage = response.currentPage;
         this.totalPages = response.totalPages;

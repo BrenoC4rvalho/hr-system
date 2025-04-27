@@ -1,4 +1,7 @@
-<div class="bg-component fixed top-0 right-0 p-10">
+<app-modal
+ [headerText]="'Employee profile'"
+ (closeCliked)="onClose()"
+>
 
   <section class="flex gap-5">
 
@@ -43,7 +46,7 @@
 
   </section>
 
-  <section>
 
-  </section>
-</div>
+
+</app-modal>
+
