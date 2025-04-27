@@ -37,6 +37,9 @@ export class ListEmployeesComponent implements OnInit, OnChanges {
   pageSize: number = 12;
   totalPages: number = 0;
 
+  showEmployeeProfileModal: boolean = false;
+  selectedEmployeeForModal: Employee | null = null;
+
   constructor(
     private employeeService: EmployeeService,
     private departmentService: DepartmentService,
@@ -120,6 +123,20 @@ export class ListEmployeesComponent implements OnInit, OnChanges {
 
   onSearch(): void {
     this.getEmployees(0, this.pageSize);
+  }
+
+  openEmployeeProfileModal(selectedEmployee: Employee): void {
+    this.selectedEmployeeForModal = selectedEmployee;
+    this.showEmployeeProfileModal= true;
+  }
+
+  closeEmployeeProfileModal(): void {
+    this.selectedEmployeeForModal = null;
+    this.showEmployeeProfileModal = false;
+  }
+
+  handleErrorModal($event: string): void {
+    this.errorMessage.emit($event);
   }
 
 }

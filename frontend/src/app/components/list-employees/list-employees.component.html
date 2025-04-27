@@ -62,7 +62,9 @@
         <td class="py-2 hidden lg:table-cell">{{ employee.department.name }}</td>
         <td class="py-2 hidden lg:table-cell">{{ employee.shift }}</td>
         <td class="py-2">
-          <button class="border border-gray-light p-1 rounded hover:opacity-70">
+          <button
+            (click)="openEmployeeProfileModal(employee)"
+            class="border border-gray-light p-1 rounded hover:opacity-70">
             <lucide-icon [img]="EyeIcon"></lucide-icon>
           </button>
         </td>
@@ -79,4 +81,14 @@
   </app-pagination>
 </section>
 
-<app-employee-profile></app-employee-profile>
+<div
+  *ngIf="showEmployeeProfileModal"
+  class="fixed inset-0 bg-deep/70 flex items-center justify-center"
+>
+  <app-employee-profile
+    [employee]="selectedEmployeeForModal"
+    (closeModal)="closeEmployeeProfileModal()"
+    (errorMessage)="handleErrorModal($event)"
+  >
+  </app-employee-profile>
+</div>
