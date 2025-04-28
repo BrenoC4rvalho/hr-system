@@ -3,10 +3,11 @@ import { NavbarComponent } from "../../shared/navbar/navbar.component";
 import { ListBirthdayComponent } from "../../components/list-birthday/list-birthday.component";
 import { DepartmentCardComponent } from "../../components/department-card/department-card.component";
 import { ErrorModalComponent } from "../../components/error-modal/error-modal";
+import { ShiftCardComponent } from "../../components/shift-card/shift-card.component";
 
 @Component({
   selector: 'app-dashboard',
-  imports: [NavbarComponent, ListBirthdayComponent, DepartmentCardComponent, ErrorModalComponent],
+  imports: [NavbarComponent, ListBirthdayComponent, DepartmentCardComponent, ErrorModalComponent, ShiftCardComponent],
   templateUrl: './dashboard.component.html',
 })
 export class DashboardComponent {
