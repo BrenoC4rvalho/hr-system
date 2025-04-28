@@ -7,7 +7,15 @@
     </header>
 
     <app-list-birthday></app-list-birthday>
-    <app-department-card></app-department-card>
+    <app-department-card (errorMessage)="handleErrorModal($event)"></app-department-card>
 
   </main>
+
+  <app-error-modal
+    [isVisible]="showErrorModal"
+    [errorMessage]="errorMessage"
+    (closed)="showErrorModal = false">
+  >
+  </app-error-modal>
+
 </div>
