@@ -13,6 +13,8 @@ export class ListBirthdayComponent {
   readonly UserRoundSearchIcon = UserSearch;
 
   searchText: string = '';
+  today: Date = new Date();
+
   users = [
     { name: 'Edwards Mckenz', role: 'Chief Financial Officer (CFO)', avatar: 'https://via.placeholder.com/40' },
     { name: 'Daisy Wilson', role: 'Director of Finance', avatar: 'https://via.placeholder.com/40' },
