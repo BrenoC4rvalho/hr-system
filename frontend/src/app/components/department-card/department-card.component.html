@@ -1,33 +1,26 @@
-<section>
-   <!-- Header -->
-   <div class="flex justify-between items-center mb-4">
+<section class="bg-component shadow rounded p-6 w-fit font-sans border border-gray-light">
+  <div class="flex justify-between items-center mb-4">
     <div>
-      <div class="text-3xl font-bold text-gray-800">{{ totalDepartments }}</div>
-      <div class="text-sm text-gray-500">Departments</div>
+      <div class="text-4xl font-bold text-deep">{{ totalDepartments }}</div>
+      <div class="text-xl text-gray">Departments</div>
     </div>
-    <button class="text-gray-400 hover:bg-gray-100 p-2 rounded-full">
-      <!-- ícone de três pontos -->
-      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 12h.01M12 12h.01M18 12h.01" />
-      </svg>
-    </button>
   </div>
 
-  <!-- Lista com barras -->
   <ul class="space-y-4 mb-6">
-    <li *ngFor="let dept of departments">
+    <li *ngFor="let department of departments">
       <div class="flex justify-between items-center text-sm mb-1">
-        <span class="text-gray-600">{{ dept.name }}</span>
-        <span class="text-gray-800 font-medium">{{ dept.count }}</span>
+        <span class="text-gray">{{ department.name }}</span>
+        <span class="text-deep font-medium">{{ department.numberOfEmployees }}</span>
       </div>
-      <div class="w-full bg-gray-200 h-1 rounded-full overflow-hidden">
-        <div class="bg-purple-300 h-1" [style.width.%]="(dept.count / maxCount) * 100"></div>
+      <div class="w-full bg-gray-light h-1 rounded-full overflow-hidden">
+        <div class="bg-secondary h-1" [style.width.%]="(department.numberOfEmployees / totalEmployees) * 100"></div>
       </div>
     </li>
   </ul>
 
-  <!-- Botão de ação -->
-  <button class="w-full py-2 bg-purple-500 text-white rounded-lg hover:bg-purple-600">
+  <a
+    routerLink="/departments"
+    class="w-full p-2 bg-white text-deep rounded hover:bg-gray/10 border border-gray-light">
     View Departments
-  </button>
+  </a>
 </section>
