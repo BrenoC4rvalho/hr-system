@@ -1,0 +1,26 @@
+<section class="bg-component shadow rounded p-6 w-fit font-sans border border-gray-light">
+  <div class="flex justify-between items-center mb-4">
+    <div>
+      <div class="text-4xl font-bold text-deep">{{ totalEmployees }}</div>
+      <div class="text-xl text-gray">Employees</div>
+    </div>
+  </div>
+
+  <ul class="space-y-4 mb-6">
+    <li *ngFor="let department of departments">
+      <div class="flex justify-between items-center text-sm mb-1">
+        <span class="text-gray">{{ department.name }}</span>
+        <span class="text-deep font-medium">{{ department.numberOfEmployees }}</span>
+      </div>
+      <div class="w-full bg-gray-light h-1 rounded-full overflow-hidden">
+        <div class="bg-secondary h-1" [style.width.%]="(department.numberOfEmployees / totalEmployees) * 100"></div>
+      </div>
+    </li>
+  </ul>
+
+  <a
+    routerLink="/employees"
+    class="w-full p-2 bg-white text-deep rounded hover:bg-gray/10 border border-gray-light">
+    View Employees
+  </a>
+</section>
