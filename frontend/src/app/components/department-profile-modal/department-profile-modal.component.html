@@ -1,0 +1,40 @@
+<app-modal
+  [headerText]="'Department profile'"
+  (closeCliked)="onClose()"
+>
+
+  <section *ngIf="department" class="flex gap-5">
+
+    <div class="w-40 h-40 rounded-full bg-blue-600 flex items-center justify-center text-white text-4xl font-bold">
+      {{ department.name.charAt(0) }}
+    </div>
+
+    <div>
+
+      <div class="border-b-2 border-gray-light pb-5">
+        <p class="text-deep font-bold text-2xl">{{ department.name }}</p>
+        <div class="flex items-center gap-2 mt-2">
+          <p class="text-gray">ID: {{ department.id }}</p>
+        </div>
+      </div>
+
+      <div class="flex gap-5 mt-5">
+        <div>
+          <div class="flex gap-3">
+            <p class="text-gray">Manager</p>
+            <p>
+              {{ department.manager ? (department.manager.firstName + ' ' + department.manager.lastName) : 'No manager assigned' }}
+            </p>
+          </div>
+          <div class="flex gap-3">
+            <p class="text-gray">Employees</p>
+            <p>{{ department.numberOfEmployees }}</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </section>
+
+</app-modal>
