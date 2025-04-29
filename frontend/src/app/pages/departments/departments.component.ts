@@ -6,10 +6,11 @@ import { CommonModule } from '@angular/common';
 import { Eye, LucideAngularModule } from 'lucide-angular';
 import { NewDepartmentModalComponent } from "../../components/new-department-modal/new-department-modal.component";
 import { ErrorModalComponent } from "../../components/error-modal/error-modal";
+import { DepartmentProfileModalComponent } from "../../components/department-profile-modal/department-profile-modal.component";
 
 @Component({
   selector: 'app-departments',
-  imports: [NavbarComponent, CommonModule, LucideAngularModule, NewDepartmentModalComponent, ErrorModalComponent],
+  imports: [NavbarComponent, CommonModule, LucideAngularModule, NewDepartmentModalComponent, ErrorModalComponent, DepartmentProfileModalComponent],
   templateUrl: './departments.component.html',
 })
 export class DepartmentsComponent implements OnInit {
@@ -22,6 +23,9 @@ export class DepartmentsComponent implements OnInit {
   errorMessage: string = '';
 
   departments: Department[] = [];
+
+  selectedDepartmentForModal: Department | null = null;
+  showDepartmentProfileModal: boolean = false;
 
   constructor(private departmentService: DepartmentService) {}
 
@@ -61,6 +65,16 @@ export class DepartmentsComponent implements OnInit {
   handleErrorModal($event: string) {
     this.showErrorModal = true;
     this.errorMessage = $event;
+  }
+
+  openDepartmentProfileModal(selectedDepartment: Department): void {
+    this.selectedDepartmentForModal = selectedDepartment;
+    this.showDepartmentProfileModal = true;
+  }
+
+  closeDepartmentProfileModal(): void {
+    this.showDepartmentProfileModal = false;
+    this.selectedDepartmentForModal = null;
   }
 
 

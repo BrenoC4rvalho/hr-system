@@ -33,7 +33,10 @@
             <td class="py-2">{{ department.manager?.firstName || 'N/A' }}</td>
             <td class="py-2">{{ department.numberOfEmployees }}</td>
             <td class="py-2">
-              <button class="border border-gray-light mr-1 p-1 rounded hover:opacity-70">
+              <button
+                (click)="openDepartmentProfileModal(department)"
+                class="border border-gray-light mr-1 p-1 rounded hover:opacity-70"
+              >
                 <lucide-icon [img]="EyeIcon"></lucide-icon>
               </button>
             </td>
@@ -50,6 +53,18 @@
   >
     <app-new-department-modal (errorMessage)="handleErrorModal($event)" (createdDepartment)="onDepartmentCreated($event)" (closeModal)="closeModalNewDepartment()"></app-new-department-modal>
 
+  </div>
+
+  <div
+    *ngIf="showDepartmentProfileModal"
+    class="fixed inset-0 bg-deep/70 flex items-center justify-center"
+  >
+    <app-department-profile-modal
+      [department]="selectedDepartmentForModal"
+      (closeModal)="closeDepartmentProfileModal()"
+      (errorMessage)="handleErrorModal($event)"
+    >
+    </app-department-profile-modal>
   </div>
 
   <!-- Error Modal -->
