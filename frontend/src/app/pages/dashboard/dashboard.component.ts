@@ -4,10 +4,11 @@ import { ListBirthdayComponent } from "../../components/list-birthday/list-birth
 import { DepartmentCardComponent } from "../../components/department-card/department-card.component";
 import { ErrorModalComponent } from "../../components/error-modal/error-modal";
 import { ShiftCardComponent } from "../../components/shift-card/shift-card.component";
+import { EmployeeCardComponent } from "../../components/employee-card/employee-card.component";
 
 @Component({
   selector: 'app-dashboard',
-  imports: [NavbarComponent, ListBirthdayComponent, DepartmentCardComponent, ErrorModalComponent, ShiftCardComponent],
+  imports: [NavbarComponent, ListBirthdayComponent, DepartmentCardComponent, ErrorModalComponent, ShiftCardComponent, EmployeeCardComponent],
   templateUrl: './dashboard.component.html',
 })
 export class DashboardComponent {
