@@ -30,7 +30,9 @@
             <td class="py-2">{{ position.name }}</td>
             <td class="py-2">{{ position.description }}</td>
             <td class="py-2">
-              <button class="border border-gray-light mr-1 p-1 rounded hover:opacity-70">
+              <button
+                (click)="openPositionProfileModal(position)"
+                class="border border-gray-light mr-1 p-1 rounded hover:opacity-70">
                 <lucide-icon [img]="EyeIcon"></lucide-icon>
               </button>
             </td>
@@ -46,6 +48,18 @@
     class="fixed inset-0 bg-deep/70 flex items-center justify-center"
   >
     <app-new-position-modal (errorMessage)="handleErrorModal($event)" (createdPosition)="onPositionCreated($event)" (closeModal)="closeModalNewPosition()"></app-new-position-modal>
+  </div>
+
+  <div
+    *ngIf="showPositionProfileModal"
+    class="fixed inset-0 bg-deep/70 flex items-center justify-center"
+  >
+    <app-position-profile-modal
+      [position]="selectedPositionForModal"
+      (closeModal)="closePositionProfileModal()"
+      (errorMessage)="handleErrorModal($event)"
+    >
+    </app-position-profile-modal>
   </div>
 
   <!-- Error Modal -->

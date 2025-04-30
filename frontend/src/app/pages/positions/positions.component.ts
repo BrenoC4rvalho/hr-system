@@ -6,10 +6,11 @@ import { PositionService } from '../../core/service/position.service';
 import { CommonModule } from '@angular/common';
 import { NewPositionModalComponent } from "../../components/new-position-modal/new-position-modal.component";
 import { ErrorModalComponent } from "../../components/error-modal/error-modal";
+import { PositionProfileModalComponent } from "../../components/position-profile-modal/position-profile-modal.component";
 
 @Component({
   selector: 'app-positions',
-  imports: [NavbarComponent, LucideAngularModule, CommonModule, NewPositionModalComponent, ErrorModalComponent],
+  imports: [NavbarComponent, LucideAngularModule, CommonModule, NewPositionModalComponent, ErrorModalComponent, PositionProfileModalComponent],
   templateUrl: './positions.component.html',
 })
 export class PositionsComponent implements OnInit {
@@ -22,6 +23,9 @@ export class PositionsComponent implements OnInit {
   errorMessage: string = '';
 
   positions: Position[] = [];
+
+  selectedPositionForModal: Position | null = null;
+  showPositionProfileModal: boolean = false;
 
   constructor(private positionService: PositionService) {}
 
@@ -61,6 +65,16 @@ export class PositionsComponent implements OnInit {
   handleErrorModal($event: string) {
     this.showErrorModal = true;
     this.errorMessage = $event;
+  }
+
+  openPositionProfileModal(selectedPosition: Position): void {
+      this.selectedPositionForModal = selectedPosition;
+      this.showPositionProfileModal = true;
+  }
+
+  closePositionProfileModal(): void {
+    this.showPositionProfileModal = false;
+    this.selectedPositionForModal = null;
   }
 
 }
