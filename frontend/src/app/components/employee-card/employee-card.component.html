@@ -7,13 +7,40 @@
   </div>
 
   <ul class="space-y-4 mb-6">
-    <li *ngFor="let department of departments">
+    <li>
       <div class="flex justify-between items-center text-sm mb-1">
-        <span class="text-gray">{{ department.name }}</span>
-        <span class="text-deep font-medium">{{ department.numberOfEmployees }}</span>
+        <span class="text-gray">Active</span>
+        <span class="text-deep font-medium">{{ totalEmployeesActive }}</span>
       </div>
       <div class="w-full bg-gray-light h-1 rounded-full overflow-hidden">
-        <div class="bg-secondary h-1" [style.width.%]="(department.numberOfEmployees / totalEmployees) * 100"></div>
+        <div class="bg-secondary h-1" [style.width.%]="(totalEmployeesActive / totalEmployees) * 100"></div>
+      </div>
+    </li>
+    <li>
+      <div class="flex justify-between items-center text-sm mb-1">
+        <span class="text-gray">On leave</span>
+        <span class="text-deep font-medium">{{ totalEmployeesOnLeave }}</span>
+      </div>
+      <div class="w-full bg-gray-light h-1 rounded-full overflow-hidden">
+        <div class="bg-secondary h-1" [style.width.%]="(totalEmployeesOnLeave / totalEmployees) * 100"></div>
+      </div>
+    </li>
+    <li>
+      <div class="flex justify-between items-center text-sm mb-1">
+        <span class="text-gray">Sick Leave</span>
+        <span class="text-deep font-medium">{{ totalEmployeesSickLeave }}</span>
+      </div>
+      <div class="w-full bg-gray-light h-1 rounded-full overflow-hidden">
+        <div class="bg-secondary h-1" [style.width.%]="(totalEmployeesSickLeave / totalEmployees) * 100"></div>
+      </div>
+    </li>
+    <li>
+      <div class="flex justify-between items-center text-sm mb-1">
+        <span class="text-gray">Leave of absence</span>
+        <span class="text-deep font-medium">{{ totalEmployeesLeaveOfAbsence }}</span>
+      </div>
+      <div class="w-full bg-gray-light h-1 rounded-full overflow-hidden">
+        <div class="bg-secondary h-1" [style.width.%]="(totalEmployeesLeaveOfAbsence / totalEmployees) * 100"></div>
       </div>
     </li>
   </ul>
