@@ -10,6 +10,7 @@ import { UpdatePasswordComponent } from './pages/update-password/update-password
 import { DepartmentsComponent } from './pages/departments/departments.component';
 import { PositionsComponent } from './pages/positions/positions.component';
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
+import { ServerErrorComponent } from './pages/error/serverError/serverError.component';
 
 export const routes: Routes = [
   {
@@ -51,6 +52,10 @@ export const routes: Routes = [
   {
     path: 'forbidden',
     component: ForbiddenComponent
+  },
+  {
+    path: 'serverError',
+    component: ServerErrorComponent
   },
   {
     path: '**',
