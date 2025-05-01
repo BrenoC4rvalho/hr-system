@@ -1,7 +1,9 @@
 package com.example.backend.controller;
 
+import java.time.Month;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import org.springframework.data.domain.Page;
@@ -93,6 +95,15 @@ public class EmployeeController {
     @GetMapping("/birthdays")
     public ResponseEntity<?> getEmployeesByBirthMonth(@RequestParam int month) {
         List<EmployeeBirthdayDTO> employees = employeeService.getEmployeesByBirthMonth(month);
+        
+        String monthName = Month.of(month).getDisplayName(java.time.format.TextStyle.FULL, Locale.ENGLISH);
+
+        Map<String, Object> response = new HashMap<String, Object>();
+        response.put("month", monthName);
+        response.put("monthNumber", month);
+        response.put("totalEmployees", employees.size());
+        response.put("employees", employees);
+
         return ResponseEntity.status(HttpStatus.OK).body(employees);
     }
     
