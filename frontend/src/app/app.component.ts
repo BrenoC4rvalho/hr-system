@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { Router, RouterOutlet } from '@angular/router';
-import { ServerErrorComponent } from "./pages/error/serverError/serverError.component";
 import { CommonModule } from '@angular/common';
 import { AuthService } from './auth/service/auth.service';
 import { HttpClient } from '@angular/common/http';
@@ -8,7 +7,7 @@ import { HttpClient } from '@angular/common/http';
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, ServerErrorComponent, CommonModule],
+  imports: [RouterOutlet, CommonModule],
   templateUrl: 'app.component.html'
 })
 export class AppComponent {
@@ -28,7 +27,7 @@ export class AppComponent {
       error: (err) => {
         console.error('Error: ', err)
         if (
-          err.status === 0 
+          err.status === 0
         ) {
           this.router.navigate(['/serverError']);
         }
