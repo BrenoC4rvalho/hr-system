@@ -1,5 +1,8 @@
 package com.example.backend.service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -7,9 +10,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.backend.dto.CreateEmployeeDTO;
+import com.example.backend.dto.EmployeeBirthdayDTO;
 import com.example.backend.dto.EmployeeDTO;
 import com.example.backend.exception.EmployeeNotFoundException;
 import com.example.backend.mapper.CreateEmployeeMapper;
+import com.example.backend.mapper.EmployeeBirthdayMapper;
 import com.example.backend.mapper.EmployeeMapper;
 import com.example.backend.model.Employee;
 import com.example.backend.repository.EmployeeRepository;
@@ -20,11 +25,18 @@ public class EmployeeService {
     private final EmployeeRepository employeeRepository;
     private final CreateEmployeeMapper createEmployeeMapper;
     private final EmployeeMapper employeeMapper;
+    private final EmployeeBirthdayMapper employeeBirthdayMapper;
 
-    public EmployeeService(EmployeeRepository employeeRepository, CreateEmployeeMapper createEmployeeMapper, EmployeeMapper employeeMapper) {
+    public EmployeeService(
+        EmployeeRepository employeeRepository, 
+        CreateEmployeeMapper createEmployeeMapper, 
+        EmployeeMapper employeeMapper,
+        EmployeeBirthdayMapper employeeBirthdayMapper     
+    ) {
         this.employeeRepository = employeeRepository;
         this.createEmployeeMapper = createEmployeeMapper;
         this.employeeMapper = employeeMapper;
+        this.employeeBirthdayMapper = employeeBirthdayMapper;
     }
 
     public Page<EmployeeDTO> getAll(Pageable pageable, Long positionId, Long departmentId, String name) {
@@ -104,4 +116,18 @@ public class EmployeeService {
         // update status
 
     }
+
+    public List<EmployeeBirthdayDTO> getEmployeesByBirthMonth(int month) {
+        List<Employee> employees = employeeRepository.findByBirthMonth(month);
+
+        if (employees.isEmpty()) {
+            throw new EmployeeNotFoundException();
+        }
+
+        return employees.stream()
+            .map(employeeBirthdayMapper::map)
+            .collect(Collectors.toList());
+        
+    }
+    
 }

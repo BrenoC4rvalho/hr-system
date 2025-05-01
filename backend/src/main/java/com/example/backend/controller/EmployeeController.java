@@ -1,6 +1,7 @@
 package com.example.backend.controller;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.data.domain.Page;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.backend.dto.CreateEmployeeDTO;
+import com.example.backend.dto.EmployeeBirthdayDTO;
 import com.example.backend.dto.EmployeeDTO;
 import com.example.backend.service.EmployeeService;
 
@@ -87,5 +89,12 @@ public class EmployeeController {
         return ResponseEntity.status(HttpStatus.OK).body(response);
 
     }
+
+    @GetMapping("/birthdays")
+    public ResponseEntity<?> getEmployeesByBirthMonth(@RequestParam int month) {
+        List<EmployeeBirthdayDTO> employees = employeeService.getEmployeesByBirthMonth(month);
+        return ResponseEntity.status(HttpStatus.OK).body(employees);
+    }
+    
 
 }
