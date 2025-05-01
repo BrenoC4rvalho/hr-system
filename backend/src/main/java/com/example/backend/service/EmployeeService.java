@@ -127,10 +127,6 @@ public class EmployeeService {
 
         List<Employee> employees = employeeRepository.findByBirthMonth(month);
 
-        if (employees.isEmpty()) {
-            throw new EmployeeNotFoundException();
-        }
-
         return employees.stream()
             .map(employeeBirthdayMapper::map)
             .collect(Collectors.toList());
