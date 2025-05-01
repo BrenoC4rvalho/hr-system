@@ -66,6 +66,13 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
     }
 
+    @ExceptionHandler(MonthNotValidException.class)
+    public ResponseEntity<Map<String, Object>> handleMonthNotValidException(MonthNotValidException e) {
+        Map<String, Object> response = new HashMap<>();
+        response.put("error", e);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+    }
+
     // User Exceptions Handler
 
     @ExceptionHandler(UserNotFoundException.class)

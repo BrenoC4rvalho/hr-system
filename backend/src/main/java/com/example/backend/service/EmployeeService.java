@@ -8,11 +8,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 
 import com.example.backend.dto.CreateEmployeeDTO;
 import com.example.backend.dto.EmployeeBirthdayDTO;
 import com.example.backend.dto.EmployeeDTO;
 import com.example.backend.exception.EmployeeNotFoundException;
+import com.example.backend.exception.MonthNotValidException;
 import com.example.backend.mapper.CreateEmployeeMapper;
 import com.example.backend.mapper.EmployeeBirthdayMapper;
 import com.example.backend.mapper.EmployeeMapper;
@@ -118,6 +120,11 @@ public class EmployeeService {
     }
 
     public List<EmployeeBirthdayDTO> getEmployeesByBirthMonth(int month) {
+
+        if(month < 1 || month > 12) {
+            throw new MonthNotValidException();
+        }
+
         List<Employee> employees = employeeRepository.findByBirthMonth(month);
 
         if (employees.isEmpty()) {
@@ -129,5 +136,5 @@ public class EmployeeService {
             .collect(Collectors.toList());
         
     }
-    
+
 }
