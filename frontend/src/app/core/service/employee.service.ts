@@ -6,6 +6,7 @@ import { CreateEmployee } from '../model/create-employee';
 import { Employee } from '../model/employee';
 import { PaginatedEmployeesResponse } from '../model/paginated-employees-response';
 import { BirthdaysResponse } from '../model/birthday-response';
+import { EmployeeStatusSummary } from '../model/employee-status-summary';
 
 @Injectable({
   providedIn: 'root'
@@ -59,6 +60,10 @@ export class EmployeeService {
         .set('month', month);
 
       return this.http.get<BirthdaysResponse>(`${this.apiUrl}/birthdays`, { params });
+    }
+
+    getEmployeeStatusSummary(): Observable<EmployeeStatusSummary> {
+      return this.http.get<EmployeeStatusSummary>(`${this.apiUrl}/status-summary`);
     }
 
 }

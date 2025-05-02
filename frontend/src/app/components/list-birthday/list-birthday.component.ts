@@ -39,14 +39,12 @@ export class ListBirthdayComponent implements OnInit {
   getEmployees(month: number): void {
     this.employeeService.getEmployeesByBirthMonth(month).subscribe({
       next: (response: BirthdaysResponse) => {
-        console.log("response", response)
         this.monthNumber = response.monthNumber;
         this.monthName = response.month;
         this.totalEmployees = response.totalEmployees;
         this.employees = response.employees;
       },
       error: (error) => {
-        console.log("error");
         if(error && error.error) {
           this.errorMessage.emit(error.error);
         } else {
