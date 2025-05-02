@@ -14,4 +14,6 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long>, JpaSp
     @Query("SELECT e FROM Employee e WHERE MONTH(e.birthDate) = :month")
     List<Employee> findByBirthMonth(@Param("month") int month);
     
+    @Query("SELECT e.status, COUNT(e) FROM Employee e GROUP BY e.status")
+    List<Object[]> countEmployeesByStatus();
 } 

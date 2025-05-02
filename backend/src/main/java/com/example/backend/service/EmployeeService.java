@@ -1,6 +1,8 @@
 package com.example.backend.service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Page;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import com.example.backend.dto.CreateEmployeeDTO;
 import com.example.backend.dto.EmployeeBirthdayDTO;
 import com.example.backend.dto.EmployeeDTO;
+import com.example.backend.enums.EmployeeStatus;
 import com.example.backend.exception.EmployeeNotFoundException;
 import com.example.backend.exception.MonthNotValidException;
 import com.example.backend.mapper.CreateEmployeeMapper;
@@ -131,6 +134,26 @@ public class EmployeeService {
             .map(employeeBirthdayMapper::map)
             .collect(Collectors.toList());
         
+    }
+
+    public Map<String, Long> getEmployeeStatusSummary() {
+     
+        List<Object[]> results = employeeRepository.countEmployeesByStatus();
+        Map<String, Long> summary = new HashMap<>();
+        
+        for (EmployeeStatus status : EmployeeStatus.values()) {
+            summary.put(status.name(), 0L);
+        }
+
+            
+        for (Object[] row : results) {
+            String status = row[0].toString();
+            Long count = (Long) row[1];
+            summary.put(status, count);
+        }
+
+        return summary;    
+
     }
 
 }
