@@ -107,7 +107,7 @@ public class EmployeeController {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
     
-    @GetMapping("/status-sumary")
+    @GetMapping("/status-summary")
     public ResponseEntity<?> getEmployeeStatusSumary() {
         Map<String, Long> summary = employeeService.getEmployeeStatusSummary();
         return ResponseEntity.status(HttpStatus.OK).body(summary);
