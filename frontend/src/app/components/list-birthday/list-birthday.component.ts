@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { ArrowLeft, ArrowRight, LucideAngularModule, UserSearch } from 'lucide-angular';
+import { ArrowLeft, ArrowRight, Cake, LucideAngularModule, UserSearch } from 'lucide-angular';
 import { EmployeeBirthday } from '../../core/model/employee-birthday';
 import { EmployeeService } from '../../core/service/employee.service';
 import { BirthdaysResponse } from '../../core/model/birthday-response';
@@ -16,6 +16,7 @@ export class ListBirthdayComponent implements OnInit {
   readonly UserRoundSearchIcon = UserSearch;
   readonly ArrowLeftIcon = ArrowLeft;
   readonly ArrowRightIcon = ArrowRight;
+  readonly CakeIcon = Cake;
 
   @Output() errorMessage = new EventEmitter<string>();
 
