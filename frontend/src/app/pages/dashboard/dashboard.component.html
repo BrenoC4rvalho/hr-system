@@ -7,10 +7,10 @@
     </header>
 
     <div class="flex gap-5 ">
-      <app-list-birthday></app-list-birthday>
+      <app-list-birthday (errorMessage)="handleErrorModal($event)"></app-list-birthday>
       <app-department-card (errorMessage)="handleErrorModal($event)"></app-department-card>
       <app-shift-card></app-shift-card>
-      <app-employee-card></app-employee-card>
+      <app-employee-card (errorMessage)="handleErrorModal($event)"></app-employee-card>
     </div>
 
   </main>
