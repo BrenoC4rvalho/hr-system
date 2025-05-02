@@ -104,7 +104,7 @@ public class EmployeeController {
         response.put("totalEmployees", employees.size());
         response.put("employees", employees);
 
-        return ResponseEntity.status(HttpStatus.OK).body(employees);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
     
 

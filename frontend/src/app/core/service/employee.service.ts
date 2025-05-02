@@ -5,6 +5,7 @@ import { Observable } from 'rxjs';
 import { CreateEmployee } from '../model/create-employee';
 import { Employee } from '../model/employee';
 import { PaginatedEmployeesResponse } from '../model/paginated-employees-response';
+import { BirthdaysResponse } from '../model/birthday-response';
 
 @Injectable({
   providedIn: 'root'
@@ -52,4 +53,12 @@ export class EmployeeService {
     update(id: number, body: Employee): Observable<Employee> {
       return this.http.put<Employee>(`${this.apiUrl}/${id}`, body);
     }
+
+    getEmployeesByBirthMonth(month: number): Observable<BirthdaysResponse> {
+      const params = new HttpParams()
+        .set('month', month);
+
+      return this.http.get<BirthdaysResponse>(`${this.apiUrl}/birthdays`, { params });
+    }
+
 }

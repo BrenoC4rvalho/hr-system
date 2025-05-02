@@ -5,6 +5,6 @@ export interface BirthdaysResponse {
   month: string;
   monthNumber: number;
   totalEmployees: number;
-  employees: EmployeeBirthday;
+  employees: EmployeeBirthday[];
 
 }

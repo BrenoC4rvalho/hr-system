@@ -1,33 +1,76 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { LucideAngularModule, UserSearch } from 'lucide-angular';
+import { ArrowLeft, ArrowRight, LucideAngularModule, UserSearch } from 'lucide-angular';
+import { EmployeeBirthday } from '../../core/model/employee-birthday';
+import { EmployeeService } from '../../core/service/employee.service';
+import { BirthdaysResponse } from '../../core/model/birthday-response';
 
 @Component({
   selector: 'app-list-birthday',
   imports: [FormsModule, CommonModule, LucideAngularModule],
   templateUrl: './list-birthday.component.html',
 })
-export class ListBirthdayComponent {
+export class ListBirthdayComponent implements OnInit {
 
   readonly UserRoundSearchIcon = UserSearch;
+  readonly ArrowLeftIcon = ArrowLeft;
+  readonly ArrowRightIcon = ArrowRight;
+
+  @Output() errorMessage = new EventEmitter<string>();
 
   searchText: string = '';
   today: Date = new Date();
 
-  users = [
-    { name: 'Edwards Mckenz', role: 'Chief Financial Officer (CFO)', avatar: 'https://via.placeholder.com/40' },
-    { name: 'Daisy Wilson', role: 'Director of Finance', avatar: 'https://via.placeholder.com/40' },
-    { name: 'Bianca Anderson', role: 'Financial Analyst', avatar: 'https://via.placeholder.com/40' },
-    { name: 'Laurent Perrier', role: 'Finance Assistant', avatar: 'https://via.placeholder.com/40' },
-    { name: 'Nunez Faulkner', role: 'Budget Analyst', avatar: 'https://via.placeholder.com/40' },
-    { name: 'Gilbert Barrett', role: 'Financial Analyst', avatar: 'https://via.placeholder.com/40' }
-  ];
+  // JavaScript's getMonth() returns a zero-based month (0 = January, 11 = December),
+  // so we add 1 to match the API expectation (1 = January, 12 = December)
+  monthNumber: number = this.today.getMonth() + 1;
+  monthName: string = '';
+  totalEmployees: number = 0;
+  employees: EmployeeBirthday[] = [];
 
-  get filteredUsers() {
-    return this.users.filter(u =>
-      u.name.toLowerCase().includes(this.searchText.toLowerCase())
-    );
+  constructor(private employeeService: EmployeeService) {}
+
+  ngOnInit(): void {
+      this.getEmployees(this.monthNumber);
+  }
+
+  getEmployees(month: number): void {
+    this.employeeService.getEmployeesByBirthMonth(month).subscribe({
+      next: (response: BirthdaysResponse) => {
+        console.log("response", response)
+        this.monthNumber = response.monthNumber;
+        this.monthName = response.month;
+        this.totalEmployees = response.totalEmployees;
+        this.employees = response.employees;
+      },
+      error: (error) => {
+        console.log("error");
+        if(error && error.error) {
+          this.errorMessage.emit(error.error);
+        } else {
+          this.errorMessage.emit('An unexpected error occurred. Please try again later.');
+        }
+      }
+    })
+  }
+
+  nextMonth(): void {
+    if(this.monthNumber == 12) {
+      this.monthNumber = 1;
+    } else {
+      this.monthNumber += 1;
+    }
+    this.getEmployees(this.monthNumber);
+  }
+
+  previousMonth(): void {
+    if(this.monthNumber == 1) {
+      this.monthNumber = 12;
+    } else {
+      this.monthNumber -= 1;
+    }
+    this.getEmployees(this.monthNumber);
   }
 
 }

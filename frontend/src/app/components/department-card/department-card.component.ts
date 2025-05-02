@@ -29,7 +29,6 @@ export class DepartmentCardComponent implements OnInit{
         this.departments = response;
         this.totalDepartments = this.departments.length;
         this.totalEmployees = response.reduce((sum, department) => sum + department.numberOfEmployees, 0);
-        console.log(this.totalEmployees)
       },
       error: (error) => {
         if(error && error.error) {
