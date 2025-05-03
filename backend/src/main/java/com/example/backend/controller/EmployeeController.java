@@ -117,10 +117,10 @@ public class EmployeeController {
     @GetMapping("/search")
     public ResponseEntity<?> getEmployeeByName(
         @RequestParam String firstName,
-        @RequestParam(required = false) Department department 
+        @RequestParam(required = false) Long departmentId 
     ) {
-        List<EmployeeBasicDTO>
-        return new String();
+        List<EmployeeBasicDTO> employees = employeeService.getEmployeesByFirstName(firstName, departmentId);
+        return ResponseEntity.status(HttpStatus.OK).body(employees);
     }
     
     

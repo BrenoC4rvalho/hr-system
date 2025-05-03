@@ -155,4 +155,39 @@ public class EmployeeService {
 
     }
 
+    public List<EmployeeBasicDTO> getEmployeesByFirstName(String firstName, Long departmentId) {
+        
+
+        if((firstName == null || firstName.isBlank()) && departmentId == null) {
+            throw new IllegalArgumentException("At least one filter (firstName or DepartmentId) must be provided.");
+        }
+
+        Specification<Employee> spec = Specification.where(null);
+
+        if (departmentId != null) {
+            spec = spec.and((root, query, cb) ->
+                cb.equal(root.join("department").get("id"), departmentId)
+            );
+        }
+
+        if (firstName != null && !firstName.isBlank()) {
+            spec = spec.and((root, query, cb) ->
+                cb.like(cb.lower(root.get("firstName")), "%" + firstName.toLowerCase() + "%")
+            );
+        }
+
+        List<Employee> employees = employeeRepository.findAll(spec);
+
+
+
+        if (employees.isEmpty()) {
+            throw new EmployeeNotFoundException();
+        }
+
+        return employees.stream()
+            .map(employeeBasicMapper::map)
+            .collect(Collectors.toList());
+
+    }
+
 }
