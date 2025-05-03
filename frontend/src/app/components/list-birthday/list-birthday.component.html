@@ -15,7 +15,7 @@
           >
           </lucide-icon>
         </button>
-        <span class="text-base">{{ monthName }}  {{ today | date: 'yyyy' }}</span>
+        <span class="text-base">{{ monthName.slice(0, 3) }} </span>
         <button
           class="hover:cursor-pointer"
           (click)="nextMonth()"

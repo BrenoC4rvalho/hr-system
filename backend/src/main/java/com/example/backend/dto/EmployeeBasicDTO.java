@@ -4,7 +4,7 @@ import java.time.LocalDate;
 
 import com.example.backend.model.Department;
 
-public class EmployeeBirthdayDTO {
+public class EmployeeBasicDTO {
 
     private Long id;
     private String firstName;
@@ -12,7 +12,7 @@ public class EmployeeBirthdayDTO {
     private Department department;
     private LocalDate birthDate;
     
-    public EmployeeBirthdayDTO(Long id, String firstName, String lastName, Department department, LocalDate birthDate) {
+    public EmployeeBasicDTO(Long id, String firstName, String lastName, Department department, LocalDate birthDate) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -20,7 +20,7 @@ public class EmployeeBirthdayDTO {
         this.birthDate = birthDate;
     }
 
-    public EmployeeBirthdayDTO() {
+    public EmployeeBasicDTO() {
     }
 
     public Long getId() {

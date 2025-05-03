@@ -22,8 +22,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.backend.dto.CreateEmployeeDTO;
-import com.example.backend.dto.EmployeeBirthdayDTO;
+import com.example.backend.dto.EmployeeBasicDTO;
 import com.example.backend.dto.EmployeeDTO;
+import com.example.backend.model.Department;
 import com.example.backend.service.EmployeeService;
 
 import jakarta.validation.Valid;
@@ -94,7 +95,7 @@ public class EmployeeController {
 
     @GetMapping("/birthdays")
     public ResponseEntity<?> getEmployeesByBirthMonth(@RequestParam int month) {
-        List<EmployeeBirthdayDTO> employees = employeeService.getEmployeesByBirthMonth(month);
+        List<EmployeeBasicDTO> employees = employeeService.getEmployeesByBirthMonth(month);
         
         String monthName = Month.of(month).getDisplayName(java.time.format.TextStyle.FULL, Locale.ENGLISH);
 
@@ -112,5 +113,15 @@ public class EmployeeController {
         Map<String, Long> summary = employeeService.getEmployeeStatusSummary();
         return ResponseEntity.status(HttpStatus.OK).body(summary);
     }
+
+    @GetMapping("/search")
+    public ResponseEntity<?> getEmployeeByName(
+        @RequestParam String firstName,
+        @RequestParam(required = false) Department department 
+    ) {
+        List<EmployeeBasicDTO>
+        return new String();
+    }
+    
     
 }

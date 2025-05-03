@@ -10,16 +10,15 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 
 import com.example.backend.dto.CreateEmployeeDTO;
-import com.example.backend.dto.EmployeeBirthdayDTO;
+import com.example.backend.dto.EmployeeBasicDTO;
 import com.example.backend.dto.EmployeeDTO;
 import com.example.backend.enums.EmployeeStatus;
 import com.example.backend.exception.EmployeeNotFoundException;
 import com.example.backend.exception.MonthNotValidException;
 import com.example.backend.mapper.CreateEmployeeMapper;
-import com.example.backend.mapper.EmployeeBirthdayMapper;
+import com.example.backend.mapper.EmployeeBasicMapper;
 import com.example.backend.mapper.EmployeeMapper;
 import com.example.backend.model.Employee;
 import com.example.backend.repository.EmployeeRepository;
@@ -30,18 +29,18 @@ public class EmployeeService {
     private final EmployeeRepository employeeRepository;
     private final CreateEmployeeMapper createEmployeeMapper;
     private final EmployeeMapper employeeMapper;
-    private final EmployeeBirthdayMapper employeeBirthdayMapper;
+    private final EmployeeBasicMapper employeeBasicMapper;
 
     public EmployeeService(
         EmployeeRepository employeeRepository, 
         CreateEmployeeMapper createEmployeeMapper, 
         EmployeeMapper employeeMapper,
-        EmployeeBirthdayMapper employeeBirthdayMapper     
+        EmployeeBasicMapper employeeBasicMapper     
     ) {
         this.employeeRepository = employeeRepository;
         this.createEmployeeMapper = createEmployeeMapper;
         this.employeeMapper = employeeMapper;
-        this.employeeBirthdayMapper = employeeBirthdayMapper;
+        this.employeeBasicMapper = employeeBasicMapper;
     }
 
     public Page<EmployeeDTO> getAll(Pageable pageable, Long positionId, Long departmentId, String name) {
@@ -122,7 +121,7 @@ public class EmployeeService {
 
     }
 
-    public List<EmployeeBirthdayDTO> getEmployeesByBirthMonth(int month) {
+    public List<EmployeeBasicDTO> getEmployeesByBirthMonth(int month) {
 
         if(month < 1 || month > 12) {
             throw new MonthNotValidException();
@@ -131,7 +130,7 @@ public class EmployeeService {
         List<Employee> employees = employeeRepository.findByBirthMonth(month);
 
         return employees.stream()
-            .map(employeeBirthdayMapper::map)
+            .map(employeeBasicMapper::map)
             .collect(Collectors.toList());
         
     }
