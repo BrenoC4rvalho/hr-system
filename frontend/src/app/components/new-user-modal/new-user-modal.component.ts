@@ -9,7 +9,6 @@ import { AuthService } from '../../auth/service/auth.service';
 import { CreateUser } from '../../core/model/create-user';
 import { ModalComponent } from "../../shared/modal/modal.component";
 import { Field } from '../../core/types/Field';
-import { Employee } from '../../core/model/employee';
 import { DynamicFieldComponent } from "../dynamic-field/dynamic-field.component";
 import { ListEmployeeSearchComponent } from "../list-employee-search/list-employee-search.component";
 import { EmployeeBasic } from '../../core/model/employee-basic';
@@ -30,7 +29,6 @@ import { EmployeeBasic } from '../../core/model/employee-basic';
 export class NewUserModalComponent implements OnInit {
 
   readonly CircleXIcon = CircleX;
-  readonly UserRoundSearchIcon = UserRoundSearch;
 
   @Output() closeModal = new EventEmitter<void>();
   @Output() createdUser = new EventEmitter<User>();
@@ -41,8 +39,6 @@ export class NewUserModalComponent implements OnInit {
   userRoles: UserRole[] = [];
 
   inputGroups: Field[][] = [];
-
-  searchText: string = '';
 
   constructor(
     private fb: FormBuilder,
@@ -106,10 +102,6 @@ export class NewUserModalComponent implements OnInit {
         }
       }
     })
-  }
-
-  onSearch(): string {
-    return this.searchText;
   }
 
   onEmployeeSelected(employee: EmployeeBasic): void {

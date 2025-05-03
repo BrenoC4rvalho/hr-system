@@ -2,27 +2,32 @@ import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from
 import { EmployeeBasic } from '../../core/model/employee-basic';
 import { EmployeeService } from '../../core/service/employee.service';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { LucideAngularModule, UserRoundSearch } from 'lucide-angular';
 
 @Component({
   selector: 'app-list-employee-search',
-  imports: [ CommonModule, ReactiveFormsModule ],
+  imports: [ CommonModule, ReactiveFormsModule, LucideAngularModule, FormsModule ],
   templateUrl: './list-employee-search.component.html',
 })
 export class ListEmployeeSearchComponent implements OnChanges {
 
-  @Input() firstName: string = '';
+  readonly UserRoundSearchIcon = UserRoundSearch;
+
+
   @Input() departmentId?: number;
   @Output() employeeSelected = new EventEmitter<EmployeeBasic>();
   @Output() errorMessage = new EventEmitter<string>();
 
+  searchText: string = '';
+  showDropdown: boolean = false;
   employees: EmployeeBasic[] = [];
 
   constructor(private employeeService: EmployeeService) {}
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['firstName'] || changes['departmentId']) {
-      this.getEmployees(this.firstName, this.departmentId);
+    if (changes['departmentId']) {
+      this.getEmployees(this.searchText, this.departmentId);
     }
   }
 
@@ -46,4 +51,25 @@ export class ListEmployeeSearchComponent implements OnChanges {
       }
     })
   }
+
+  onSearch(): void {
+    if (this.searchText.trim().length === 0) {
+      this.employees = [];
+      return;
+    }
+
+    this.getEmployees(this.searchText, this.departmentId);
+  }
+
+  selectEmployee(employee: EmployeeBasic): void {
+    this.searchText = `${employee.firstName} ${employee.lastName}`;
+    this.employeeSelected.emit(employee);
+    this.showDropdown = false;
+  }
+
+  hideDropdown() {
+    setTimeout(() => this.showDropdown = false, 150);
+  }
+
+
 }
