@@ -1,7 +1,9 @@
 <div
   *ngIf="isVisible"
-  class="fixed bottom-8 right-8 w-96 bg-red-100 text-red-700 p-4 rounded-lg shadow-lg flex items-center space-x-4 z-50"
+  class="fixed bottom-8 right-8 w-96 bg-red-100 text-red-700 p-4 rounded-lg shadow-lg flex items-center space-x-4 z-50 overflow-hidden"
+  [@fadeAnimation]="visibleState"
 >
+
   <!-- icon error -->
   <div class="flex-shrink-0">
     <lucide-icon [img]="AlertCircleIcon" class="h-6 w-6 text-red-500"></lucide-icon>
@@ -13,4 +15,7 @@
   <button (click)="close()" class="text-red-500 hover:text-red-700 focus:outline-none">
     <lucide-icon [img]="XCircleIcon" class="h-6 w-6"></lucide-icon>
   </button>
+
+  <div class="absolute bottom-0 right-0 h-1 bg-red-400 animate-progress" [style.animation-duration.ms]="autoCloseDelay"></div>
+
 </div>
