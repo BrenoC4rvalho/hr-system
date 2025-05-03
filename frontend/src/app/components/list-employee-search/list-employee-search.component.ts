@@ -2,10 +2,11 @@ import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from
 import { EmployeeBasic } from '../../core/model/employee-basic';
 import { EmployeeService } from '../../core/service/employee.service';
 import { CommonModule } from '@angular/common';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-list-employee-search',
-  imports: [ CommonModule ],
+  imports: [ CommonModule, ReactiveFormsModule ],
   templateUrl: './list-employee-search.component.html',
 })
 export class ListEmployeeSearchComponent implements OnChanges {
@@ -27,6 +28,11 @@ export class ListEmployeeSearchComponent implements OnChanges {
 
 
   getEmployees(firstName: string, departmentId?: number): void {
+
+    if(firstName.trim() === '' && !departmentId) {
+      return;
+    }
+
     this.employeeService.getEmployeeByName(firstName, departmentId).subscribe({
       next: (response: EmployeeBasic[]) => {
         this.employees = response;
@@ -40,5 +46,4 @@ export class ListEmployeeSearchComponent implements OnChanges {
       }
     })
   }
-
 }
