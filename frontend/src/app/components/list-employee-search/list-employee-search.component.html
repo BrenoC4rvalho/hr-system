@@ -1,0 +1,19 @@
+<ul *ngIf="employees.length > 0">
+  <li
+    *ngFor="let employee of employees"
+    class="flex items-center py-2 border-b border-gray-light last:border-0"
+    (click)="employeeSelected.emit(employee)"
+  >
+    <img
+      class="w-10 h-10 rounded-full bg-secondary"
+    />
+    <div class="ml-3 flex-1">
+      <div class="text-deep font-medium">{{ employee.firstName }} {{ employee.lastName }}</div>
+      <div class="text-gray text-sm">{{ employee.department.name }}</div>
+    </div>
+  </li>
+</ul>
+
+<div *ngIf="employees.length === 0" class="text-center text-gray py-4">
+  <p>No employees found.</p>
+</div>
