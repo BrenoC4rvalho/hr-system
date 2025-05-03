@@ -30,6 +30,8 @@ export class ListBirthdayComponent implements OnInit {
   totalEmployees: number = 0;
   employees: EmployeeBasic[] = [];
 
+  employeesSearch: EmployeeBasic[] = [];
+
   constructor(private employeeService: EmployeeService) {}
 
   ngOnInit(): void {
@@ -39,6 +41,7 @@ export class ListBirthdayComponent implements OnInit {
   getEmployees(month: number): void {
     this.employeeService.getEmployeesByBirthMonth(month).subscribe({
       next: (response: BirthdaysResponse) => {
+        this.employeesSearch = [];
         this.monthNumber = response.monthNumber;
         this.monthName = response.month;
         this.totalEmployees = response.totalEmployees;
@@ -70,6 +73,29 @@ export class ListBirthdayComponent implements OnInit {
       this.monthNumber -= 1;
     }
     this.getEmployees(this.monthNumber);
+  }
+
+  onSearch(): void {
+
+    if(this.searchText.trim() == '') {
+      this.getEmployees(this.monthNumber);
+      return;
+    }
+
+    this.employeeService.getEmployeeByName(this.searchText).subscribe({
+      next: (response: EmployeeBasic[]) => {
+        this.employeesSearch = response;
+        this.monthName = 'Search'
+      },
+      error: (error) => {
+        if(error && error.error) {
+          this.errorMessage.emit(error.error);
+        } else {
+          this.errorMessage.emit('An unexpected error occurred. Please try again later.');
+        }
+        this.getEmployees(this.monthNumber);
+      }
+    })
   }
 
 }

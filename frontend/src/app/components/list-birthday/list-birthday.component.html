@@ -15,7 +15,9 @@
           >
           </lucide-icon>
         </button>
-        <span class="text-base">{{ monthName.slice(0, 3) }} </span>
+        <span class="text-base">
+          {{ monthName === 'Search' ? monthName : monthName.slice(0, 3) }}
+        </span>
         <button
           class="hover:cursor-pointer"
           (click)="nextMonth()"
@@ -35,16 +37,17 @@
       <input
         type="text"
         [(ngModel)]="searchText"
-        placeholder="Search username"
+        placeholder="Search first name"
         class="w-full pl-3 pr-10 py-2 border border-gray-light rounded-lg focus:outline-none focus:ring-2 focus:ring-secondary"
+        (input)="onSearch()"
       />
       <lucide-icon class="h-5 w-5 text-deep absolute right-3 top-1/2 transform -translate-y-1/2" [img]="UserRoundSearchIcon"></lucide-icon>
     </div>
 
 
-    <ul *ngIf="totalEmployees > 0">
+    <ul *ngIf="(employeesSearch.length > 0 ||  totalEmployees > 0)">
       <li
-        *ngFor="let employee of employees"
+        *ngFor="let employee of (employeesSearch.length > 0 ? employeesSearch : employees)"
         class="flex items-center py-2 border-b border-gray-light last:border-0"
       >
         <img
@@ -60,7 +63,7 @@
       </li>
     </ul>
 
-    <div *ngIf="totalEmployees == 0" class="flex flex-col gap-3 items-center">
+    <div *ngIf="employeesSearch.length === 0 && totalEmployees == 0" class="flex flex-col gap-3 items-center">
       <lucide-icon
             class="h-30 w-30 text-primary"
             [img]="CakeIcon"
