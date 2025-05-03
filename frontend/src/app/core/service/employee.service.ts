@@ -7,6 +7,7 @@ import { Employee } from '../model/employee';
 import { PaginatedEmployeesResponse } from '../model/paginated-employees-response';
 import { BirthdaysResponse } from '../model/birthday-response';
 import { EmployeeStatusSummary } from '../model/employee-status-summary';
+import { EmployeeBasic } from '../model/employee-basic';
 
 @Injectable({
   providedIn: 'root'
@@ -57,13 +58,28 @@ export class EmployeeService {
 
     getEmployeesByBirthMonth(month: number): Observable<BirthdaysResponse> {
       const params = new HttpParams()
-        .set('month', month);
+        .set('month', month.toString());
 
       return this.http.get<BirthdaysResponse>(`${this.apiUrl}/birthdays`, { params });
     }
 
     getEmployeeStatusSummary(): Observable<EmployeeStatusSummary> {
       return this.http.get<EmployeeStatusSummary>(`${this.apiUrl}/status-summary`);
+    }
+
+    getEmployeeByName(firstName: string, departmentId?: number): Observable<EmployeeBasic[]> {
+      let params = new HttpParams();
+
+      if(firstName) {
+        params =params.set('firstName', firstName);
+      }
+
+      if(departmentId) {
+        params = params.set('departmentId', departmentId.toString());
+      }
+
+      return this.http.get<EmployeeBasic[]>(`${this.apiUrl}/search`, { params });
+
     }
 
 }
