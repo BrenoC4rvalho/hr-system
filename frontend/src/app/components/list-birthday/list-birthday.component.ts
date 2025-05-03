@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ArrowLeft, ArrowRight, Cake, LucideAngularModule, UserSearch } from 'lucide-angular';
-import { EmployeeBirthday } from '../../core/model/employee-birthday';
+import { EmployeeBasic } from '../../core/model/employee-basic';
 import { EmployeeService } from '../../core/service/employee.service';
 import { BirthdaysResponse } from '../../core/model/birthday-response';
 
@@ -28,7 +28,7 @@ export class ListBirthdayComponent implements OnInit {
   monthNumber: number = this.today.getMonth() + 1;
   monthName: string = '';
   totalEmployees: number = 0;
-  employees: EmployeeBirthday[] = [];
+  employees: EmployeeBasic[] = [];
 
   constructor(private employeeService: EmployeeService) {}
 

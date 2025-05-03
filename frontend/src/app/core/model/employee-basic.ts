@@ -1,6 +1,6 @@
 import { Department } from "./department";
 
-export interface EmployeeBirthday {
+export interface EmployeeBasic {
 
   id: number;
   firstName: number;
