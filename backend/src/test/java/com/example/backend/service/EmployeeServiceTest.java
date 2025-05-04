@@ -9,6 +9,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import javax.swing.text.html.HTMLDocument.HTMLReader.SpecialAction;
@@ -28,6 +29,7 @@ import com.example.backend.dto.CreateEmployeeDTO;
 import com.example.backend.dto.EmployeeBasicDTO;
 import com.example.backend.dto.EmployeeDTO;
 import com.example.backend.exception.EmployeeNotFoundException;
+import com.example.backend.exception.MonthNotValidException;
 import com.example.backend.mapper.CreateEmployeeMapper;
 import com.example.backend.mapper.EmployeeBasicMapper;
 import com.example.backend.mapper.EmployeeMapper;
@@ -245,6 +247,58 @@ class EmployeeServiceTest {
 
         verify(employeeRepository).findAll(any(Specification.class));
     }
+
+
+    @Test
+    void shouldReturnEmployeeStatusSummary() {
+        Object[] row1 = new Object[]{"ACTIVE", 5L};
+        Object[] row2 = new Object[]{"INACTIVE", 2L};
+
+        when(employeeRepository.countEmployeesByStatus()).thenReturn(List.of(row1, row2));
+
+        Map<String, Long> result = employeeService.getEmployeeStatusSummary();
+
+        assertNotNull(result);
+        assertEquals(0L, result.getOrDefault("ON_LEAVE", 0L)); // Supondo que existe esse status no enum
+        assertEquals(5L, result.get("ACTIVE"));
+        assertEquals(2L, result.get("INACTIVE"));
+
+        verify(employeeRepository).countEmployeesByStatus();
+    }
+
+    @Test
+    void shouldReturnEmployeesByBirthMonth() {
+        Employee employee = new Employee();
+        employee.setFirstName("Bob");
+
+        EmployeeBasicDTO dto = new EmployeeBasicDTO();
+        dto.setFirstName("Bob");
+
+        when(employeeRepository.findByBirthMonth(5)).thenReturn(List.of(employee));
+        when(employeeBasicMapper.map(employee)).thenReturn(dto);
+
+        List<EmployeeBasicDTO> result = employeeService.getEmployeesByBirthMonth(5);
+
+        assertNotNull(result);
+        assertEquals(1, result.size());
+        assertEquals("Bob", result.get(0).getFirstName());
+
+        verify(employeeRepository).findByBirthMonth(5);
+        verify(employeeBasicMapper).map(employee);
+    }
+
+    @Test
+    void shouldThrowExceptionWhenBirthMonthIsInvalid() {
+        assertThrows(MonthNotValidException.class, () ->
+            employeeService.getEmployeesByBirthMonth(0)
+        );
+
+        assertThrows(MonthNotValidException.class, () ->
+            employeeService.getEmployeesByBirthMonth(13)
+        );
+    }
+
+
 
 
 }
