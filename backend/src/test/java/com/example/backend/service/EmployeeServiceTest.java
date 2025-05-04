@@ -25,9 +25,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 
 import com.example.backend.dto.CreateEmployeeDTO;
+import com.example.backend.dto.EmployeeBasicDTO;
 import com.example.backend.dto.EmployeeDTO;
 import com.example.backend.exception.EmployeeNotFoundException;
 import com.example.backend.mapper.CreateEmployeeMapper;
+import com.example.backend.mapper.EmployeeBasicMapper;
 import com.example.backend.mapper.EmployeeMapper;
 import com.example.backend.model.Employee;
 import com.example.backend.repository.EmployeeRepository;
@@ -43,6 +45,9 @@ class EmployeeServiceTest {
 
     @Mock
     private EmployeeMapper employeeMapper;
+
+    @Mock 
+    private EmployeeBasicMapper employeeBasicMapper;
 
     @InjectMocks
     private EmployeeService employeeService;
@@ -201,4 +206,45 @@ class EmployeeServiceTest {
 
         verify(employeeRepository).findById(1L);
     }
+
+    @Test
+    void shouldReturnEmployeesByFirstName() {
+        Employee employee = new Employee();
+        employee.setFirstName("Alice");
+
+        EmployeeBasicDTO dto = new EmployeeBasicDTO();
+        dto.setFirstName("Alice");
+
+        when(employeeRepository.findAll(any(Specification.class))).thenReturn(List.of(employee));
+        when(employeeBasicMapper.map(employee)).thenReturn(dto);
+
+        List<EmployeeBasicDTO> result = employeeService.getEmployeesByFirstName("Alice", null);
+
+        assertNotNull(result);
+        assertEquals(1, result.size());
+        assertEquals("Alice", result.get(0).getFirstName());
+
+        verify(employeeRepository).findAll(any(Specification.class));
+        verify(employeeBasicMapper).map(employee);
+    }
+
+    @Test
+    void shouldThrowExceptionWhenFirstNameAndDepartmentIdAreNull() {
+        assertThrows(IllegalArgumentException.class, () ->
+            employeeService.getEmployeesByFirstName(null, null)
+        );
+    }
+
+    @Test
+    void shouldThrowEmployeeNotFoundExceptionWhenNoEmployeesMatch() {
+        when(employeeRepository.findAll(any(Specification.class))).thenReturn(List.of());
+
+        assertThrows(EmployeeNotFoundException.class, () ->
+            employeeService.getEmployeesByFirstName("NoName", null)
+        );
+
+        verify(employeeRepository).findAll(any(Specification.class));
+    }
+
+
 }
