@@ -24,7 +24,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.backend.dto.CreateEmployeeDTO;
 import com.example.backend.dto.EmployeeBasicDTO;
 import com.example.backend.dto.EmployeeDTO;
-import com.example.backend.model.Department;
 import com.example.backend.service.EmployeeService;
 
 import jakarta.validation.Valid;
@@ -109,7 +108,7 @@ public class EmployeeController {
     }
     
     @GetMapping("/status-summary")
-    public ResponseEntity<?> getEmployeeStatusSumary() {
+    public ResponseEntity<?> getEmployeeStatusSummary() {
         Map<String, Long> summary = employeeService.getEmployeeStatusSummary();
         return ResponseEntity.status(HttpStatus.OK).body(summary);
     }

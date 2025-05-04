@@ -24,6 +24,7 @@ import org.springframework.test.context.ActiveProfiles;
 import com.example.backend.dto.AuthRequestDTO;
 import com.example.backend.dto.AuthResponseDTO;
 import com.example.backend.dto.CreateEmployeeDTO;
+import com.example.backend.dto.EmployeeBasicDTO;
 import com.example.backend.dto.EmployeeDTO;
 import com.example.backend.enums.EmployeeStatus;
 import com.example.backend.enums.Gender;
@@ -184,4 +185,55 @@ public class EmployeeControllerTest {
         assertNotNull(response.getBody());
         assertEquals("Updated", response.getBody().getFirstName());
     }
+
+    @Test
+    void shouldReturnEmployeeStatusSummary() {
+        HttpEntity<Void> requestEntity = new HttpEntity<>(headers);
+
+        ResponseEntity<Map> response = restTemplate.exchange(
+            "/employees/status-summary",
+            HttpMethod.GET,
+            requestEntity,
+            Map.class
+        );
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertNotNull(response.getBody());
+        assertTrue(response.getBody().containsKey("ACTIVE")); 
+    }
+
+    @Test
+    void shouldReturnEmployeesByBirthMonth() {
+        HttpEntity<Void> requestEntity = new HttpEntity<>(headers);
+
+        ResponseEntity<Map> response = restTemplate.exchange(
+            "/employees/birthdays?month=1", 
+            HttpMethod.GET,
+            requestEntity,
+            Map.class
+        );
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertNotNull(response.getBody());
+        assertEquals("January", response.getBody().get("month"));
+        assertTrue((int) response.getBody().get("totalEmployees") >= 1);
+    }
+
+    @Test
+    void shouldReturnEmployeesByFirstName() {
+        HttpEntity<Void> requestEntity = new HttpEntity<>(headers);
+
+        ResponseEntity<EmployeeBasicDTO[]> response = restTemplate.exchange(
+            "/employees/search?firstName=Test",
+            HttpMethod.GET,
+            requestEntity,
+            EmployeeBasicDTO[].class
+        );
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertNotNull(response.getBody());
+        assertTrue(response.getBody().length > 0);
+        assertEquals("Test", response.getBody()[0].getFirstName());
+    }
+
 }
