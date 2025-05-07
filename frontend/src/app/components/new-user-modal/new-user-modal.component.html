@@ -11,17 +11,15 @@
         <app-dynamic-field [field]="field" [form]="form"></app-dynamic-field>
       </ng-container>
     </div>
+    <div>
+      <label class="mb-2 text-sm font-medium text-gray">Employee</label>
+      <app-list-employee-search
+        (employeeSelected)="onEmployeeSelected($event)"
+        (errorMessage)="this.errorMessage.emit($event)"
+      >
+      </app-list-employee-search>
+    </div>
   </form>
-
-  <div>
-    <label class="mb-2 text-sm font-medium text-gray">Employee</label>
-
-    <app-list-employee-search
-      (employeeSelected)="onEmployeeSelected($event)"
-      (errorMessage)="this.errorMessage.emit($event)"
-    >
-    </app-list-employee-search>
-  </div>
 
 </app-modal>
 
