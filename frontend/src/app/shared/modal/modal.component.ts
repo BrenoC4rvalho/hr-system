@@ -11,13 +11,7 @@ export class ModalComponent {
   readonly CircleXIcon = CircleX;
 
   @Input() headerText: string = '';
-  @Input() disableSave: boolean = false;
-  @Output() saveClicked = new EventEmitter<void>();
   @Output() closeCliked = new EventEmitter<void>();
-
-  save(): void {
-    this.saveClicked.emit();
-  }
 
   close(): void {
     this.closeCliked.emit();
