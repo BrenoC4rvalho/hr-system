@@ -1,8 +1,6 @@
 <app-modal
   [headerText]="'Add new User'"
-  [disableSave]="form.invalid"
   (closeCliked)="onClose()"
-  (saveClicked)="onSave()"
 >
 
   <form [formGroup]="form" class="space-y-6">
@@ -20,6 +18,18 @@
       </app-list-employee-search>
     </div>
   </form>
+
+  <button
+    modal-button
+    class="
+    text-white-soft bg-primary px-4 py-1 rounded hover:cursor-pointer hover:bg-primary/70
+      disabled:opacity-50 disabled:cursor-auto
+    "
+    (click)="onSave()"
+    [disabled]="form.invalid"
+  >
+      Save
+  </button>
 
 </app-modal>
 
