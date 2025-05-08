@@ -1,18 +1,8 @@
-<div
-  class="relative bg-component shadow-2xl p-6 rounded-lg min-w-3xl"
-  *ngIf="isVisible && user"
+<app-modal
+  *ngIf="user"
+  [headerText]="'User Profile'"
+  (closeCliked)="onClose()"
 >
-  <button
-    (click)="onClose()"
-    class="text-red-500 absolute right-3 top-3 hover:text-red-700 transition"
-    aria-label="Close"
-  >
-    <lucide-icon class="w-7 h-7" [img]="CircleXIcon"></lucide-icon>
-  </button>
-
-  <header class="text-3xl font-semibold text-primary mb-4">
-    <h3>User Profile</h3>
-  </header>
 
   <div class="space-y-6">
     <div class="flex items-center gap-6">
@@ -60,36 +50,34 @@
       </p>
     </div>
 
-    <div class="flex gap-3 mt-4 justify-end">
-      <button
-        *ngIf="!isEditing && canEditAdminOrSelf() && canEdit()"
-        (click)="toggleEdit()"
-        class="bg-secondary px-6 py-2 rounded-lg text-white font-medium transition hover:bg-secondary/80"
-      >
-        Edit
-      </button>
-
-      <button
-        *ngIf="isEditing"
-        (click)="saveChanges()"
-        class="bg-green-500 px-6 py-2 rounded-lg text-white font-medium transition hover:bg-green-600"
-      >
-        Save
-      </button>
-
-      <button
-        *ngIf="isEditing"
-        (click)="cancelEdit()"
-        class="bg-gray-400 px-6 py-2 rounded-lg text-white font-medium transition hover:bg-gray-500"
-      >
-        Cancel
-      </button>
-
-      <a *ngIf="canEditAdminOrSelf()" [routerLink]="['/updatePassword', user.id]">
-        <button class="border border-secondary px-6 py-2 rounded-lg font-medium text-secondary transition hover:bg-secondary hover:text-white">
-          Change Password
-        </button>
-      </a>
-    </div>
   </div>
-</div>
+
+  <button
+    modal-button
+    *ngIf="!isEditing && canEditAdminOrSelf() && canEdit()"
+    (click)="toggleEdit()"
+    class="bg-secondary px-6 py-2 rounded-lg text-white font-medium transition hover:bg-secondary/80"
+  >
+    Edit
+  </button>
+
+  <button
+    modal-button
+    *ngIf="isEditing"
+    (click)="saveChanges()"
+    class="bg-green-500 px-6 py-2 rounded-lg text-white font-medium transition hover:bg-green-600"
+  >
+    Save
+  </button>
+
+  <a
+    modal-button
+    *ngIf="canEditAdminOrSelf()"
+    [routerLink]="['/updatePassword', user.id]"
+  >
+    <button class="border border-secondary px-6 py-2 rounded-lg font-medium text-secondary transition hover:bg-secondary hover:text-white">
+      Change Password
+    </button>
+  </a>
+
+</app-modal>

@@ -1,27 +1,24 @@
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChange, SimpleChanges } from '@angular/core';
 import { User } from '../../core/model/user';
 import { UserService } from '../../core/service/user.service';
-import { CircleX, LucideAngularModule } from 'lucide-angular';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { UserRole } from '../../core/enums/user-role.enum';
 import { UserStatus } from '../../core/enums/user-status.enum';
 import { AuthService } from '../../auth/service/auth.service';
+import { ModalComponent } from "../../shared/modal/modal.component";
 
 @Component({
   selector: 'app-user-profile-modal',
-  imports: [LucideAngularModule, CommonModule, RouterModule, FormsModule],
+  imports: [ CommonModule, RouterModule, FormsModule, ModalComponent],
   templateUrl: './user-profile-modal.component.html',
 })
 export class UserProfileModalComponent implements OnChanges {
 
-  readonly CircleXIcon = CircleX
-
   @Input() userId: number | undefined;
-  @Input() isVisible: boolean = false;
   @Output() closed = new EventEmitter<void>()
-  @Output() errorUserProfileModal = new EventEmitter<string>()
+  @Output() errorMessage = new EventEmitter<string>()
 
   isEditing = false;
 
@@ -37,7 +34,7 @@ export class UserProfileModalComponent implements OnChanges {
    }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if(changes['isVisible'] && this.isVisible) {
+    if(changes['userId'] && this.userId) {
       this.getUserProfile();
     }
   }
@@ -56,7 +53,7 @@ export class UserProfileModalComponent implements OnChanges {
 
       },
       error: () => {
-        this.errorUserProfileModal.emit("An unexpected error occurred while fetching user information. Please try again later.");
+        this.errorMessage.emit("An unexpected error occurred while fetching user information. Please try again later.");
       }
     })
 
@@ -76,14 +73,13 @@ export class UserProfileModalComponent implements OnChanges {
   }
 
   onClose() {
-    this.isVisible = false;
     this.closed.emit();
   }
 
   saveChanges() {
 
     if (!this.editableUser.username || this.editableUser.username.length < 3 || this.editableUser.username.length > 50) {
-      alert('Username must be between 3 and 50 characters.');
+      this.errorMessage.emit('Username must be between 3 and 50 characters.');
       return;
     }
 
@@ -95,9 +91,9 @@ export class UserProfileModalComponent implements OnChanges {
         },
         error: (err) => {
           if(err.error) {
-            this.errorUserProfileModal.emit(err.error);
+            this.errorMessage.emit(err.error);
           } else {
-            this.errorUserProfileModal.emit("An unexpected error occurred while fetching user information. Please try again later.");
+            this.errorMessage.emit("An unexpected error occurred while fetching user information. Please try again later.");
           }
         }
       });
