@@ -82,10 +82,9 @@
     class="fixed inset-0 bg-deep/70 flex items-center justify-center"
 >
   <app-user-profile-modal
-    [isVisible]="showUserProfileModal"
     [userId]="currentUser?.id"
     (closed)="showUserProfileModal = false"
-    (errorUserProfileModal)="showErrorUserProfileModal($event)"
+    (errorMessage)="showErrorUserProfileModal($event)"
   >
   </app-user-profile-modal>
 </div>
