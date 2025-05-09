@@ -60,7 +60,7 @@
     class="fixed inset-0 bg-deep/70 flex items-center justify-center"
   >
     <app-department-profile-modal
-      [department]="selectedDepartmentForModal"
+      [departmentId]="selectedDepartmentForModal?.id"
       (closeModal)="closeDepartmentProfileModal()"
       (errorMessage)="handleErrorModal($event)"
     >
