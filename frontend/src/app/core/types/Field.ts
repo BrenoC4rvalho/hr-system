@@ -4,12 +4,13 @@ export type Field =
       name: string;
       type: 'input';
       inputType: string;
-      placeholder: string;
+      placeholder?: string;
+      value?: string | number | Date
     }
   | {
       label: string;
       name: string;
       type: 'select';
       placeholder: string;
-      options: any[]; // ou Gender[] | Department[] | Position[] etc.
+      options: any[];
     };
