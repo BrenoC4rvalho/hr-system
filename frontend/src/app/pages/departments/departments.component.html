@@ -39,6 +39,12 @@
               >
                 <lucide-icon [img]="EyeIcon"></lucide-icon>
               </button>
+              <button
+                (click)="openDepartmentEditModal(department)"
+                class="border border-gray-light mr-1 p-1 rounded hover:opacity-70"
+              >
+                <lucide-icon [img]="PencilIcon"></lucide-icon>
+              </button>
             </td>
           </tr>
         </tbody>
@@ -65,6 +71,18 @@
       (errorMessage)="handleErrorModal($event)"
     >
     </app-department-profile-modal>
+  </div>
+
+  <div
+    *ngIf="showDepartmentEditModal"
+    class="fixed inset-0 bg-deep/70 flex items-center justify-center"
+  >
+    <app-edit-department-modal
+      [department]="selectedDepartmentForModal"
+      (closeModal)="closeDepartmentEditModal()"
+      (errorMessage)="handleErrorModal($event)"
+    >
+    </app-edit-department-modal>
   </div>
 
   <!-- Error Modal -->

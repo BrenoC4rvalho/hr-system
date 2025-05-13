@@ -3,19 +3,21 @@ import { NavbarComponent } from "../../shared/navbar/navbar.component";
 import { Department } from '../../core/model/department';
 import { DepartmentService } from '../../core/service/department.service';
 import { CommonModule } from '@angular/common';
-import { Eye, LucideAngularModule } from 'lucide-angular';
+import { Eye, LucideAngularModule, Pencil } from 'lucide-angular';
 import { NewDepartmentModalComponent } from "../../components/new-department-modal/new-department-modal.component";
 import { ErrorModalComponent } from "../../components/error-modal/error-modal";
 import { DepartmentProfileModalComponent } from "../../components/department-profile-modal/department-profile-modal.component";
+import { EditDepartmentModalComponent } from "../../components/edit-department-modal/edit-department-modal.component";
 
 @Component({
   selector: 'app-departments',
-  imports: [NavbarComponent, CommonModule, LucideAngularModule, NewDepartmentModalComponent, ErrorModalComponent, DepartmentProfileModalComponent],
+  imports: [NavbarComponent, CommonModule, LucideAngularModule, NewDepartmentModalComponent, ErrorModalComponent, DepartmentProfileModalComponent, EditDepartmentModalComponent],
   templateUrl: './departments.component.html',
 })
 export class DepartmentsComponent implements OnInit {
 
   readonly EyeIcon = Eye;
+  readonly PencilIcon = Pencil;
 
   isModalNewDepartmentOpen: boolean = false;
 
@@ -24,8 +26,9 @@ export class DepartmentsComponent implements OnInit {
 
   departments: Department[] = [];
 
-  selectedDepartmentForModal: Department | null = null;
+  selectedDepartmentForModal: Department | undefined;
   showDepartmentProfileModal: boolean = false;
+  showDepartmentEditModal: boolean = false;
 
   constructor(private departmentService: DepartmentService) {}
 
@@ -72,9 +75,19 @@ export class DepartmentsComponent implements OnInit {
     this.showDepartmentProfileModal = true;
   }
 
+  openDepartmentEditModal(selectedDepartment: Department): void {
+    this.selectedDepartmentForModal = selectedDepartment;
+    this.showDepartmentEditModal = true;
+  }
+
   closeDepartmentProfileModal(): void {
     this.showDepartmentProfileModal = false;
-    this.selectedDepartmentForModal = null;
+    this.selectedDepartmentForModal = undefined;
+  }
+
+  closeDepartmentEditModal(): void {
+    this.showDepartmentEditModal = false;
+    this.selectedDepartmentForModal = undefined;
   }
 
 
