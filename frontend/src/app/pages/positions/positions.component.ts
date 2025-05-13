@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { NavbarComponent } from "../../shared/navbar/navbar.component";
-import { Eye, LucideAngularModule } from 'lucide-angular';
+import { Eye, LucideAngularModule, Pencil } from 'lucide-angular';
 import { Position } from '../../core/model/position';
 import { PositionService } from '../../core/service/position.service';
 import { CommonModule } from '@angular/common';
@@ -16,6 +16,7 @@ import { PositionProfileModalComponent } from "../../components/position-profile
 export class PositionsComponent implements OnInit {
 
   readonly EyeIcon = Eye;
+  readonly PencilIcon = Pencil;
 
   isModalNewPositionOpen: boolean = false;
 
