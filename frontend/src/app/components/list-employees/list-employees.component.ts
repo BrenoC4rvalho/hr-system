@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
-import { LucideAngularModule, Eye, UserRoundSearch } from 'lucide-angular';
+import { LucideAngularModule, Eye, UserRoundSearch, Pencil } from 'lucide-angular';
 import { Employee } from '../../core/model/employee';
 import { EmployeeService } from '../../core/service/employee.service';
 import { PaginatedEmployeesResponse } from '../../core/model/paginated-employees-response';
@@ -24,6 +24,7 @@ export class ListEmployeesComponent implements OnInit, OnChanges {
 
   readonly EyeIcon = Eye;
   readonly UserRoundSearchIcon = UserRoundSearch;
+  readonly PencilIcon = Pencil;
 
   employees: Employee[] = [];
   departments: Department[] = [];
