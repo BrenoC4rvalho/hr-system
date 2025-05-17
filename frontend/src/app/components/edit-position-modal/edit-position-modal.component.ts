@@ -69,5 +69,17 @@ export class EditPositionModalComponent implements OnInit {
 
     const editPosition: Position = this.form.value;
 
+    if(this.position?.id) {
+      this.positionService.update(this.position?.id, editPosition).subscribe({
+        next: (updatedPosition: Position) => {
+          this.editPosition.emit(updatedPosition);
+          this.closeModal.emit();
+        },
+        error: (err) => {
+            this.errorMessage.emit(err?.error || 'Failed to update position.');
+        }
+      })
+    }
   }
+
 }
