@@ -36,6 +36,7 @@
                 <lucide-icon [img]="EyeIcon"></lucide-icon>
               </button>
               <button
+                (click)="openPositionEditModal(position)"
                 class="border border-gray-light mr-1 p-1 rounded hover:opacity-70"
               >
                 <lucide-icon [img]="PencilIcon"></lucide-icon>
@@ -65,6 +66,19 @@
       (errorMessage)="handleErrorModal($event)"
     >
     </app-position-profile-modal>
+  </div>
+
+  <div
+    *ngIf="isModalEditPositionOpen"
+    class="fixed inset-0 bg-deep/70 flex items-center justify-center"
+  >
+    <app-edit-position-modal
+      [position]="selectedPositionForModal"
+      (closeModal)="closePositionEditModal()"
+      (errorMessage)="handleErrorModal($event)"
+      (editPosition)="handleEditPosition($event)"
+    >
+    </app-edit-position-modal>
   </div>
 
   <!-- Error Modal -->

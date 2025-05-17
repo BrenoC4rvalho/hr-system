@@ -60,10 +60,10 @@ public class PositionController {
     @PutMapping("/{id}")
     public ResponseEntity<?> update(@PathVariable Long id, @RequestBody PositionDTO positionDTO) {
         
-        positionService.update(id, positionDTO);
+        PositionDTO updatedPosition = positionService.update(id, positionDTO);
 
-        Map<String, String> response = new HashMap<>();
-        response.put("message", "Position updated successfully.");
+        Map<String, Object> response = new HashMap<>();
+        response.put("positon", updatedPosition);
         
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }

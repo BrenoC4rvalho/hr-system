@@ -13,7 +13,7 @@ import { PositionService } from '../../core/service/position.service';
 })
 export class PositionProfileModalComponent {
 
-  @Input() position: Position | null = null;
+  @Input() position: Position | undefined;
   @Output() closeModal = new EventEmitter<void>();
   @Output() errorMessage = new EventEmitter<string>();
 
