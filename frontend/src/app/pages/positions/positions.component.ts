@@ -7,10 +7,11 @@ import { CommonModule } from '@angular/common';
 import { NewPositionModalComponent } from "../../components/new-position-modal/new-position-modal.component";
 import { ErrorModalComponent } from "../../components/error-modal/error-modal";
 import { PositionProfileModalComponent } from "../../components/position-profile-modal/position-profile-modal.component";
+import { EditPositionModalComponent } from "../../components/edit-position-modal/edit-position-modal.component";
 
 @Component({
   selector: 'app-positions',
-  imports: [NavbarComponent, LucideAngularModule, CommonModule, NewPositionModalComponent, ErrorModalComponent, PositionProfileModalComponent],
+  imports: [NavbarComponent, LucideAngularModule, CommonModule, NewPositionModalComponent, ErrorModalComponent, PositionProfileModalComponent, EditPositionModalComponent],
   templateUrl: './positions.component.html',
 })
 export class PositionsComponent implements OnInit {
@@ -25,8 +26,9 @@ export class PositionsComponent implements OnInit {
 
   positions: Position[] = [];
 
-  selectedPositionForModal: Position | null = null;
+  selectedPositionForModal: Position | undefined;
   showPositionProfileModal: boolean = false;
+  isModalEditPositionOpen: boolean = false;
 
   constructor(private positionService: PositionService) {}
 
@@ -73,9 +75,27 @@ export class PositionsComponent implements OnInit {
       this.showPositionProfileModal = true;
   }
 
+  openPositionEditModal(selectedPosition: Position): void {
+    this.selectedPositionForModal = selectedPosition;
+    this.isModalEditPositionOpen = true;
+  }
+
   closePositionProfileModal(): void {
     this.showPositionProfileModal = false;
-    this.selectedPositionForModal = null;
+    this.selectedPositionForModal = undefined;
+  }
+
+  closePositionEditModal(): void {
+    this.isModalEditPositionOpen = false;
+    this.selectedPositionForModal = undefined;
+  }
+
+  handleEditPosition(updated: Position): void {
+    const index = this.positions.findIndex(p => p.id === updated.id);
+    console.log(index, updated.id)
+    if (index !== -1) {
+      this.positions[updated.id] = updated;
+    }
   }
 
 }
