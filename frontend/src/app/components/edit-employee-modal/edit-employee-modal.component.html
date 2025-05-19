@@ -1,1 +1,26 @@
-<p>edit-employee-modal works!</p>
+<app-modal
+  [headerText]="'Edit Employee'"
+  (closeCliked)="onClose()"
+>
+
+  <form [formGroup]="form" class="space-y-6">
+    <div *ngFor="let group of inputGroups" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <ng-container *ngFor="let field of group">
+        <app-dynamic-field [field]="field" [form]="form"></app-dynamic-field>
+      </ng-container>
+    </div>
+  </form>
+
+  <button
+    modal-button
+    class="
+    text-white-soft bg-primary px-4 py-1 rounded hover:cursor-pointer hover:bg-primary/70
+      disabled:opacity-50 disabled:cursor-auto
+    "
+    (click)="onSave()"
+    [disabled]="form.invalid"
+  >
+    Save
+  </button>
+
+</app-modal>
