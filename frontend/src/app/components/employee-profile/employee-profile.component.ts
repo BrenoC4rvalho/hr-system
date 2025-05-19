@@ -15,7 +15,7 @@ export class EmployeeProfileComponent {
   readonly MailIcon = Mail;
   readonly PhoneIcon = Phone;
 
-  @Input() employee: Employee | null = null;
+  @Input() employee: Employee | undefined;
   @Output() closeModal = new EventEmitter<void>();
   @Output() errorMessage = new EventEmitter<string>();
 
