@@ -11,10 +11,11 @@ import { DepartmentService } from '../../core/service/department.service';
 import { PositionService } from '../../core/service/position.service';
 import { FormsModule } from '@angular/forms';
 import { EmployeeProfileComponent } from "../employee-profile/employee-profile.component";
+import { EditEmployeeModalComponent } from "../edit-employee-modal/edit-employee-modal.component";
 
 @Component({
   selector: 'app-list-employees',
-  imports: [CommonModule, LucideAngularModule, PaginationComponent, FormsModule, EmployeeProfileComponent],
+  imports: [CommonModule, LucideAngularModule, PaginationComponent, FormsModule, EmployeeProfileComponent, EditEmployeeModalComponent],
   templateUrl: './list-employees.component.html',
 })
 export class ListEmployeesComponent implements OnInit, OnChanges {
@@ -39,7 +40,10 @@ export class ListEmployeesComponent implements OnInit, OnChanges {
   totalPages: number = 0;
 
   showEmployeeProfileModal: boolean = false;
-  selectedEmployeeForModal: Employee | null = null;
+  showEmployeeEditModal: boolean = false;
+
+  selectedEmployeeForModal: Employee | undefined;
+
 
   constructor(
     private employeeService: EmployeeService,
@@ -132,8 +136,18 @@ export class ListEmployeesComponent implements OnInit, OnChanges {
   }
 
   closeEmployeeProfileModal(): void {
-    this.selectedEmployeeForModal = null;
+    this.selectedEmployeeForModal = undefined;
     this.showEmployeeProfileModal = false;
+  }
+
+  openEmployeeEditModal(edit: Employee): void {
+    this.selectedEmployeeForModal = edit;
+    this.showEmployeeEditModal = true;
+  }
+
+  closeEmployeeEditModal(): void {
+    this.selectedEmployeeForModal = undefined;
+    this.showEmployeeEditModal = false;
   }
 
   handleErrorModal($event: string): void {

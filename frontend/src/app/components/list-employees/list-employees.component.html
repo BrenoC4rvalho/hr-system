@@ -64,10 +64,11 @@
         <td class="py-2">
           <button
             (click)="openEmployeeProfileModal(employee)"
-            class="border border-gray-light p-1 rounded hover:opacity-70">
+            class="border border-gray-light mr-1 p-1 rounded hover:opacity-70">
             <lucide-icon [img]="EyeIcon"></lucide-icon>
           </button>
           <button
+            (click)="openEmployeeEditModal(employee)"
             class="border border-gray-light mr-1 p-1 rounded hover:opacity-70"
           >
             <lucide-icon [img]="PencilIcon"></lucide-icon>
@@ -96,4 +97,16 @@
     (errorMessage)="handleErrorModal($event)"
   >
   </app-employee-profile>
+</div>
+
+<div
+  *ngIf="showEmployeeEditModal"
+  class="fixed inset-0 bg-deep/70 flex items-center justify-center"
+>
+  <app-edit-employee-modal
+    [employee]="selectedEmployeeForModal"
+    (closeModal)="closeEmployeeEditModal()"
+    (errorMessage)="handleErrorModal($event)"
+  >
+  </app-edit-employee-modal>
 </div>
