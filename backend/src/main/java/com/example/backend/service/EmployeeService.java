@@ -45,7 +45,7 @@ public class EmployeeService {
 
     public Page<EmployeeDTO> getAll(Pageable pageable, Long positionId, Long departmentId, String name) {
 
-        Specification<Employee> spec = Specification.where(null);
+        Specification<Employee> spec = null;
 
         if (positionId != null) {
             spec = spec.and((root, query, cb) ->
@@ -162,7 +162,7 @@ public class EmployeeService {
             throw new IllegalArgumentException("At least one filter (firstName or DepartmentId) must be provided.");
         }
 
-        Specification<Employee> spec = Specification.where(null);
+        Specification<Employee> spec = null;
 
         if (departmentId != null) {
             spec = spec.and((root, query, cb) ->
