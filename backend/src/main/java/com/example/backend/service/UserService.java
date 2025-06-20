@@ -61,7 +61,7 @@ public class UserService {
 
     public Page<UserRespondeDTO> getAll(Pageable pageable, String username) {
 
-        Specification<User> spec = Specification.where(null);
+        Specification<User> spec = null;
 
         if(username != null && !username.isBlank()) {
             spec = spec.and((root, query, cb) ->
