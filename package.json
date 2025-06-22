@@ -1,8 +1,7 @@
 {
   "name": "hr-system",
   "version": "1.0.0",
-  "description": "Documentar depois sobre a paleta de cores no styles css.",
-  "main": "index.js",
+  "description": "hr-system",
   "scripts": {
     "dev": "npm run services:up && concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
     "services:up": "docker compose up -d",
@@ -12,7 +11,7 @@
     "dev:backend": "export $(grep -v '^#' .env | envsubst | xargs) && cd backend && mvn spring-boot:run",
     "test:backend": "cd backend && mvn test"
   },
-  "author": "",
+  "author": "BrenoC4rvalho",
   "license": "ISC",
   "devDependencies": {
     "concurrently": "^9.1.2"
