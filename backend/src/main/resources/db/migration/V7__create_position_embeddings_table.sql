@@ -8,7 +8,7 @@ CREATE TABLE position_embeddings (
     create_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT fk_position
-        FOREIGN KEY(positon_id)
+        FOREIGN KEY(position_id)
         REFERENCES positions(id)
         ON DELETE CASCADE
 );
