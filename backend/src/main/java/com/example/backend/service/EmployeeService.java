@@ -199,18 +199,26 @@ public class EmployeeService {
     }
 
     @Transactional
-    private void generateAndStoreEmbedding(Employee employee) {
+    public void generateAndStoreEmbedding(Employee employee) {
         String content = String.format(
-                "Employee: %s %s. Position: %s. Department: %s. Status: %s.",
+                "Employee: %s %s. Position: %s. Department: %s. Status: %s. Email: %s. Phone: %s. Gender: %s. Birth Date: %s. Hired Date: %s. Shift: %s.",
                 employee.getFirstName(),
                 employee.getLastName(),
                 employee.getPosition().getName(),
                 employee.getDepartment().getName(),
-                employee.getStatus().toString()
+                employee.getStatus().toString(),
+                employee.getEmail(),
+                employee.getPhone(),
+                employee.getGender().toString(),
+                employee.getBirthDate(),
+                employee.getHiredDate(),
+                employee.getShift().toString()
         );
 
         Document document = new Document(content, Map.of(
                 "employee_id", employee.getId(),
+                "department_id", employee.getDepartment().getId(),
+                "position_id", employee.getPosition().getId(),
                 "department_name", employee.getDepartment().getName(),
                 "position_name", employee.getPosition().getName()
         ));
