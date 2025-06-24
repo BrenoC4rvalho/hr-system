@@ -1,8 +1,12 @@
 package com.example.backend.service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
+import org.springframework.ai.document.Document;
+import org.springframework.ai.vectorstore.VectorStore;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,11 +22,18 @@ import com.example.backend.repository.PositionRepository;
 public class PositionService {
 
     private final PositionRepository positionRepository;
+    private final VectorStore positionVectorStore;
     private final PositionMapper positionMapper;
     private final CreatePositionMapper createPositionMapper;
 
-    public PositionService(PositionRepository positionRepository, PositionMapper positionMapper, CreatePositionMapper createPositionMapper) {
+    public PositionService(
+            PositionRepository positionRepository,
+            @Qualifier("positionVectorStore") VectorStore positionVectorStore,
+            PositionMapper positionMapper,
+            CreatePositionMapper createPositionMapper
+    ) {
         this.positionRepository = positionRepository;
+        this.positionVectorStore = positionVectorStore;
         this.positionMapper = positionMapper;
         this.createPositionMapper = createPositionMapper;
     }
@@ -45,6 +56,8 @@ public class PositionService {
         Position newPosition = createPositionMapper.map(createPositionDTO);
 
         newPosition = positionRepository.save(newPosition);
+
+        generateAndStoreEmbedding(newPosition);
 
         return positionMapper.map(newPosition);
     }
@@ -77,9 +90,26 @@ public class PositionService {
             position.setDescription(positionDTO.getDescription().trim());
         }
 
-        positionRepository.save(position);
+        Position updatedPosition = positionRepository.save(position);
+        generateAndStoreEmbedding(updatedPosition);
 
-        return positionMapper.map(position);
+        return positionMapper.map(updatedPosition);
+    }
+
+    @Transactional
+    public void generateAndStoreEmbedding(Position position) {
+        String content = String.format(
+                "Position: %s. Description: %s",
+                position.getName(),
+                position.getDescription()
+        );
+
+        Document document = new Document(content, Map.of(
+                "position_id", position.getId(),
+                "position_name", position.getName()
+        ));
+
+        this.positionVectorStore.add(List.of(document));
     }
 
 }
