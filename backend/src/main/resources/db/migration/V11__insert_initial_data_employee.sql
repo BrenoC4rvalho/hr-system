@@ -1,28 +1,5 @@
--- V9: Insert Initial Data
+-- V11: insert initial data employee.
 
-INSERT INTO positions (name, description) VALUES
-('Software Engineer', 'Develops and maintains software applications.'),
-('HR Analyst', 'Manages recruitment, selection, and talent development.'),
-('Project Manager', 'Plans, executes, and finalizes projects on time and within budget.'),
-('UX/UI Designer', 'Creates intuitive and visually appealing user interfaces.'),
-('Financial Analyst', 'Performs financial analysis and prepares reports.'),
-('IT Support Technician', 'Provides technical support and troubleshooting for users.'),
-('Digital Marketing Specialist', 'Executes online marketing campaigns and manages social media.'),
-('Data Analyst', 'Collects, processes, and analyzes large datasets.'),
-('Sales Manager', 'Leads the sales team to achieve targets.'),
-('Front-End Developer', 'Implements the user interface of websites and web applications.'),
-('Back-End Developer', 'Builds and maintains server-side logic.'),
-('QA Engineer', 'Ensures software quality through manual and automated testing.'),
-('Accountant', 'Manages the company''s accounts and tax compliance.'),
-('Technical Recruiter', 'Specializes in finding and hiring tech talent.'),
-('Administrative Assistant', 'Provides general administrative support to the organization.');
-
-INSERT INTO departments (name) VALUES
-('Information Technology'),
-('Human Resources'),
-('Finance'),
-('Marketing'),
-('Sales');
 
 INSERT INTO employees (first_name, last_name, email, phone, gender, department_id, position_id, shift, status, birth_date, hired_date) VALUES
 ('Liam', 'Smith', 'liam.smith@example.com', '(555) 111-2222', 'MALE', 1, 1, 'MORNING', 'ACTIVE', '1991-03-15', '2020-02-10'),
@@ -98,10 +75,10 @@ INSERT INTO employees (first_name, last_name, email, phone, gender, department_i
 ('Caleb', 'Reed', 'caleb.reed@example.com', '(555) 121-3454', 'MALE', 1, 8, 'NIGHT', 'ACTIVE', '1989-03-20', '2019-05-17'),
 ('Penelope', 'Cook', 'penelope.cook@example.com', '(555) 232-4565', 'FEMALE', 2, 7, 'AFTERNOON', 'ACTIVE', '1995-08-30', '2021-02-27'),
 ('Isaac', 'Morgan', 'isaac.morgan@example.com', '(555) 343-5676', 'MALE', 3, 13, 'MORNING', 'ACTIVE', '1988-01-12', '2018-03-13'),
-('Riley', 'Bell', 'riley.bell@example.com', 'OTHER', 4, 15, 'NONE', 'ACTIVE', '1999-04-06', '2022-10-11'),
 ('Wyatt', 'Murphy', 'wyatt.murphy@example.com', '(555) 565-7898', 'MALE', 5, 14, 'MORNING', 'ACTIVE', '1993-07-18', '2020-01-02'),
 ('Layla', 'Bailey', 'layla.bailey@example.com', '(555) 676-8909', 'FEMALE', 1, 12, 'AFTERNOON', 'ACTIVE', '1996-11-10', '2021-07-21'),
 ('Nora', 'Cooper', 'nora.cooper@example.com', '(555) 787-9010', 'FEMALE', 2, 11, 'MORNING', 'ACTIVE', '1992-02-23', '2019-09-29'),
 ('Eli', 'Richardson', 'eli.richardson@example.com', '(555) 898-0121', 'MALE', 1, 10, 'NONE', 'ACTIVE', '2000-05-17', '2023-02-03'),
 ('Hannah', 'Cox', 'hannah.cox@example.com', '(555) 909-1232', 'FEMALE', 1, 1, 'MORNING', 'ACTIVE', '1987-08-04', '2017-10-17'),
-('Levi', 'Howard', 'levi.howard@example.com', '(555) 010-2343', 'MALE', 3, 3, 'NIGHT', 'ACTIVE', '1998-10-28', '2022-06-14');
+('Levi', 'Howard', 'levi.howard@example.com', '(555) 010-2343', 'MALE', 3, 3, 'NIGHT', 'ACTIVE', '1998-10-28', '2022-06-14'),
+('Riley', 'Bell', 'riley.bell@example.com', '(555) 464-6787', 'OTHER', 4, 15, 'NONE', 'ACTIVE', '1999-04-06', '2022-10-11');
