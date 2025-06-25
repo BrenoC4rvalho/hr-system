@@ -2,13 +2,8 @@
 
 CREATE TABLE department_embeddings (
     id UUID PRIMARY KEY,
-    department_id BIGINT NOT NULL,
-    context_chunk TEXT,
+    content TEXT,
+    metadata JSONB,
     embedding VECTOR(768) NOT NULL,
-    create_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-
-    CONSTRAINT fk_department
-        FOREIGN KEY(department_id)
-        REFERENCES departments(id)
-        ON DELETE CASCADE
+    create_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
