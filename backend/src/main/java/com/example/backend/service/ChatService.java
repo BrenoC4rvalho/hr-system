@@ -30,7 +30,7 @@ public class ChatService {
     private final VectorStore positionVectorStore;
     private final VectorStore departmentVectorStore;
 
-    @Value("classpath:prompts/rh-assistant-chat-prompt.st")
+    @Value("classpath:prompts/hr-assistant-chat-prompt.st")
     private Resource systemPromptResource;
 
     private String systemPromptTemplate;
@@ -98,12 +98,12 @@ public class ChatService {
                 .collect(Collectors.joining("\n---\n"));
 
         SystemPromptTemplate promptTemplate = new SystemPromptTemplate(this.systemPromptTemplate);
-        Prompt prompt = promptTemplate.create(Map.of("context", context));
+        Message systemMessage = promptTemplate.createMessage(Map.of("context", context));
 
-        var endPrompt = new Prompt((Message) List.of(prompt.getInstructions(), new UserMessage(userMessage)));
+        Prompt prompt = new Prompt(List.of(systemMessage, new UserMessage(userMessage)));
 
-        return chatModel.stream(endPrompt)
-                .map(chatResponse -> chatResponse.getResults().getFirst().toString());
+        return chatModel.stream(prompt)
+                .map(chatResponse -> chatResponse.getResults().getFirst().getOutput().getText());
 
     }
 
