@@ -25,17 +25,15 @@
 
   <main class="h-full p-2 flex flex-col gap-2 overflow-auto">
 
-    <div>
-      <app-message
-        text="This is a message from the user. aaaa aaaa aaaaa aaaa aaaaaa"
-        variant="user"
-      ></app-message>
-    </div>
+    <app-message
+      *ngFor="let msg of conversation"
+      [text]="msg.text"
+      [variant]="msg.variant"
+    >
+    </app-message>
 
-    <div>
-      <app-message
-        text="This is a response from the AI assistant."
-      ></app-message>
+    <div *ngIf="isLoading && conversation[conversation.length - 1]?.text === ''" class="flex justify-start">
+        <app-message text="..." variant="assistant"></app-message>
     </div>
 
   </main>
@@ -56,3 +54,10 @@
       </div>
     </div>
 </div>
+
+<app-error-modal
+    [isVisible]="showErrorModal"
+    [errorMessage]="errorMessage"
+    (closed)="showErrorModal = false">
+</app-error-modal>
+
