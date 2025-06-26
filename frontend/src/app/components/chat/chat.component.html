@@ -1,0 +1,119 @@
+<button
+  *ngIf="!isVisible"
+  class="w-10 h-10 rounded-full bg-primary z-50 fixed right-5 bottom-5 hover:cursor-pointer hover:opacity-75 text-white shadow-2xl"
+  (click)="openChat()"
+>
+  AI
+</button>
+
+<div
+  *ngIf="isVisible"
+  class="h-full flex flex-col right-0 fixed shadow-2xl bg-component"
+>
+  <header class="bg-primary flex justify-between gap-32 px-4 py-3">
+
+    <div class="flex gap-2 items-center">
+      <img class="w-10 h-10 rounded-full bg-component" src="img/aura.png" alt="Aura">
+      <h2 class="text-xl text-white">Aura - Your assistant</h2>
+    </div>
+
+    <button (click)="closeChat()" class="text-white hover:cursor-pointer">
+      <lucide-icon class="w-5 h-5" [img]="CircleXIcon"></lucide-icon>
+    </button>
+
+  </header>
+
+  <main class="h-full p-2 flex flex-col gap-2 overflow-auto">
+
+    <div>
+      <app-message
+        text="This is a message from the user. aaaa aaaa aaaaa aaaa aaaaaa"
+        variant="user"
+      ></app-message>
+    </div>
+
+    <div>
+      <app-message
+        text="This is a response from the AI assistant."
+      ></app-message>
+    </div>
+
+    <div>
+      <app-message
+        text="This is a message from the user. aaaa aaaa aaaaa aaaa aaaaaa"
+        variant="user"
+      ></app-message>
+    </div>
+
+    <div>
+      <app-message
+        text="This is a response from the AI assistant."
+      ></app-message>
+    </div>
+
+    <div>
+      <app-message
+        text="This is a message from the user. aaaa aaaa aaaaa aaaa aaaaaa"
+        variant="user"
+      ></app-message>
+    </div>
+
+    <div>
+      <app-message
+        text="This is a response from the AI assistant."
+      ></app-message>
+    </div>
+
+    <div>
+      <app-message
+        text="This is a message from the user. aaaa aaaa aaaaa aaaa aaaaaa"
+        variant="user"
+      ></app-message>
+    </div>
+
+    <div>
+      <app-message
+        text="This is a response from the AI assistant."
+      ></app-message>
+    </div>
+
+    <div>
+      <app-message
+        text="This is a message from the user. aaaa aaaa aaaaa aaaa aaaaaa"
+        variant="user"
+      ></app-message>
+    </div>
+
+    <div>
+      <app-message
+        text="This is a response from the AI assistant."
+      ></app-message>
+    </div>
+
+<div>
+      <app-message
+        text="This is a message from the user. aaaa aaaa aaaaa aaaa aaaaaa"
+        variant="user"
+      ></app-message>
+    </div>
+
+    <div>
+      <app-message
+        text="This is a response from the AI assistant."
+      ></app-message>
+    </div>
+  </main>
+
+  <div class="bg-gray-light/15 px-4 py-6">
+      <div class="relative flex items-center">
+        <input
+          type="text"
+          placeholder="Ask your question..."
+          class="bg-component shadow-2xl w-full text-2xl p-2 pr-12 rounded-2xl placeholder:text-deep"
+        >
+        <button class="absolute right-4 hover:cursor-pointer">
+          <lucide-icon class="w-6 h-6 text-primary" [img]="SendIcon"></lucide-icon>
+        </button>
+      </div>
+    </div>
+</div>
