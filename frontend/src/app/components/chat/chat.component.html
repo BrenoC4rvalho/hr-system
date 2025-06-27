@@ -26,15 +26,17 @@
   <main class="h-full p-2 flex flex-col gap-2 overflow-auto">
 
     <app-message
-      *ngFor="let msg of conversation"
+      *ngFor="let msg of conversation; let isLast = last"
       [text]="msg.text"
       [variant]="msg.variant"
     >
+      <p
+        *ngIf="isLoading && isLast"
+      >
+        . . .
+      </p>
     </app-message>
 
-    <div *ngIf="isLoading && conversation[conversation.length - 1]?.text === ''" class="flex justify-start">
-        <app-message text="..." variant="assistant"></app-message>
-    </div>
 
   </main>
 
