@@ -6,11 +6,13 @@ import { ChatService } from '../../core/service/chat.service';
 import { FormsModule } from '@angular/forms';
 import { ChatMessage } from '../../core/types/ChatMessage';
 import { ErrorModalComponent } from "../error-modal/error-modal";
+import { animate, keyframes, query, stagger, style, transition, trigger } from '@angular/animations';
 
 @Component({
   selector: 'app-chat',
   imports: [CommonModule, FormsModule, LucideAngularModule, MessageComponent, ErrorModalComponent],
   templateUrl: './chat.component.html',
+
 })
 export class ChatComponent {
 

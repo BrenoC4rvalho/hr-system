@@ -30,11 +30,14 @@
       [text]="msg.text"
       [variant]="msg.variant"
     >
-      <p
+      <div
         *ngIf="isLoading && isLast"
+        class="flex items-center gap-1.5"
       >
-        . . .
-      </p>
+        <span class="h-2 w-2 rounded-full bg-current animate-fade-pulse" style="animation-delay: -0.32s;"></span>
+        <span class="h-2 w-2 rounded-full bg-current animate-fade-pulse" style="animation-delay: -0.16s;"></span>
+        <span class="h-2 w-2 rounded-full bg-current animate-fade-pulse"></span>
+      </div>
     </app-message>
 
 
