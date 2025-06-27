@@ -1,5 +1,6 @@
 package com.example.backend.service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -51,27 +52,31 @@ public class EmployeeService {
 
     public Page<EmployeeDTO> getAll(Pageable pageable, Long positionId, Long departmentId, String name) {
 
-        Specification<Employee> spec = null;
+        List<Specification<Employee>> specs = new ArrayList<>();
 
         if (positionId != null) {
-            spec = spec.and((root, query, cb) ->
-                cb.equal(root.join("position").get("id"), positionId)
+            specs.add((root, query, cb) ->
+                    cb.equal(root.join("position").get("id"), positionId)
             );
         }
 
         if (departmentId != null) {
-            spec = spec.and((root, query, cb) ->
-                cb.equal(root.join("department").get("id"), departmentId)
+            specs.add((root, query, cb) ->
+                    cb.equal(root.join("department").get("id"), departmentId)
             );
         }
 
         if (name != null && !name.isBlank()) {
-            spec = spec.and((root, query, cb) ->
-                cb.like(cb.lower(root.get("firstName")), "%" + name.toLowerCase() + "%")
+            specs.add((root, query, cb) ->
+                    cb.like(cb.lower(root.get("firstName")), "%" + name.toLowerCase() + "%")
             );
         }
 
-        Page<Employee> employees = employeeRepository.findAll(spec, pageable);
+        Specification<Employee> finalSpec = specs.stream()
+                .reduce(Specification::and)
+                .orElse(null);
+
+        Page<Employee> employees = employeeRepository.findAll(finalSpec, pageable);
 
         if (employees.isEmpty()) {
             throw new EmployeeNotFoundException();
@@ -170,23 +175,25 @@ public class EmployeeService {
             throw new IllegalArgumentException("At least one filter (firstName or DepartmentId) must be provided.");
         }
 
-        Specification<Employee> spec = null;
+        List<Specification<Employee>> specs = new ArrayList<>();
 
         if (departmentId != null) {
-            spec = spec.and((root, query, cb) ->
-                cb.equal(root.join("department").get("id"), departmentId)
+            specs.add((root, query, cb) ->
+                    cb.equal(root.join("department").get("id"), departmentId)
             );
         }
 
         if (firstName != null && !firstName.isBlank()) {
-            spec = spec.and((root, query, cb) ->
-                cb.like(cb.lower(root.get("firstName")), "%" + firstName.toLowerCase() + "%")
+            specs.add((root, query, cb) ->
+                    cb.like(cb.lower(root.get("firstName")), "%" + firstName.toLowerCase() + "%")
             );
         }
 
-        List<Employee> employees = employeeRepository.findAll(spec);
+        Specification<Employee> finalSpec = specs.stream()
+                .reduce(Specification::and)
+                .orElse(null);
 
-
+        List<Employee> employees = employeeRepository.findAll(finalSpec);
 
         if (employees.isEmpty()) {
             throw new EmployeeNotFoundException();

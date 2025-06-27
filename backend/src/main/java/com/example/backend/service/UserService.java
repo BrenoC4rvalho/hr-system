@@ -24,6 +24,9 @@ import com.example.backend.repository.EmployeeRepository;
 import com.example.backend.repository.UserRepository;
 import com.example.backend.security.service.PasswordEncoderService;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 public class UserService {
     
@@ -61,15 +64,19 @@ public class UserService {
 
     public Page<UserRespondeDTO> getAll(Pageable pageable, String username) {
 
-        Specification<User> spec = null;
+        List<Specification<User>> specs = new ArrayList<>();
 
         if(username != null && !username.isBlank()) {
-            spec = spec.and((root, query, cb) ->
+            specs.add((root, query, cb) ->
                 cb.like(cb.lower(root.get("username")), "%" + username.toLowerCase() + "%")
             );
         }
 
-        Page<User> users = userRepository.findAll(spec, pageable);
+        Specification<User> finalSpec = specs.stream()
+                .reduce(Specification::and)
+                .orElse(null);
+
+        Page<User> users = userRepository.findAll(finalSpec, pageable);
 
         if(users.isEmpty()) {
             throw new UserNotFoundException();
