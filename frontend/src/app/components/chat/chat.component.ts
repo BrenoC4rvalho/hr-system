@@ -7,6 +7,7 @@ import { FormsModule } from '@angular/forms';
 import { ChatMessage } from '../../core/types/ChatMessage';
 import { ErrorModalComponent } from "../error-modal/error-modal";
 import { animate, keyframes, query, stagger, style, transition, trigger } from '@angular/animations';
+import { TextChunkProcessor } from '../../core/utils/textChunkProcessor';
 
 @Component({
   selector: 'app-chat',
@@ -27,6 +28,7 @@ export class ChatComponent {
   errorMessage: string = '';
 
   public conversation: ChatMessage[] = [];
+  private textProcessor = new TextChunkProcessor();
 
   constructor(private chatService: ChatService) {}
 
@@ -52,13 +54,14 @@ export class ChatComponent {
     this.conversation.push({ text: messageToSend, variant: 'user' });
     this.userMessage = '';
     this.isLoading = true;
+    this.textProcessor.reset();
 
     this.conversation.push({ text: '', variant: 'assistant' });
 
     this.chatService.generateResponse(messageToSend).subscribe({
       next: (chunk) => {
         const lastMessage = this.conversation[this.conversation.length - 1];
-        lastMessage.text += chunk;
+        lastMessage.text += this.textProcessor.process(chunk);
       },
       error: (err) => {
         console.error('Chat API Error:', err);
