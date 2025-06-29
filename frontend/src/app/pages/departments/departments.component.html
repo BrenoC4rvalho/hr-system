@@ -81,6 +81,7 @@
       [department]="selectedDepartmentForModal"
       (closeModal)="closeDepartmentEditModal()"
       (errorMessage)="handleErrorModal($event)"
+      (editDepartment)="handleEditDepartment($event)"
     >
     </app-edit-department-modal>
   </div>

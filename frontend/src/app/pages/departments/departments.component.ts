@@ -90,5 +90,13 @@ export class DepartmentsComponent implements OnInit {
     this.selectedDepartmentForModal = undefined;
   }
 
+  handleEditDepartment(updatedDepartment: Department): void {
+    const index = this.departments.findIndex(d => d.id === updatedDepartment.id);
+    if (index !== -1) {
+      this.departments[index] = updatedDepartment;
+    }
+  }
+
+
 
 }
