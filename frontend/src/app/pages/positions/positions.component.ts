@@ -93,7 +93,7 @@ export class PositionsComponent implements OnInit {
   handleEditPosition(updated: Position): void {
     const index = this.positions.findIndex(p => p.id === updated.id);
     if (index !== -1) {
-      this.positions[updated.id] = updated;
+      this.positions[index] = updated;
     }
   }
 
