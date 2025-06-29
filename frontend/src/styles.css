@@ -28,3 +28,19 @@
   animation-timing-function: linear;
   animation-fill-mode: forwards;
 }
+
+@keyframes fade-pulse {
+  0% {
+    opacity: 0.2;
+  }
+  20% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.2;
+  }
+}
+
+.animate-fade-pulse {
+  animation: fade-pulse 1.4s infinite ease-in-out;
+}

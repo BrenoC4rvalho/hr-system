@@ -1,0 +1,68 @@
+<button
+  *ngIf="!isVisible"
+  class="w-10 h-10 rounded-full bg-primary z-50 fixed right-5 bottom-5 hover:cursor-pointer hover:opacity-75 text-white shadow-2xl"
+  (click)="openChat()"
+>
+  AI
+</button>
+
+<div
+  *ngIf="isVisible"
+  class="h-full max-w-lg flex flex-col right-0 fixed shadow-2xl bg-component"
+>
+  <header class="bg-primary flex justify-between gap-32 px-4 py-3">
+
+    <div class="flex gap-2 items-center">
+      <img class="w-10 h-10 rounded-full bg-component" src="img/aura.png" alt="Aura">
+      <h2 class="text-xl text-white">Aura - Your assistant</h2>
+    </div>
+
+    <button (click)="closeChat()" class="text-white hover:cursor-pointer">
+      <lucide-icon class="w-5 h-5" [img]="CircleXIcon"></lucide-icon>
+    </button>
+
+  </header>
+
+  <main class="h-full p-2 flex flex-col gap-2 overflow-auto">
+
+    <app-message
+      *ngFor="let msg of conversation; let isLast = last"
+      [text]="msg.text"
+      [variant]="msg.variant"
+    >
+      <div
+        *ngIf="isLoading && isLast"
+        class="flex items-center gap-1.5"
+      >
+        <span class="h-2 w-2 rounded-full bg-current animate-fade-pulse" style="animation-delay: -0.32s;"></span>
+        <span class="h-2 w-2 rounded-full bg-current animate-fade-pulse" style="animation-delay: -0.16s;"></span>
+        <span class="h-2 w-2 rounded-full bg-current animate-fade-pulse"></span>
+      </div>
+    </app-message>
+
+
+  </main>
+
+  <div class="bg-gray-light/15 px-4 py-6">
+      <div class="relative flex items-center">
+        <input
+          [(ngModel)]="userMessage"
+          (keyup.enter)="sendMessage()"
+          [disabled]="isLoading"
+          type="text"
+          placeholder="Ask your question..."
+          class="bg-component shadow-2xl w-full text-2xl p-2 pr-12 rounded-2xl placeholder:text-deep"
+        >
+        <button (click)="sendMessage()" [disabled]="isLoading" class="absolute right-4 hover:cursor-pointer disabled:cursor-auto disabled:opacity-50">
+          <lucide-icon class="w-6 h-6 text-primary" [img]="SendIcon"></lucide-icon>
+        </button>
+      </div>
+    </div>
+</div>
+
+<app-error-modal
+    [isVisible]="showErrorModal"
+    [errorMessage]="errorMessage"
+    (closed)="showErrorModal = false">
+</app-error-modal>
+

@@ -1,10 +1,14 @@
 package com.example.backend.service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import org.springframework.ai.document.Document;
+import org.springframework.ai.vectorstore.VectorStore;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -27,17 +31,20 @@ import com.example.backend.repository.EmployeeRepository;
 public class EmployeeService {
 
     private final EmployeeRepository employeeRepository;
+    private final VectorStore employeeVectorStore;
     private final CreateEmployeeMapper createEmployeeMapper;
     private final EmployeeMapper employeeMapper;
     private final EmployeeBasicMapper employeeBasicMapper;
 
     public EmployeeService(
-        EmployeeRepository employeeRepository, 
-        CreateEmployeeMapper createEmployeeMapper, 
+        EmployeeRepository employeeRepository,
+        @Qualifier("employeeVectorStore") VectorStore employeeVectorStore,
+        CreateEmployeeMapper createEmployeeMapper,
         EmployeeMapper employeeMapper,
         EmployeeBasicMapper employeeBasicMapper     
     ) {
         this.employeeRepository = employeeRepository;
+        this.employeeVectorStore = employeeVectorStore;
         this.createEmployeeMapper = createEmployeeMapper;
         this.employeeMapper = employeeMapper;
         this.employeeBasicMapper = employeeBasicMapper;
@@ -45,27 +52,31 @@ public class EmployeeService {
 
     public Page<EmployeeDTO> getAll(Pageable pageable, Long positionId, Long departmentId, String name) {
 
-        Specification<Employee> spec = null;
+        List<Specification<Employee>> specs = new ArrayList<>();
 
         if (positionId != null) {
-            spec = spec.and((root, query, cb) ->
-                cb.equal(root.join("position").get("id"), positionId)
+            specs.add((root, query, cb) ->
+                    cb.equal(root.join("position").get("id"), positionId)
             );
         }
 
         if (departmentId != null) {
-            spec = spec.and((root, query, cb) ->
-                cb.equal(root.join("department").get("id"), departmentId)
+            specs.add((root, query, cb) ->
+                    cb.equal(root.join("department").get("id"), departmentId)
             );
         }
 
         if (name != null && !name.isBlank()) {
-            spec = spec.and((root, query, cb) ->
-                cb.like(cb.lower(root.get("firstName")), "%" + name.toLowerCase() + "%")
+            specs.add((root, query, cb) ->
+                    cb.like(cb.lower(root.get("firstName")), "%" + name.toLowerCase() + "%")
             );
         }
 
-        Page<Employee> employees = employeeRepository.findAll(spec, pageable);
+        Specification<Employee> finalSpec = specs.stream()
+                .reduce(Specification::and)
+                .orElse(null);
+
+        Page<Employee> employees = employeeRepository.findAll(finalSpec, pageable);
 
         if (employees.isEmpty()) {
             throw new EmployeeNotFoundException();
@@ -79,6 +90,7 @@ public class EmployeeService {
     public EmployeeDTO create(CreateEmployeeDTO createEmployeeDTO) {
         Employee newEmployee = createEmployeeMapper.map(createEmployeeDTO);
         Employee savedEmployee = employeeRepository.save(newEmployee);
+        generateAndStoreEmbedding(savedEmployee);
         return employeeMapper.map(savedEmployee);
     }
 
@@ -108,6 +120,7 @@ public class EmployeeService {
         if (employeeDTO.getTerminationDate() != null) employee.setTerminationDate(employeeDTO.getTerminationDate());
 
         Employee employeeUpdated = employeeRepository.save(employee);
+        generateAndStoreEmbedding(employeeUpdated);
         return employeeMapper.map(employeeUpdated);
     }
 
@@ -162,23 +175,25 @@ public class EmployeeService {
             throw new IllegalArgumentException("At least one filter (firstName or DepartmentId) must be provided.");
         }
 
-        Specification<Employee> spec = null;
+        List<Specification<Employee>> specs = new ArrayList<>();
 
         if (departmentId != null) {
-            spec = spec.and((root, query, cb) ->
-                cb.equal(root.join("department").get("id"), departmentId)
+            specs.add((root, query, cb) ->
+                    cb.equal(root.join("department").get("id"), departmentId)
             );
         }
 
         if (firstName != null && !firstName.isBlank()) {
-            spec = spec.and((root, query, cb) ->
-                cb.like(cb.lower(root.get("firstName")), "%" + firstName.toLowerCase() + "%")
+            specs.add((root, query, cb) ->
+                    cb.like(cb.lower(root.get("firstName")), "%" + firstName.toLowerCase() + "%")
             );
         }
 
-        List<Employee> employees = employeeRepository.findAll(spec);
+        Specification<Employee> finalSpec = specs.stream()
+                .reduce(Specification::and)
+                .orElse(null);
 
-
+        List<Employee> employees = employeeRepository.findAll(finalSpec);
 
         if (employees.isEmpty()) {
             throw new EmployeeNotFoundException();
@@ -188,6 +203,34 @@ public class EmployeeService {
             .map(employeeBasicMapper::map)
             .collect(Collectors.toList());
 
+    }
+
+    @Transactional
+    public void generateAndStoreEmbedding(Employee employee) {
+        String content = String.format(
+                "Employee: %s %s. Position: %s. Department: %s. Status: %s. Email: %s. Phone: %s. Gender: %s. Birth Date: %s. Hired Date: %s. Shift: %s.",
+                employee.getFirstName(),
+                employee.getLastName(),
+                employee.getPosition().getName(),
+                employee.getDepartment().getName(),
+                employee.getStatus().toString(),
+                employee.getEmail(),
+                employee.getPhone(),
+                employee.getGender().toString(),
+                employee.getBirthDate(),
+                employee.getHiredDate(),
+                employee.getShift().toString()
+        );
+
+        Document document = new Document(content, Map.of(
+                "employee_id", employee.getId(),
+                "department_id", employee.getDepartment().getId(),
+                "position_id", employee.getPosition().getId(),
+                "department_name", employee.getDepartment().getName(),
+                "position_name", employee.getPosition().getName()
+        ));
+
+        this.employeeVectorStore.add(List.of(document));
     }
 
 }
