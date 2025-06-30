@@ -107,6 +107,7 @@
     [employee]="selectedEmployeeForModal"
     (closeModal)="closeEmployeeEditModal()"
     (errorMessage)="handleErrorModal($event)"
+    (employeeUpdated)="handleEmployeeUpdated($event)"
   >
   </app-edit-employee-modal>
 </div>

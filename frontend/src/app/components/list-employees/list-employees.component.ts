@@ -154,4 +154,11 @@ export class ListEmployeesComponent implements OnInit, OnChanges {
     this.errorMessage.emit($event);
   }
 
+  handleEmployeeUpdated(updatedEmployee: Employee): void {
+    const index = this.employees.findIndex(emp => emp.id === updatedEmployee.id);
+    if (index !== -1) {
+      this.employees[index] = updatedEmployee;
+    }
+  }
+
 }
