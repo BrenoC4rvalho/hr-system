@@ -8,17 +8,20 @@ import { UserRole } from '../../core/enums/user-role.enum';
 import { UserStatus } from '../../core/enums/user-status.enum';
 import { AuthService } from '../../auth/service/auth.service';
 import { ModalComponent } from "../../shared/modal/modal.component";
+import { EmployeeBasic } from '../../core/model/employee-basic';
+import { ListEmployeeSearchComponent } from "../list-employee-search/list-employee-search.component";
 
 @Component({
   selector: 'app-user-profile-modal',
-  imports: [ CommonModule, RouterModule, FormsModule, ModalComponent],
+  imports: [CommonModule, RouterModule, FormsModule, ModalComponent, ListEmployeeSearchComponent],
   templateUrl: './user-profile-modal.component.html',
 })
 export class UserProfileModalComponent implements OnChanges {
 
   @Input() userId: number | undefined;
-  @Output() closed = new EventEmitter<void>()
-  @Output() errorMessage = new EventEmitter<string>()
+  @Output() closed = new EventEmitter<void>();
+  @Output() errorMessage = new EventEmitter<string>();
+  @Output() userUpdated = new EventEmitter<User>();
 
   isEditing = false;
 
@@ -28,6 +31,7 @@ export class UserProfileModalComponent implements OnChanges {
 
   userRoles: UserRole[];
   userStatus: UserStatus[] = Object.values(UserStatus);
+  selectedEmployeeName: string = '';
 
   constructor(private userService: UserService, private authService: AuthService) {
     this.userRoles = this.getFilterdRoles();
@@ -50,7 +54,9 @@ export class UserProfileModalComponent implements OnChanges {
       next: (response: User) => {
         this.user = response;
         this.editableUser = { ...this.user };
-
+        if (response.employee) {
+          this.selectedEmployeeName = `${response.employee.firstName} ${response.employee.lastName}`;
+        }
       },
       error: () => {
         this.errorMessage.emit("An unexpected error occurred while fetching user information. Please try again later.");
@@ -87,6 +93,7 @@ export class UserProfileModalComponent implements OnChanges {
       this.userService.update(this.userId, this.editableUser).subscribe({
         next: (updatedUser) => {
           this.user = updatedUser;
+          this.userUpdated.emit(updatedUser);
           this.isEditing = false;
         },
         error: (err) => {
@@ -109,8 +116,14 @@ export class UserProfileModalComponent implements OnChanges {
   cancelEdit() {
     if(this.user) {
       this.editableUser = {...this.user };
+      this.selectedEmployeeName = this.user.employee ? `${this.user.employee.firstName} ${this.user.employee.lastName}` : '';
     }
     this.isEditing = false;
+  }
+
+  onEmployeeSelected(employee: EmployeeBasic): void {
+    this.editableUser.employeeId = employee.id;
+    this.selectedEmployeeName = `${employee.firstName} ${employee.lastName}`;
   }
 
   canEditAdminOrSelf(): boolean {

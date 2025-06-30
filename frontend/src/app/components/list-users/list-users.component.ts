@@ -131,4 +131,11 @@ export class ListUsersComponent implements OnInit, OnChanges {
     this.errorMessage.emit(errorMessage);
   }
 
+  handleUserUpdated(updatedUser: User): void {
+    const index = this.users.findIndex(user => user.id === updatedUser.id);
+    if (index !== -1) {
+      this.users[index] = updatedUser;
+    }
+  }
+
 }
