@@ -2,6 +2,7 @@ import { Injectable, NgZone } from '@angular/core';
 import { environment } from '../../../environments/environments';
 import { Observable } from 'rxjs';
 import { AuthService } from '../../auth/service/auth.service';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
@@ -10,7 +11,11 @@ export class ChatService {
 
   private apiUrl = `${environment.apiUrl}/chat`
 
-  constructor(private authService: AuthService, private zone: NgZone) { }
+  constructor(
+    private authService: AuthService,
+    private zone: NgZone,
+    private http: HttpClient
+  ) { }
 
   generateResponse(message: string): Observable<string> {
     return new Observable<string>(observer => {
@@ -64,6 +69,10 @@ export class ChatService {
         controller.abort();
       };
     });
+  }
+
+  getFullResponse(sessionId: string): Observable<{ response: string }> {
+    return this.http.get<{ response: string }>(`${this.apiUrl}/full/${sessionId}`);
   }
 
 }

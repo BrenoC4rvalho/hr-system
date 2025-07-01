@@ -29,6 +29,7 @@ export class ChatComponent {
 
   public conversation: ChatMessage[] = [];
   private textProcessor = new TextChunkProcessor();
+  private currentSessionId: string | null = null;
 
   constructor(private chatService: ChatService) {}
 
@@ -55,13 +56,20 @@ export class ChatComponent {
     this.userMessage = '';
     this.isLoading = true;
     this.textProcessor.reset();
+    this.currentSessionId = null;
 
     this.conversation.push({ text: '', variant: 'assistant' });
 
     this.chatService.generateResponse(messageToSend).subscribe({
       next: (chunk) => {
+        if (chunk.startsWith('sessionId:')) {
+          this.currentSessionId = chunk.substring(10);
+          return;
+        }
         const lastMessage = this.conversation[this.conversation.length - 1];
-        lastMessage.text += this.textProcessor.process(chunk);
+        if(lastMessage) {
+            lastMessage.text += this.textProcessor.process(chunk);
+        }
       },
       error: (err) => {
         console.error('Chat API Error:', err);
@@ -75,8 +83,25 @@ export class ChatComponent {
       },
       complete: () => {
         this.isLoading = false;
+        if (this.currentSessionId) {
+          this.fetchFullResponse(this.currentSessionId);
+        }
       }
     })
+  }
+
+  fetchFullResponse(sessionId: string): void {
+    this.chatService.getFullResponse(sessionId).subscribe({
+      next: (response) => {
+        const lastMessage = this.conversation[this.conversation.length - 1];
+        if (lastMessage && lastMessage.variant === 'assistant') {
+          lastMessage.text = response.response;
+        }
+      },
+      error: (err) => {
+        console.error('Error fetching full response:', err);
+      }
+    });
   }
 
 }
