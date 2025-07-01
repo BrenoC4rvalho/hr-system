@@ -1,35 +1,35 @@
 export class TextChunkProcessor {
-  private lastChar: string = '';
+  private isFirstChunk: boolean = true;
 
+  /**
+   * Processa um novo pedaço de texto. Adiciona um espaço antes do pedaço,
+   * a menos que seja o primeiro ou comece com pontuação.
+   * @param chunk O novo pedaço de texto recebido.
+   * @returns O chunk processado, com um espaço se necessário.
+   */
   public process(chunk: string): string {
     if (!chunk) {
       return '';
     }
 
-    let processedChunk = chunk;
+    // Lista de sinais de pontuação que não devem ter um espaço antes.
+    const punctuation = '.,!?;:)';
 
-    if (this.needsSpace(this.lastChar, chunk[0])) {
-      processedChunk = ' ' + chunk;
+    // Se for o primeiro pedaço ou se o pedaço começar com pontuação,
+    // não adicione um espaço antes.
+    if (this.isFirstChunk || punctuation.includes(chunk.charAt(0))) {
+      this.isFirstChunk = false;
+      return chunk;
     }
 
-    this.lastChar = chunk.charAt(chunk.length - 1);
-
-    return processedChunk;
+    // Para todos os outros pedaços, adicione um espaço antes.
+    return ' ' + chunk;
   }
 
+  /**
+   * Reseta o processador para a próxima mensagem.
+   */
   public reset(): void {
-    this.lastChar = '';
-  }
-
-  private needsSpace(prevChar: string, currentChar: string): boolean {
-    if (!prevChar) {
-      return false;
-    }
-
-    const isLetter = (char: string) => /[a-zA-Z\u00C0-\u017F]/.test(char);
-
-    const isPunctuation = (char: string) => /[.,!?;:)]/.test(char);
-
-    return isLetter(prevChar) && isLetter(currentChar) && !isPunctuation(currentChar);
+    this.isFirstChunk = true;
   }
 }
