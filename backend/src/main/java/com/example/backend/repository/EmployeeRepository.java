@@ -16,4 +16,7 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long>, JpaSp
     
     @Query("SELECT e.status, COUNT(e) FROM Employee e GROUP BY e.status")
     List<Object[]> countEmployeesByStatus();
+
+    @Query("SELECT e.shift, COUNT(e) FROM Employee e WHERE e.shift <> 'NONE' GROUP BY e.shift")
+    List<Object[]> countEmployeesByShift();
 } 

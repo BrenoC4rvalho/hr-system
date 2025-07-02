@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import com.example.backend.enums.Shift;
 import org.springframework.ai.document.Document;
 import org.springframework.ai.vectorstore.VectorStore;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -166,6 +167,25 @@ public class EmployeeService {
 
         return summary;    
 
+    }
+
+    public Map<String, Long> getEmployeeShiftSummary() {
+        List<Object[]> results = employeeRepository.countEmployeesByShift();
+        Map<String, Long> summary = new HashMap<>();
+
+        for (Shift shift : Shift.values()) {
+            if (shift != Shift.NONE) {
+                summary.put(shift.name(), 0L);
+            }
+        }
+
+        for (Object[] row : results) {
+            String shift = row[0].toString();
+            Long count = (Long) row[1];
+            summary.put(shift, count);
+        }
+
+        return summary;
     }
 
     public List<EmployeeBasicDTO> getEmployeesByFirstName(String firstName, Long departmentId) {

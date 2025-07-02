@@ -113,6 +113,13 @@ public class EmployeeController {
         return ResponseEntity.status(HttpStatus.OK).body(summary);
     }
 
+
+    @GetMapping("/shift-summary")
+    public ResponseEntity<?> getEmployeeShiftSummary() {
+        Map<String, Long> summary = employeeService.getEmployeeShiftSummary();
+        return ResponseEntity.status(HttpStatus.OK).body(summary);
+    }
+
     @GetMapping("/search")
     public ResponseEntity<?> getEmployeeByName(
         @RequestParam String firstName,
