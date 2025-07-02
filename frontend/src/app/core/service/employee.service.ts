@@ -8,6 +8,7 @@ import { PaginatedEmployeesResponse } from '../model/paginated-employees-respons
 import { BirthdaysResponse } from '../model/birthday-response';
 import { EmployeeStatusSummary } from '../model/employee-status-summary';
 import { EmployeeBasic } from '../model/employee-basic';
+import { EmployeeShiftSummary } from '../model/employee-shift-summary';
 
 @Injectable({
   providedIn: 'root'
@@ -65,6 +66,10 @@ export class EmployeeService {
 
     getEmployeeStatusSummary(): Observable<EmployeeStatusSummary> {
       return this.http.get<EmployeeStatusSummary>(`${this.apiUrl}/status-summary`);
+    }
+
+    getEmployeeShiftSummary(): Observable<EmployeeShiftSummary> {
+      return this.http.get<EmployeeShiftSummary>(`${this.apiUrl}/shift-summary`);
     }
 
     getEmployeeByName(firstName: string, departmentId?: number): Observable<EmployeeBasic[]> {
