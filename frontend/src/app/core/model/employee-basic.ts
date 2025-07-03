@@ -7,5 +7,6 @@ export interface EmployeeBasic {
   lastName: number;
   department: Department;
   birthDate: Date;
+  hiredDate: Date;
 
 }

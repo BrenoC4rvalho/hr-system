@@ -87,4 +87,9 @@ export class EmployeeService {
 
     }
 
+    getRecentHires(days: number): Observable<EmployeeBasic[]> {
+      const params = new HttpParams().set('days', days.toString());
+      return this.http.get<EmployeeBasic[]>(`${this.apiUrl}/recent-hires`, { params });
+    }
+
 }

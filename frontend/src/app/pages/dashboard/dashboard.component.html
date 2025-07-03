@@ -11,6 +11,9 @@
       <app-department-card (errorMessage)="handleErrorModal($event)"></app-department-card>
       <app-shift-card></app-shift-card>
       <app-employee-card (errorMessage)="handleErrorModal($event)"></app-employee-card>
+       <div class="lg:col-span-2 xl:col-span-2">
+        <app-recent-hires-card (errorMessage)="handleErrorModal($event)"></app-recent-hires-card>
+      </div>
     </div>
 
   </main>
