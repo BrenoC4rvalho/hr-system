@@ -13,6 +13,7 @@ import { Position } from '../../core/model/position';
 import { Shift } from '../../core/enums/shift.enum';
 import { Gender } from '../../core/enums/gender.enum';
 import { EmployeeStatus } from '../../core/enums/employee-status.enum';
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-edit-employee-modal',
@@ -44,34 +45,51 @@ export class EditEmployeeModalComponent {
   ) {}
 
   ngOnInit() {
-    this.loadInitialData();
+    this.initializeForm();
+    this.loadDropdownDataAndSetValues();
+  }
 
+  initializeForm(): void {
     this.form = this.fb.group({
       firstName: [this.employee?.firstName || '', Validators.required],
       lastName: [this.employee?.lastName || ''],
       email: [this.employee?.email || '', [Validators.email]],
       phone: [this.employee?.phone || '', Validators.required],
       gender: [this.employee?.gender || null, Validators.required],
-      department: [this.employee?.department || null, Validators.required],
-      position: [this.employee?.position || null, Validators.required],
+      department: [null, Validators.required],
+      position: [null, Validators.required],
       shift: [this.employee?.shift || null],
       status: [this.employee?.status || null, Validators.required],
-      birthDate: [this.employee?.birthDate ? new Date(this.employee.birthDate).toISOString().split('T')[0] : null, Validators.required],
-      hiredDate: [this.employee?.hiredDate ? new Date(this.employee.hiredDate).toISOString().split('T')[0] : null, Validators.required],
-      terminationDate: [this.employee?.terminationDate ? new Date(this.employee.terminationDate).toISOString().split('T')[0] : null],
+      birthDate: [this.formatDate(this.employee?.birthDate), Validators.required],
+      hiredDate: [this.formatDate(this.employee?.hiredDate), Validators.required],
+      terminationDate: [this.formatDate(this.employee?.terminationDate)],
     });
   }
 
-  loadInitialData(): void {
-    this.departmentService.getAll().subscribe(data => {
-        this.departments = data;
+  loadDropdownDataAndSetValues(): void {
+    const departments$ = this.departmentService.getAll();
+    const positions$ = this.positionService.getAll();
+
+    forkJoin([departments$, positions$]).subscribe({
+      next: ([departments, positions]) => {
+        this.departments = departments;
+        this.positions = positions;
         this.updateInputGroups();
-    });
-    this.positionService.getAll().subscribe(data => {
-        this.positions = data;
-        this.updateInputGroups();
+
+        const selectedDepartment = this.departments.find(d => d.id === this.employee?.department.id);
+        const selectedPosition = this.positions.find(p => p.id === this.employee?.position.id);
+
+        this.form.patchValue({
+          department: selectedDepartment,
+          position: selectedPosition
+        });
+      },
+      error: (err) => {
+        this.errorMessage.emit('Failed to load required data for editing.');
+      }
     });
   }
+
 
   updateInputGroups(): void {
     this.inputGroups = [
@@ -100,6 +118,11 @@ export class EditEmployeeModalComponent {
         { label: 'Termination Date', name: 'terminationDate', type: 'input', inputType: 'date' }
       ]
     ];
+  }
+
+  private formatDate(date: Date | string | undefined): string | null {
+    if (!date) return null;
+    return new Date(date).toISOString().split('T')[0];
   }
 
   onClose(): void {
