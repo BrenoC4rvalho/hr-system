@@ -11,13 +11,15 @@ public class EmployeeBasicDTO {
     private String lastName;
     private Department department;
     private LocalDate birthDate;
+    private LocalDate hiredDate;
     
-    public EmployeeBasicDTO(Long id, String firstName, String lastName, Department department, LocalDate birthDate) {
+    public EmployeeBasicDTO(Long id, String firstName, String lastName, Department department, LocalDate birthDate, LocalDate hiredDate) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.department = department;
         this.birthDate = birthDate;
+        this.hiredDate = hiredDate;
     }
 
     public EmployeeBasicDTO() {
@@ -52,6 +54,12 @@ public class EmployeeBasicDTO {
     }
     public void setBirthDate(LocalDate birthDate) {
         this.birthDate = birthDate;
+    }
+    public LocalDate getHiredDate() {
+        return this.hiredDate;
+    }
+    public void setHiredDate(LocalDate hiredDate) {
+        this.hiredDate = hiredDate;
     }
 
 }

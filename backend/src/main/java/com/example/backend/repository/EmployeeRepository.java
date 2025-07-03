@@ -1,5 +1,6 @@
 package com.example.backend.repository;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -19,4 +20,7 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long>, JpaSp
 
     @Query("SELECT e.shift, COUNT(e) FROM Employee e WHERE e.shift <> 'NONE' GROUP BY e.shift")
     List<Object[]> countEmployeesByShift();
+
+    @Query("SELECT e FROM Employee e WHERE e.hiredDate >= :date")
+    List<Employee> findRecentHires(@Param("date") LocalDate date);
 } 

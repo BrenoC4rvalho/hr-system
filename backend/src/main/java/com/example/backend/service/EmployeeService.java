@@ -1,5 +1,6 @@
 package com.example.backend.service;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -223,6 +224,14 @@ public class EmployeeService {
             .map(employeeBasicMapper::map)
             .collect(Collectors.toList());
 
+    }
+
+    public List<EmployeeBasicDTO> getRecentHires(int days) {
+        LocalDate sinceDate = LocalDate.now().minusDays(days);
+        List<Employee> employees = employeeRepository.findRecentHires(sinceDate);
+        return employees.stream()
+                .map(employeeBasicMapper::map)
+                .collect(Collectors.toList());
     }
 
     @Transactional
