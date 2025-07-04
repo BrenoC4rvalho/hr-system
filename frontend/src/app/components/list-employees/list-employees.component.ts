@@ -12,10 +12,11 @@ import { PositionService } from '../../core/service/position.service';
 import { FormsModule } from '@angular/forms';
 import { EmployeeProfileComponent } from "../employee-profile/employee-profile.component";
 import { EditEmployeeModalComponent } from "../edit-employee-modal/edit-employee-modal.component";
+import { SuccessToastComponent } from "../success-toast/success-toast.component";
 
 @Component({
   selector: 'app-list-employees',
-  imports: [CommonModule, LucideAngularModule, PaginationComponent, FormsModule, EmployeeProfileComponent, EditEmployeeModalComponent],
+  imports: [CommonModule, LucideAngularModule, PaginationComponent, FormsModule, EmployeeProfileComponent, EditEmployeeModalComponent, SuccessToastComponent],
   templateUrl: './list-employees.component.html',
 })
 export class ListEmployeesComponent implements OnInit, OnChanges {
@@ -43,6 +44,9 @@ export class ListEmployeesComponent implements OnInit, OnChanges {
   showEmployeeEditModal: boolean = false;
 
   selectedEmployeeForModal: Employee | undefined;
+
+  showSuccessToast: boolean = false;
+  successMessage: string = '';
 
 
   constructor(
@@ -158,6 +162,8 @@ export class ListEmployeesComponent implements OnInit, OnChanges {
     const index = this.employees.findIndex(emp => emp.id === updatedEmployee.id);
     if (index !== -1) {
       this.employees[index] = updatedEmployee;
+      this.successMessage = `Employee '${updatedEmployee.firstName}' updated successfully.`;
+      this.showSuccessToast = true;
     }
   }
 

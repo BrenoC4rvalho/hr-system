@@ -11,10 +11,11 @@ import { PaginationComponent } from "../pagination/pagination.component";
 import { UserProfileModalComponent } from "../user-profile-modal/user-profile-modal.component";
 import { ConfirmButtonComponent } from "../confirm-button/confirm-button.component";
 import { FormsModule } from '@angular/forms';
+import { SuccessToastComponent } from "../success-toast/success-toast.component";
 
 @Component({
   selector: 'app-list-users',
-  imports: [CommonModule, LucideAngularModule, PaginationComponent, UserProfileModalComponent, ConfirmButtonComponent, FormsModule],
+  imports: [CommonModule, LucideAngularModule, PaginationComponent, UserProfileModalComponent, ConfirmButtonComponent, FormsModule, SuccessToastComponent],
   templateUrl: './list-users.component.html',
 })
 export class ListUsersComponent implements OnInit, OnChanges {
@@ -33,6 +34,9 @@ export class ListUsersComponent implements OnInit, OnChanges {
 
   showUserProfileModal: boolean = false;
   currentUserId: number | undefined;
+
+  showSuccessToast: boolean = false;
+  successMessage: string = '';
 
   users: User[] = [];
 
@@ -107,6 +111,8 @@ export class ListUsersComponent implements OnInit, OnChanges {
       next: () => {
         const user = this.users.find(user => user.id === userId);
         user ? user.status = UserStatus.INACTIVE : '';
+        this.successMessage = `User '${this.currentUsernameToDelete}' has been successfully deleted.`;
+        this.showSuccessToast = true;
       },
       error: (error) => {
         if(error && error.error) {
