@@ -1,0 +1,17 @@
+<div
+  *ngIf="isVisible"
+  class="fixed bottom-8 right-8 w-96 bg-green-100 text-green-800 p-4 rounded-lg shadow-lg flex items-center space-x-4 z-50 overflow-hidden"
+  [@fadeAnimation]
+>
+  <div class="flex-shrink-0">
+    <lucide-icon [img]="CheckCircleIcon" class="h-6 w-6 text-green-500"></lucide-icon>
+  </div>
+  <div>
+    <p class="font-semibold text-lg">{{ successMessage }}</p>
+  </div>
+  <button (click)="close()" class="absolute top-2 right-2 text-green-500 hover:text-green-700 focus:outline-none">
+    <lucide-icon [img]="XCircleIcon" class="h-5 w-5"></lucide-icon>
+  </button>
+
+  <div class="absolute bottom-0 left-0 h-1 bg-green-400 animate-progress" [style.animation-duration.ms]="autoCloseDelay"></div>
+</div>
