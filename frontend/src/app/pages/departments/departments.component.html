@@ -94,3 +94,9 @@
   </app-error-modal>
 
 </div>
+
+<app-success-toast
+  [isVisible]="showSuccessToast"
+  [successMessage]="successMessage"
+  (closed)="showSuccessToast = false"
+></app-success-toast>

@@ -8,10 +8,11 @@ import { NewDepartmentModalComponent } from "../../components/new-department-mod
 import { ErrorModalComponent } from "../../components/error-modal/error-modal";
 import { DepartmentProfileModalComponent } from "../../components/department-profile-modal/department-profile-modal.component";
 import { EditDepartmentModalComponent } from "../../components/edit-department-modal/edit-department-modal.component";
+import { SuccessToastComponent } from "../../components/success-toast/success-toast.component";
 
 @Component({
   selector: 'app-departments',
-  imports: [NavbarComponent, CommonModule, LucideAngularModule, NewDepartmentModalComponent, ErrorModalComponent, DepartmentProfileModalComponent, EditDepartmentModalComponent],
+  imports: [NavbarComponent, CommonModule, LucideAngularModule, NewDepartmentModalComponent, ErrorModalComponent, DepartmentProfileModalComponent, EditDepartmentModalComponent, SuccessToastComponent],
   templateUrl: './departments.component.html',
 })
 export class DepartmentsComponent implements OnInit {
@@ -29,6 +30,9 @@ export class DepartmentsComponent implements OnInit {
   selectedDepartmentForModal: Department | undefined;
   showDepartmentProfileModal: boolean = false;
   showDepartmentEditModal: boolean = false;
+
+  successMessage: string = '';
+  showSuccessToast: boolean = false;
 
   constructor(private departmentService: DepartmentService) {}
 
@@ -62,6 +66,8 @@ export class DepartmentsComponent implements OnInit {
   }
 
   onDepartmentCreated($event: Department) {
+    this.successMessage = `Department '${$event.name}' created successfully.`;
+    this.showSuccessToast = true;
     this.departments.push($event);
   }
 
@@ -94,6 +100,8 @@ export class DepartmentsComponent implements OnInit {
     const index = this.departments.findIndex(d => d.id === updatedDepartment.id);
     if (index !== -1) {
       this.departments[index] = updatedDepartment;
+      this.successMessage = `Department '${updatedDepartment.name}' updated successfully.`;
+      this.showSuccessToast = true;
     }
   }
 
