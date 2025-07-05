@@ -55,6 +55,8 @@ export class ListUsersComponent implements OnInit, OnChanges {
   ngOnChanges(changes: SimpleChanges): void {
       if(this.newUser !== undefined) {
         this.users.push(this.newUser);
+        this.successMessage = `User '${this.newUser.username}' created successfully.`;
+        this.showSuccessToast = true;
         this.newUser = undefined;
       }
   }
@@ -141,6 +143,8 @@ export class ListUsersComponent implements OnInit, OnChanges {
     const index = this.users.findIndex(user => user.id === updatedUser.id);
     if (index !== -1) {
       this.users[index] = updatedUser;
+      this.successMessage = `User '${updatedUser.username}' updated successfully.`;
+      this.showSuccessToast = true;
     }
   }
 

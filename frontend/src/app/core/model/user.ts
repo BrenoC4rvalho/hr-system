@@ -7,6 +7,6 @@ export interface User {
   username: string;
   role: UserRole;
   status: UserStatus;
-  employee: Employee;
-  employeeId: number
+  employee?: Employee;
+  employeeId?: number
 }

@@ -32,6 +32,7 @@ export class AdminComponent {
   }
 
   onUserCreated($event: User) {
+
     this.newUser = $event;
   }
 
