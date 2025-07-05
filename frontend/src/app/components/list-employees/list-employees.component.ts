@@ -64,6 +64,8 @@ export class ListEmployeesComponent implements OnInit, OnChanges {
   ngOnChanges(changes: SimpleChanges): void {
     if(this.newEmployee !== undefined) {
       this.employees.push(this.newEmployee);
+      this.successMessage = `Employee '${this.newEmployee.firstName}' created successfully.`;
+      this.showSuccessToast = true;
       this.newEmployee = undefined;
     }
   }

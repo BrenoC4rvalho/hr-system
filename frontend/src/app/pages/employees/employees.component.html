@@ -20,6 +20,7 @@
     <app-new-employee-modal
       (closeModal)="closeModalNewEmployee()"
       (errorMessage)="handleErrorModal($event)"
+      (createdEmployee)="onEmployeeCreated($event)"
     >
     </app-new-employee-modal>
   </div>
