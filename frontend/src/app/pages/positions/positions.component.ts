@@ -8,10 +8,11 @@ import { NewPositionModalComponent } from "../../components/new-position-modal/n
 import { ErrorModalComponent } from "../../components/error-modal/error-modal";
 import { PositionProfileModalComponent } from "../../components/position-profile-modal/position-profile-modal.component";
 import { EditPositionModalComponent } from "../../components/edit-position-modal/edit-position-modal.component";
+import { SuccessToastComponent } from "../../components/success-toast/success-toast.component";
 
 @Component({
   selector: 'app-positions',
-  imports: [NavbarComponent, LucideAngularModule, CommonModule, NewPositionModalComponent, ErrorModalComponent, PositionProfileModalComponent, EditPositionModalComponent],
+  imports: [NavbarComponent, LucideAngularModule, CommonModule, NewPositionModalComponent, ErrorModalComponent, PositionProfileModalComponent, EditPositionModalComponent, SuccessToastComponent],
   templateUrl: './positions.component.html',
 })
 export class PositionsComponent implements OnInit {
@@ -29,6 +30,9 @@ export class PositionsComponent implements OnInit {
   selectedPositionForModal: Position | undefined;
   showPositionProfileModal: boolean = false;
   isModalEditPositionOpen: boolean = false;
+
+  successMessage: string = '';
+  showSuccessToast: boolean = false;
 
   constructor(private positionService: PositionService) {}
 
@@ -62,6 +66,8 @@ export class PositionsComponent implements OnInit {
   }
 
   onPositionCreated($event: Position) {
+    this.successMessage = `Position '${$event.name}' created successfully.`;
+    this.showSuccessToast = true;
     this.positions.push($event);
   }
 
@@ -94,6 +100,8 @@ export class PositionsComponent implements OnInit {
     const index = this.positions.findIndex(p => p.id === updated.id);
     if (index !== -1) {
       this.positions[index] = updated;
+      this.successMessage = `Position '${updated.name}' updated successfully.`;
+      this.showSuccessToast = true;
     }
   }
 
