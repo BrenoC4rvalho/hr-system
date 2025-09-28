@@ -81,6 +81,7 @@
       [department]="selectedDepartmentForModal"
       (closeModal)="closeDepartmentEditModal()"
       (errorMessage)="handleErrorModal($event)"
+      (editDepartment)="handleEditDepartment($event)"
     >
     </app-edit-department-modal>
   </div>
@@ -93,3 +94,9 @@
   </app-error-modal>
 
 </div>
+
+<app-success-toast
+  [isVisible]="showSuccessToast"
+  [successMessage]="successMessage"
+  (closed)="showSuccessToast = false"
+></app-success-toast>

@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.validator.constraints.Length;
@@ -62,11 +63,13 @@ public class Employee {
     @NotNull(message = "The department field cannot be null.")
     @ManyToOne()
     @JoinColumn(name = "department_id", referencedColumnName = "id", nullable = false)
+    @JsonBackReference("employee-department")
     private Department department;
-    
+
     @NotNull(message = "The position id field cannot be null.")
     @ManyToOne()
     @JoinColumn(name = "position_id", referencedColumnName = "id", nullable = false)
+    @JsonBackReference("employee-position")
     private Position position;
 
     @NotNull(message = "The shift field cannot be null.")

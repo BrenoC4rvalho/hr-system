@@ -5,6 +5,7 @@
 >
 
   <div class="space-y-6">
+
     <div class="flex items-center gap-6">
       <div class="w-32 h-32 flex items-center justify-center rounded-full bg-primary text-white-soft text-5xl font-bold">
         {{ user.username[0] }}
@@ -27,14 +28,19 @@
       <p *ngIf="!isEditing">{{ user.role }}</p>
     </div>
 
-    <div class="text-lg flex flex-col">
-      <label class="font-semibold">Employee ID:</label>
-      <input
-        *ngIf="isEditing"
-        [(ngModel)]="editableUser.employee"
-        class="border p-2 rounded"
-      />
-      <p *ngIf="!isEditing">{{ user.employee }}</p>
+   <div *ngIf="isEditing" class="text-lg flex flex-col">
+      <label class="font-semibold">Employee:</label>
+      <app-list-employee-search
+        (employeeSelected)="onEmployeeSelected($event)"
+        (errorMessage)="this.errorMessage.emit($event)">
+      </app-list-employee-search>
+      <p *ngIf="selectedEmployeeName" class="text-sm text-gray-600 mt-2">
+        Selected: {{ selectedEmployeeName }}
+      </p>
+    </div>
+    <div *ngIf="!isEditing && user.employee" class="text-lg flex flex-col">
+      <label class="font-semibold">Employee:</label>
+      <p>{{ user.employee.firstName }} {{ user.employee.lastName }}</p>
     </div>
 
     <div class="text-lg flex flex-col">

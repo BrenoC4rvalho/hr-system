@@ -9,6 +9,19 @@
         <app-dynamic-field [field]="field" [form]="form"></app-dynamic-field>
       </ng-container>
     </div>
+
+    <div>
+      <label class="mb-2 text-sm font-medium text-gray">Manager</label>
+      <app-list-employee-search
+        [departmentId]="department?.id"
+        (employeeSelected)="onEmployeeSelected($event)"
+        (errorMessage)="this.errorMessage.emit($event)"
+      >
+      </app-list-employee-search>
+      <p *ngIf="selectedManagerName" class="text-sm text-gray-600 mt-2">
+        Selected: {{ selectedManagerName }}
+      </p>
+    </div>
   </form>
 
   <button

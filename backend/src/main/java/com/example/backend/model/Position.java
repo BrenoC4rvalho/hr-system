@@ -3,6 +3,7 @@ package com.example.backend.model;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.validator.constraints.Length;
@@ -43,7 +44,7 @@ public class Position {
     private LocalDateTime updatedAt;
 
     @OneToMany(mappedBy = "position")
-    @JsonIgnore
+    @JsonManagedReference("employee-position")
     private List<Employee> employees;
 
     public Position() {

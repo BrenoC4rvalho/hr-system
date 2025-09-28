@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Sinks;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -56,42 +57,38 @@ public class ChatService {
         }
     }
 
-    public Flux<String> generateResponse(String userMessage) {
+    public Flux<String> generateResponse(String userMessage, Sinks.One<String> fullResponseSink) {
 
+        Prompt prompt = createPrompt(userMessage);
+
+        StringBuilder responseBuilder = new StringBuilder();
+
+        return chatModel.stream(prompt)
+                .map(chatResponse -> {
+                    String chunk = chatResponse.getResults().getFirst().getOutput().getText();
+                    responseBuilder.append(chunk);
+                    return chunk;
+                })
+                .doOnComplete(() -> {
+                    fullResponseSink.tryEmitValue(responseBuilder.toString());
+                });
+    }
+
+    private Prompt createPrompt(String userMessage) {
         List<Document> employeeDocs = employeeVectorStore.similaritySearch(
-                SearchRequest.builder()
-                        .query(userMessage)
-                        .topK(2)
-                        .build()
+                SearchRequest.builder().query(userMessage).topK(2).build()
         );
         List<Document> positionDocs = positionVectorStore.similaritySearch(
-                SearchRequest.builder()
-                        .query(userMessage)
-                        .topK(2)
-                        .build()
+                SearchRequest.builder().query(userMessage).topK(2).build()
         );
         List<Document> departmentDocs = departmentVectorStore.similaritySearch(
-                SearchRequest.builder()
-                        .query(userMessage)
-                        .topK(2)
-                        .build()
+                SearchRequest.builder().query(userMessage).topK(2).build()
         );
 
         List<Document> allDocs = new ArrayList<>();
-
-
-        if(employeeDocs != null && !employeeDocs.isEmpty()) {
-            allDocs.addAll(employeeDocs);
-        }
-
-        if(positionDocs != null && !positionDocs.isEmpty()) {
-            allDocs.addAll(positionDocs);
-        }
-
-        if(departmentDocs != null && !departmentDocs.isEmpty()) {
-            allDocs.addAll(departmentDocs);
-        }
-
+        if (employeeDocs != null) allDocs.addAll(employeeDocs);
+        if (positionDocs != null) allDocs.addAll(positionDocs);
+        if (departmentDocs != null) allDocs.addAll(departmentDocs);
 
         String context = allDocs.stream()
                 .map(Document::getText)
@@ -100,11 +97,7 @@ public class ChatService {
         SystemPromptTemplate promptTemplate = new SystemPromptTemplate(this.systemPromptTemplate);
         Message systemMessage = promptTemplate.createMessage(Map.of("context", context));
 
-        Prompt prompt = new Prompt(List.of(systemMessage, new UserMessage(userMessage)));
-
-        return chatModel.stream(prompt)
-                .map(chatResponse -> chatResponse.getResults().getFirst().getOutput().getText());
-
+        return new Prompt(List.of(systemMessage, new UserMessage(userMessage)));
     }
 
 }

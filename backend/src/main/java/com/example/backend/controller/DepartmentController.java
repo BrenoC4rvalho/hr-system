@@ -56,12 +56,8 @@ public class DepartmentController {
 
     @PutMapping("/{id}")
     public ResponseEntity<?> update(@PathVariable Long id, @RequestBody DepartmentDTO departmentDTO) {
-        departmentService.update(id, departmentDTO);
-        
-        Map<String, String> response = new HashMap<>();
-        response.put("message", "Department updated successfully.");
-        
-        return ResponseEntity.status(HttpStatus.OK).body(response);
+        DepartmentDTO updatedDepartment = departmentService.update(id, departmentDTO);
+        return ResponseEntity.status(HttpStatus.OK).body(updatedDepartment);
     }
  
     

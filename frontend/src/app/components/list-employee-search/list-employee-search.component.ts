@@ -10,10 +10,9 @@ import { LucideAngularModule, UserRoundSearch } from 'lucide-angular';
   imports: [ CommonModule, ReactiveFormsModule, LucideAngularModule, FormsModule ],
   templateUrl: './list-employee-search.component.html',
 })
-export class ListEmployeeSearchComponent implements OnChanges {
+export class ListEmployeeSearchComponent {
 
   readonly UserRoundSearchIcon = UserRoundSearch;
-
 
   @Input() departmentId?: number;
   @Output() employeeSelected = new EventEmitter<EmployeeBasic>();
@@ -24,13 +23,6 @@ export class ListEmployeeSearchComponent implements OnChanges {
   employees: EmployeeBasic[] = [];
 
   constructor(private employeeService: EmployeeService) {}
-
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes['departmentId']) {
-      this.getEmployees(this.searchText, this.departmentId);
-    }
-  }
-
 
   getEmployees(firstName: string, departmentId?: number): void {
 

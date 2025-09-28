@@ -113,6 +113,19 @@ public class EmployeeController {
         return ResponseEntity.status(HttpStatus.OK).body(summary);
     }
 
+
+    @GetMapping("/shift-summary")
+    public ResponseEntity<?> getEmployeeShiftSummary() {
+        Map<String, Long> summary = employeeService.getEmployeeShiftSummary();
+        return ResponseEntity.status(HttpStatus.OK).body(summary);
+    }
+
+    @GetMapping("/recent-hires")
+    public ResponseEntity<?> getRecentHires(@RequestParam(defaultValue = "90") int days) {
+        List<EmployeeBasicDTO> employees = employeeService.getRecentHires(days);
+        return ResponseEntity.status(HttpStatus.OK).body(employees);
+    }
+
     @GetMapping("/search")
     public ResponseEntity<?> getEmployeeByName(
         @RequestParam String firstName,
